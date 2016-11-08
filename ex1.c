@@ -31,26 +31,23 @@ printf("%d\n", SDL_JOYBALLMOTION);
 
   SDL_Event event;
   while(1){
+    SDL_Delay(10);
     while(SDL_PollEvent(&event))
     {
-      printf("event type %d \n", event.type);
-
-      if(event.type == 11){
-        puts("apertou quadrado.");
-      }
+      //printf("%d \n", event.type);
       switch(event.type)
       {
-        case SDL_JOYBUTTONDOWN:
-          puts("buttondow!!!!!!");
+        case 16973834:
+          puts("4");
           break;
-        case SDL_JOYAXISMOTION:
-          puts("axis!!!!!");
+        case 16777226:
+          puts("1");
           break;
-        case SDL_JOYBUTTONUP:
-          puts("up!!!!!!");
+        case 16842762:
+          puts("2");
           break;
-        case SDL_JOYHATMOTION:
-          puts("hat!!!!!!");
+        case 16908298:
+          puts("3");
           break;
         case SDL_JOYBALLMOTION:
           puts("ball!!!!!!");
