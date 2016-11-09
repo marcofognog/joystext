@@ -38,12 +38,6 @@ int main(int argc, char *argv[]){
     printf("    %s\n", SDL_JoystickName(i));
   }
 
-  puts("lista de events:");
-  printf("%d\n", SDL_JOYBUTTONDOWN);
-  printf("%d\n", SDL_JOYAXISMOTION);
-  printf("%d\n", SDL_JOYBUTTONUP);
-  printf("%d\n", SDL_JOYHATMOTION);
-  printf("%d\n", SDL_JOYBALLMOTION);
   printf("botaoes: %i\n", SDL_JoystickNumButtons(joystick));
 
   SDL_Event event;
