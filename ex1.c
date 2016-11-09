@@ -2,11 +2,13 @@
 #include "SDL.h"
 #include <X11/extensions/XTest.h>
 
-void print_binary(int *binary_buttons){
+void print_binary(char *binary_buttons){
   int print_flag = 0;
   for (int i=0; i < 16; i++) {
-    if(binary_buttons[i])
+    int b = binary_buttons[i] -0;
+    if(b){
       print_flag = 1;
+    }
   }
   if(print_flag){
     for (int i=0; i < 16; i++) {
@@ -44,11 +46,11 @@ int main(int argc, char *argv[]){
   Display* display = XOpenDisplay(0);
 
 
+  char buttons[15];
   while(1){
     SDL_Delay(20);
     SDL_JoystickUpdate();
 
-    int buttons[15];
 
     //initialize
     for (int i=0; i < 16; i++){
