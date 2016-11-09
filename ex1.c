@@ -28,32 +28,27 @@ printf("%d\n", SDL_JOYAXISMOTION);
 printf("%d\n", SDL_JOYBUTTONUP);
 printf("%d\n", SDL_JOYHATMOTION);
 printf("%d\n", SDL_JOYBALLMOTION);
+printf("botaoes: %i\n", SDL_JoystickNumButtons(joystick));
 
   SDL_Event event;
   while(1){
-    SDL_Delay(10);
-    while(SDL_PollEvent(&event))
+    SDL_Delay(120);
+    SDL_JoystickUpdate();
+
+    for ( int i=0; i < SDL_JoystickNumButtons ( joystick ); ++i )
     {
-      //printf("%d \n", event.type);
-      switch(event.type)
-      {
-        case 16973834:
-          puts("4");
-          break;
-        case 16777226:
-          puts("1");
-          break;
-        case 16842762:
-          puts("2");
-          break;
-        case 16908298:
-          puts("3");
-          break;
-        case SDL_JOYBALLMOTION:
-          puts("ball!!!!!!");
-          break;
-      }
+      unsigned int n = SDL_JoystickGetButton ( joystick, i );
+      if ( n != 0 )
+        fprintf ( stdout, "found you pressed button %i\n", i );
     }
+
+    for ( int i=0; i < SDL_JoystickNumAxes ( joystick ); ++i )
+    {
+      signed short a = SDL_JoystickGetAxis ( joystick, i );
+      if ( a != 0 )
+        fprintf ( stdout, "axis %i is %d\n", i,a );
+    }
+
   }
 
   SDL_Quit();
