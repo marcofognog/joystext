@@ -1,5 +1,7 @@
 #include <stdio.h>
 #include "SDL.h"
+#include <X11/extensions/XTest.h>
+
 
 int main(int argc, char *argv[]){
   if (SDL_Init( SDL_INIT_VIDEO | SDL_INIT_JOYSTICK ) < 0)
@@ -31,6 +33,8 @@ printf("%d\n", SDL_JOYBALLMOTION);
 printf("botaoes: %i\n", SDL_JoystickNumButtons(joystick));
 
   SDL_Event event;
+  Display* display = XOpenDisplay(0);
+
   while(1){
     SDL_Delay(120);
     SDL_JoystickUpdate();
@@ -38,8 +42,11 @@ printf("botaoes: %i\n", SDL_JoystickNumButtons(joystick));
     for ( int i=0; i < SDL_JoystickNumButtons ( joystick ); ++i )
     {
       unsigned int n = SDL_JoystickGetButton ( joystick, i );
-      if ( n != 0 )
+      if ( n != 0 ){
         fprintf ( stdout, "found you pressed button %i\n", i );
+        XTestFakeKeyEvent(display, 14, 1, 0);
+        XTestFakeKeyEvent(display, 14, 0, 0);
+      }
     }
 
     for ( int i=0; i < SDL_JoystickNumAxes ( joystick ); ++i )
@@ -48,7 +55,7 @@ printf("botaoes: %i\n", SDL_JoystickNumButtons(joystick));
       if ( a != 0 )
         fprintf ( stdout, "axis %i is %d\n", i,a );
     }
-
+    XFlush(display);
   }
 
   SDL_Quit();
