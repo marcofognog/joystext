@@ -35,27 +35,54 @@ printf("botaoes: %i\n", SDL_JoystickNumButtons(joystick));
   SDL_Event event;
   Display* display = XOpenDisplay(0);
 
+  int print_flag = 0;
+
   while(1){
-    SDL_Delay(120);
+    SDL_Delay(20);
     SDL_JoystickUpdate();
 
-    for ( int i=0; i < SDL_JoystickNumButtons ( joystick ); ++i )
-    {
-      unsigned int n = SDL_JoystickGetButton ( joystick, i );
-      if ( n != 0 ){
-        fprintf ( stdout, "found you pressed button %i\n", i );
-        XTestFakeKeyEvent(display, 14, 1, 0);
-        XTestFakeKeyEvent(display, 14, 0, 0);
-      }
+    int buttons[15];
+
+    //initialize
+    for (int i=0; i < 16; i++){
+      buttons[i] = 0;
     }
 
-    for ( int i=0; i < SDL_JoystickNumAxes ( joystick ); ++i )
+    for ( int i=0; i < 12; i++ )
     {
-      signed short a = SDL_JoystickGetAxis ( joystick, i );
-      if ( a != 0 )
-        fprintf ( stdout, "axis %i is %d\n", i,a );
+      unsigned int n = SDL_JoystickGetButton ( joystick, i );
+      if ( n != 0 )
+        buttons[i] = 1;
     }
-    XFlush(display);
+
+      signed short a1 = SDL_JoystickGetAxis ( joystick, 0 );
+      signed short a2 = SDL_JoystickGetAxis ( joystick, 1 );
+      if ( a1 != 0 ){
+        if ( a1 < 0 ){
+          buttons[12] = 1;
+        } else {
+          buttons[13] = 1;
+        }
+      }
+      if ( a2 != 0 ){
+        if ( a2 < 0 ){
+          buttons[14] = 1;
+        } else {
+          buttons[15] = 1;
+        }
+      }
+
+    for (int i=0; i < 16; i++) {
+      if(buttons[i])
+        print_flag = 1;
+    }
+    if(print_flag){
+      for (int i=0; i < 16; i++) {
+        printf("%i", buttons[i]);
+      }
+      printf("\n");
+      print_flag = 0;
+    }
   }
 
   SDL_Quit();
