@@ -2,6 +2,20 @@
 #include "SDL.h"
 #include <X11/extensions/XTest.h>
 
+void print_binary(int *binary_buttons){
+  int print_flag = 0;
+  for (int i=0; i < 16; i++) {
+    if(binary_buttons[i])
+      print_flag = 1;
+  }
+  if(print_flag){
+    for (int i=0; i < 16; i++) {
+      printf("%i", binary_buttons[i]);
+    }
+    printf("\n");
+    print_flag = 0;
+  }
+}
 
 int main(int argc, char *argv[]){
   if (SDL_Init( SDL_INIT_VIDEO | SDL_INIT_JOYSTICK ) < 0)
@@ -24,18 +38,17 @@ int main(int argc, char *argv[]){
     printf("    %s\n", SDL_JoystickName(i));
   }
 
-puts("lista de events:");
-printf("%d\n", SDL_JOYBUTTONDOWN);
-printf("%d\n", SDL_JOYAXISMOTION);
-printf("%d\n", SDL_JOYBUTTONUP);
-printf("%d\n", SDL_JOYHATMOTION);
-printf("%d\n", SDL_JOYBALLMOTION);
-printf("botaoes: %i\n", SDL_JoystickNumButtons(joystick));
+  puts("lista de events:");
+  printf("%d\n", SDL_JOYBUTTONDOWN);
+  printf("%d\n", SDL_JOYAXISMOTION);
+  printf("%d\n", SDL_JOYBUTTONUP);
+  printf("%d\n", SDL_JOYHATMOTION);
+  printf("%d\n", SDL_JOYBALLMOTION);
+  printf("botaoes: %i\n", SDL_JoystickNumButtons(joystick));
 
   SDL_Event event;
   Display* display = XOpenDisplay(0);
 
-  int print_flag = 0;
 
   while(1){
     SDL_Delay(20);
@@ -55,34 +68,25 @@ printf("botaoes: %i\n", SDL_JoystickNumButtons(joystick));
         buttons[i] = 1;
     }
 
-      signed short a1 = SDL_JoystickGetAxis ( joystick, 0 );
-      signed short a2 = SDL_JoystickGetAxis ( joystick, 1 );
-      if ( a1 != 0 ){
-        if ( a1 < 0 ){
-          buttons[12] = 1;
-        } else {
-          buttons[13] = 1;
-        }
+    signed short a1 = SDL_JoystickGetAxis ( joystick, 0 );
+    signed short a2 = SDL_JoystickGetAxis ( joystick, 1 );
+    if ( a1 != 0 ){
+      if ( a1 < 0 ){
+        buttons[12] = 1;
+      } else {
+        buttons[13] = 1;
       }
-      if ( a2 != 0 ){
-        if ( a2 < 0 ){
-          buttons[14] = 1;
-        } else {
-          buttons[15] = 1;
-        }
+    }
+    if ( a2 != 0 ){
+      if ( a2 < 0 ){
+        buttons[14] = 1;
+      } else {
+        buttons[15] = 1;
       }
+    }
 
-    for (int i=0; i < 16; i++) {
-      if(buttons[i])
-        print_flag = 1;
-    }
-    if(print_flag){
-      for (int i=0; i < 16; i++) {
-        printf("%i", buttons[i]);
-      }
-      printf("\n");
-      print_flag = 0;
-    }
+    print_binary(buttons);
+
   }
 
   SDL_Quit();
