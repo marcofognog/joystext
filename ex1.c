@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include "SDL.h"
 #include <X11/extensions/XTest.h>
+#include <X11/keysym.h>
 
 void print_binary(int *binary_buttons){
   int print_flag = 0;
@@ -19,6 +20,25 @@ void print_binary(int *binary_buttons){
   }
 }
 
+void send_keycode(keysym){
+  Display* display = XOpenDisplay(0);
+  int val = XKeysymToKeycode(display, keysym);
+  XTestFakeKeyEvent(display,val,1,0);
+  XTestFakeKeyEvent(display,val,0,0);
+  XFlush(display);
+}
+
+void send_keycode_modified(modifier, keysym){
+  Display* display = XOpenDisplay(0);
+  int keycode = XKeysymToKeycode(display, keysym);
+  int modcode = XKeysymToKeycode(display, modifier);
+  XTestFakeKeyEvent(display,modcode,1,0);
+  XTestFakeKeyEvent(display,keycode,1,0);
+  XTestFakeKeyEvent(display,keycode,0,0);
+  XTestFakeKeyEvent(display,modcode,0,0);
+  XFlush(display);
+}
+
 void send_key(int *binary_buttons){
   int a[16] = {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
   int b[16] = {0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
@@ -34,30 +54,31 @@ void send_key(int *binary_buttons){
   int l[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,1};
 
   if(memcmp(binary_buttons,a, sizeof(a)) == 0)
-    printf("a\n");
+    send_keycode(XK_a);
   if(memcmp(binary_buttons,b, sizeof(b)) == 0)
-    printf("b\n");
+    send_keycode(XK_b);
   if(memcmp(binary_buttons,c, sizeof(c)) == 0)
-    printf("c\n");
+    send_keycode(XK_c);
   if(memcmp(binary_buttons,d, sizeof(d)) == 0)
-    printf("d\n");
+    send_keycode(XK_d);
   if(memcmp(binary_buttons,e, sizeof(e)) == 0)
-    printf("e\n");
+    send_keycode(XK_e);
   if(memcmp(binary_buttons,f, sizeof(f)) == 0)
-    printf("f\n");
+    send_keycode(XK_f);
   if(memcmp(binary_buttons,g, sizeof(g)) == 0)
-    printf("g\n");
+    send_keycode(XK_g);
   if(memcmp(binary_buttons,h, sizeof(h)) == 0)
-    printf("h\n");
+    send_keycode(XK_h);
   if(memcmp(binary_buttons,i, sizeof(h)) == 0)
-    printf("i\n");
+    send_keycode(XK_i);
   if(memcmp(binary_buttons,j, sizeof(h)) == 0)
-    printf("j\n");
+    send_keycode(XK_j);
   if(memcmp(binary_buttons,k, sizeof(h)) == 0)
-    printf("k\n");
+    send_keycode(XK_k);
   if(memcmp(binary_buttons,l, sizeof(h)) == 0)
-    printf("l\n");
+    send_keycode_modified(XK_Shift_L, XK_z);
 }
+
 
 int main(int argc, char *argv[]){
   if (SDL_Init( SDL_INIT_VIDEO | SDL_INIT_JOYSTICK ) < 0)
@@ -83,7 +104,6 @@ int main(int argc, char *argv[]){
   printf("botaoes: %i\n", SDL_JoystickNumButtons(joystick));
 
   SDL_Event event;
-  Display* display = XOpenDisplay(0);
 
 
   int buttons[16] = {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
