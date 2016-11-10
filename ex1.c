@@ -228,9 +228,8 @@ int main(int argc, char *argv[]){
           history[j][i]=0;
         }
       }
+      send_key(merged);
     }
-
-    print_binary(merged);
 
     if(counter>97){
       counter = 0;
