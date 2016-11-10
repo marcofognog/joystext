@@ -159,7 +159,7 @@ int main(int argc, char *argv[]){
   printf("botaoes: %i\n", SDL_JoystickNumButtons(joystick));
 
   int buttons[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-  int history[10][16];
+  int history[100][16];
   //reset history
   for(int j=0;j<10;j++){
     for(int i=0;i<16;i++){
@@ -170,7 +170,7 @@ int main(int argc, char *argv[]){
   int merged[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 
   while(1){
-    SDL_Delay(1000);
+    SDL_Delay(40);
     SDL_JoystickUpdate();
 
 
@@ -208,11 +208,6 @@ int main(int argc, char *argv[]){
       history[counter][i] = buttons[i];
     }
 
-    printf("history:\n");
-    for(int i=0; i<9;i++){
-      print_binary(history[i]);
-    }
-
     if(pressed_key(buttons)){
     }else{
       //reset merged
@@ -221,25 +216,30 @@ int main(int argc, char *argv[]){
       }
 
       //merge
-      for(int j=0;j<10;j++){
+      for(int j=0;j<100;j++){
         for(int i=0;i<16;i++){
           merged[i] = (history[j][i] || merged[i]);
         }
       }
 
       //reset history
-      for(int j=0;j<10;j++){
+      for(int j=0;j<100;j++){
         for(int i=0;i<16;i++){
           history[j][i]=0;
         }
       }
     }
 
-    printf("merged: \n");
     print_binary(merged);
 
-    if(counter>7){
+    if(counter>97){
       counter = 0;
+      //reset history
+      for(int j=0;j<100;j++){
+        for(int i=0;i<16;i++){
+          history[j][i]=0;
+        }
+      }
     }else{
       counter++;
     }
