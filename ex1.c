@@ -3,7 +3,7 @@
 #include <X11/extensions/XTest.h>
 #include <X11/keysym.h>
 
-void print_binary(int *binary_buttons){
+int pressed_key(int *binary_buttons){
   int print_flag = 0;
   for (int i=0; i < 16; i++) {
     int b = binary_buttons[i] -0;
@@ -11,13 +11,14 @@ void print_binary(int *binary_buttons){
       print_flag = 1;
     }
   }
-  if(print_flag){
-    for (int i=0; i < 16; i++) {
-      printf("%i", binary_buttons[i]);
-    }
-    printf("\n");
-    print_flag = 0;
+  return print_flag;
+}
+
+void print_binary(int *binary_buttons){
+  for (int i=0; i < 16; i++) {
+    printf("%i", binary_buttons[i]);
   }
+  printf("\n");
 }
 
 void send_keycode(keysym){
@@ -134,7 +135,6 @@ void send_key(int *binary_buttons){
     send_keycode(XK_BackSpace);
 }
 
-
 int main(int argc, char *argv[]){
   if (SDL_Init( SDL_INIT_VIDEO | SDL_INIT_JOYSTICK ) < 0)
   {
@@ -158,12 +158,19 @@ int main(int argc, char *argv[]){
 
   printf("botaoes: %i\n", SDL_JoystickNumButtons(joystick));
 
-  SDL_Event event;
+  int buttons[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+  int history[10][16];
+  //reset history
+  for(int j=0;j<10;j++){
+    for(int i=0;i<16;i++){
+      history[j][i]=0;
+    }
+  }
+  int counter=0;
+  int merged[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 
-
-  int buttons[16] = {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
   while(1){
-    SDL_Delay(20);
+    SDL_Delay(1000);
     SDL_JoystickUpdate();
 
 
@@ -196,8 +203,46 @@ int main(int argc, char *argv[]){
       }
     }
 
-    send_key(buttons);
-    print_binary(buttons);
+    //copy
+    for(int i=0; i<16;i++){
+      history[counter][i] = buttons[i];
+    }
+
+    printf("history:\n");
+    for(int i=0; i<9;i++){
+      print_binary(history[i]);
+    }
+
+    if(pressed_key(buttons)){
+    }else{
+      //reset merged
+      for (int i=0; i<16; i++){
+        merged[i]=0;
+      }
+
+      //merge
+      for(int j=0;j<10;j++){
+        for(int i=0;i<16;i++){
+          merged[i] = (history[j][i] || merged[i]);
+        }
+      }
+
+      //reset history
+      for(int j=0;j<10;j++){
+        for(int i=0;i<16;i++){
+          history[j][i]=0;
+        }
+      }
+    }
+
+    printf("merged: \n");
+    print_binary(merged);
+
+    if(counter>7){
+      counter = 0;
+    }else{
+      counter++;
+    }
   }
 
   SDL_Quit();
