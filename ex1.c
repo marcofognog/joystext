@@ -71,6 +71,7 @@ void send_key(int *binary_buttons){
   int space[16] = {1,0,0,1,0,0,0,0,0,0,0,0,0,0,1,0};
   int enter[16] = {0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0};
   int backspace[16] = {0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0};
+  int semi_colon[16] = {1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0};
 
   if(memcmp(binary_buttons,a, sizeof(a)) == 0)
     send_keycode(XK_a);
@@ -130,6 +131,8 @@ void send_key(int *binary_buttons){
     send_keycode(XK_Return);
   if(memcmp(binary_buttons,backspace, sizeof(backspace)) == 0)
     send_keycode(XK_BackSpace);
+  if(memcmp(binary_buttons,semi_colon, sizeof(semi_colon)) == 0)
+    send_keycode(XK_semicolon);
 }
 
 int main(int argc, char *argv[]){
