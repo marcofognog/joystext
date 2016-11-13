@@ -71,7 +71,59 @@ void send_key(int *binary_buttons){
   int space[16] = {0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0};
   int enter[16] = {0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0};
   int backspace[16] = {0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0};
-  int semi_colon[16] = {1,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0};
+
+  int shift[16] = {0,0,0,0,0,0,1,0,0,0,0,0,0,0,0,0};
+  int semi_colon[16] = {1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,0};
+  int colon[16] = {0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,0};
+  int slash[16] = {0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,0};
+  int escape[16] = {0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,0};
+  int comma[16] = {0,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0};
+  int dot[16] = {0,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0};
+  int minus[16] = {0,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1};
+  int plus[16] = {0,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0};
+  int left_parenthesis[16] = {1,0,0,0,1,0,0,0,0,0,0,0,0,0,1,0};
+  int right_parenthesis[16] = {1,0,0,0,1,0,0,0,0,0,0,0,0,1,0,0};
+  int left_square_bracket[16] = {1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1};
+  int right_square_bracket[16] = {1,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0};
+  int left_curly_bracket[16] = {0,1,0,0,1,0,0,0,0,0,0,0,0,0,1,0};
+  int right_curly_bracket[16] = {0,1,0,0,1,0,0,0,0,0,0,0,0,1,0,0};
+  int exclamation[16] = {0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,1};
+  int at[16] = {0,1,0,0,1,0,0,0,0,0,0,0,1,0,0,0};
+  int sharp[16] = {0,0,1,0,1,0,0,0,0,0,0,0,0,0,1,0};
+  int dollar[16] = {0,0,1,0,1,0,0,0,0,0,0,0,0,1,0,0};
+  int percent[16] = {0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,1};
+  int single_quote[16] = {0,0,1,0,1,0,0,0,0,0,0,0,1,0,0,0};
+  int pipe[16] = {0,0,0,1,1,0,0,0,0,0,0,0,0,0,1,0};
+  int asterisk[16] = {0,0,0,1,1,0,0,0,0,0,0,0,0,1,0,0};
+  int underscore[16] = {0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,1};
+  int double_quote[16] = {0,0,0,1,1,0,0,0,0,0,0,0,1,0,0,0};
+  int ampersand[16] = {1,1,0,0,1,0,0,0,0,0,0,0,0,0,1,0};
+  int page_up[16] = {1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0};
+  int page_down[16] = {0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,0};
+  int home[16] = {0,0,1,0,0,1,0,0,0,0,0,0,0,0,0,0};
+  int end[16] = {0,0,0,1,0,1,0,0,0,0,0,0,0,0,0,0};
+  int arrow_up[16] = {0,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0};
+  int arrow_right[16] = {0,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0};
+  int arrow_down[16] = {0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1};
+  int arrow_left[16] = {0,0,0,0,0,1,0,0,0,0,0,0,1,0,0,0};
+  int one[16] = {1,0,0,0,0,1,0,0,0,0,0,0,0,0,1,0};
+  int two[16] = {0,1,0,0,0,1,0,0,0,0,0,0,0,0,1,0};
+  int three[16] = {0,0,1,0,0,1,0,0,0,0,0,0,0,0,1,0};
+  int four[16] = {0,0,0,1,0,1,0,0,0,0,0,0,0,0,1,0};
+  int five[16] = {1,0,0,0,0,1,0,0,0,0,0,0,0,1,0,0};
+  int six[16] = {0,1,0,0,0,1,0,0,0,0,0,0,0,1,0,0};
+  int seven[16] = {0,0,1,0,0,1,0,0,0,0,0,0,0,1,0,0};
+  int eight[16] = {0,0,0,1,0,1,0,0,0,0,0,0,0,1,0,0};
+  int nine[16] = {1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1};
+  int zero[16] = {0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,1};
+  int ctr_w[16] = {0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0};
+  int meta_right_arrow[16] = {0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0};
+  int meta_shit_q[16] = {0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1};
+  int meta_left_arrow[16] = {0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0};
+  int meta_d[16] = {1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0};
+  int meta_ctrl_right_arrow[16] = {0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0};
+  int meta_enter[16] = {0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0};
+  int meta_ctrl_left_arrow[16] = {0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0};
 
   if(memcmp(binary_buttons,a, sizeof(a)) == 0)
     send_keycode(XK_a);
@@ -133,6 +185,93 @@ void send_key(int *binary_buttons){
     send_keycode(XK_BackSpace);
   if(memcmp(binary_buttons,semi_colon, sizeof(semi_colon)) == 0)
     send_keycode(XK_semicolon);
+
+  if(memcmp(binary_buttons,shift, sizeof(shift)) == 0)
+    send_keycode(XK_Shift_L);
+  if(memcmp(binary_buttons,colon, sizeof(colon)) == 0)
+    send_keycode_modified(XK_Shift_L, XK_colon);
+  if(memcmp(binary_buttons,slash, sizeof(slash)) == 0)
+    send_keycode(XK_slash);
+  if(memcmp(binary_buttons,escape, sizeof(escape)) == 0)
+    send_keycode(XK_Escape);
+  if(memcmp(binary_buttons,comma, sizeof(comma)) == 0)
+    send_keycode(XK_comma);
+  if(memcmp(binary_buttons,dot, sizeof(dot)) == 0)
+    send_keycode(XK_period);
+  if(memcmp(binary_buttons,minus, sizeof(minus)) == 0)
+    send_keycode(XK_minus);
+  if(memcmp(binary_buttons,plus, sizeof(plus)) == 0)
+    send_keycode_modified(XK_Shift_L,XK_plus);
+  if(memcmp(binary_buttons,left_parenthesis, sizeof(left_parenthesis)) == 0)
+    send_keycode(XK_parenleft);
+  if(memcmp(binary_buttons,right_parenthesis, sizeof(right_parenthesis)) == 0)
+    send_keycode(XK_parenright);
+  if(memcmp(binary_buttons,left_square_bracket, sizeof(left_square_bracket)) == 0)
+    send_keycode(XK_bracketleft);
+  if(memcmp(binary_buttons,right_square_bracket, sizeof(right_square_bracket)) == 0)
+    send_keycode(XK_bracketright);
+  if(memcmp(binary_buttons,left_curly_bracket, sizeof(left_curly_bracket)) == 0)
+    send_keycode_modified(XK_Shift_L, XK_braceleft);
+  if(memcmp(binary_buttons,right_curly_bracket, sizeof(right_curly_bracket)) == 0)
+    send_keycode_modified(XK_Shift_L, XK_braceright);
+  if(memcmp(binary_buttons,exclamation, sizeof(exclamation)) == 0)
+    send_keycode_modified(XK_Shift_L,XK_exclam);
+  if(memcmp(binary_buttons,at, sizeof(at)) == 0)
+    send_keycode_modified(XK_Shift_L,XK_at);
+  if(memcmp(binary_buttons,sharp, sizeof(sharp)) == 0)
+    send_keycode_modified(XK_Shift_L,XK_numbersign);
+  if(memcmp(binary_buttons,dollar, sizeof(dollar)) == 0)
+    send_keycode_modified(XK_Shift_L,XK_dollar);
+  if(memcmp(binary_buttons,percent, sizeof(percent)) == 0)
+    send_keycode_modified(XK_Shift_L,XK_percent);
+  if(memcmp(binary_buttons,single_quote, sizeof(single_quote)) == 0)
+    send_keycode(XK_quotedbl);
+  if(memcmp(binary_buttons,pipe, sizeof(pipe)) == 0)
+    send_keycode_modified(XK_Shift_L,XK_bar);
+  if(memcmp(binary_buttons,asterisk, sizeof(asterisk)) == 0)
+    send_keycode_modified(XK_Shift_L,XK_asterisk);
+  if(memcmp(binary_buttons,underscore, sizeof(underscore)) == 0)
+    send_keycode_modified(XK_Shift_L,XK_underscore);
+  if(memcmp(binary_buttons,double_quote, sizeof(double_quote)) == 0)
+    send_keycode_modified(XK_Shift_L,XK_quotedbl);
+  if(memcmp(binary_buttons,ampersand, sizeof(ampersand)) == 0)
+    send_keycode_modified(XK_Shift_L,XK_ampersand);
+  if(memcmp(binary_buttons,page_up, sizeof(page_up)) == 0)
+    send_keycode(XK_Page_Up);
+  if(memcmp(binary_buttons,page_down, sizeof(page_down)) == 0)
+    send_keycode(XK_Page_Down);
+  if(memcmp(binary_buttons,home, sizeof(home)) == 0)
+    send_keycode(XK_Begin);
+  if(memcmp(binary_buttons,end, sizeof(end)) == 0)
+    send_keycode(XK_End);
+  if(memcmp(binary_buttons,arrow_up, sizeof(arrow_up)) == 0)
+    send_keycode(XK_Up);
+  if(memcmp(binary_buttons,arrow_down, sizeof(arrow_down)) == 0)
+    send_keycode(XK_Down);
+  if(memcmp(binary_buttons,arrow_right, sizeof(arrow_right)) == 0)
+    send_keycode(XK_Right);
+  if(memcmp(binary_buttons,arrow_left, sizeof(arrow_left)) == 0)
+    send_keycode(XK_Left);
+  if(memcmp(binary_buttons,one, sizeof(one)) == 0)
+    send_keycode(XK_1);
+  if(memcmp(binary_buttons,two, sizeof(two)) == 0)
+    send_keycode(XK_2);
+  if(memcmp(binary_buttons,three, sizeof(three)) == 0)
+    send_keycode(XK_3);
+  if(memcmp(binary_buttons,four, sizeof(four)) == 0)
+    send_keycode(XK_4);
+  if(memcmp(binary_buttons,five, sizeof(five)) == 0)
+    send_keycode(XK_5);
+  if(memcmp(binary_buttons,six, sizeof(six)) == 0)
+    send_keycode(XK_6);
+  if(memcmp(binary_buttons,seven, sizeof(seven)) == 0)
+    send_keycode(XK_7);
+  if(memcmp(binary_buttons,eight, sizeof(eight)) == 0)
+    send_keycode(XK_8);
+  if(memcmp(binary_buttons,nine, sizeof(nine)) == 0)
+    send_keycode(XK_9);
+  if(memcmp(binary_buttons,zero, sizeof(zero)) == 0)
+    send_keycode(XK_0);
 }
 
 int main(int argc, char *argv[]){
