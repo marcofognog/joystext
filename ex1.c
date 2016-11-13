@@ -274,6 +274,12 @@ void send_key(int *binary_buttons){
     send_keycode(XK_9);
   if(memcmp(binary_buttons,zero, sizeof(zero)) == 0)
     send_keycode(XK_0);
+  if(memcmp(binary_buttons,equal, sizeof(equal)) == 0)
+    send_keycode(XK_equal);
+  if(memcmp(binary_buttons,less, sizeof(less)) == 0)
+    send_keycode_modified(XK_Shift_L, XK_less);
+  if(memcmp(binary_buttons,greater, sizeof(greater)) == 0)
+    send_keycode_modified(XK_Shift_L, XK_greater);
 }
 
 int main(int argc, char *argv[]){
