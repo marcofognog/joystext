@@ -118,14 +118,6 @@ void send_key(int *binary_buttons){
   int eight[16] = {0,0,0,1,0,1,0,0,0,0,0,0,0,1,0,0};
   int nine[16] = {1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1};
   int zero[16] = {0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,1};
-  int ctr_w[16] = {0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0};
-  int meta_right_arrow[16] = {0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0};
-  int meta_shift_q[16] = {0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1};
-  int meta_left_arrow[16] = {0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0};
-  int meta_d[16] = {1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0};
-  int meta_ctrl_right_arrow[16] = {0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0};
-  int meta_enter[16] = {0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0};
-  int meta_ctrl_left_arrow[16] = {0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0};
 
   if(memcmp(binary_buttons,a, sizeof(a)) == 0)
     send_keycode(XK_a);
@@ -317,9 +309,9 @@ int main(int argc, char *argv[]){
   int merged[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 
   while(1){
-    SDL_Delay(40);
     SDL_JoystickUpdate();
 
+    int pointer_mode=1;
 
     //initialize
     for (int i=0; i < 16; i++){
@@ -350,44 +342,68 @@ int main(int argc, char *argv[]){
       }
     }
 
-    //copy
-    for(int i=0; i<16;i++){
-      history[counter][i] = buttons[i];
-    }
-
-    if(pressed_key(buttons)){
-    }else{
-      //reset merged
-      for (int i=0; i<16; i++){
-        merged[i]=0;
+    if(pointer_mode != 1){
+      SDL_Delay(40);
+      //copy
+      for(int i=0; i<16;i++){
+        history[counter][i] = buttons[i];
       }
 
-      //merge
-      for(int j=0;j<100;j++){
-        for(int i=0;i<16;i++){
-          merged[i] = (history[j][i] || merged[i]);
+      if(pressed_key(buttons)){
+      }else{
+        //reset merged
+        for (int i=0; i<16; i++){
+          merged[i]=0;
         }
+
+        //merge
+        for(int j=0;j<100;j++){
+          for(int i=0;i<16;i++){
+            merged[i] = (history[j][i] || merged[i]);
+          }
+        }
+
+        //reset history
+        for(int j=0;j<100;j++){
+          for(int i=0;i<16;i++){
+            history[j][i]=0;
+          }
+        }
+        send_key(merged);
       }
 
-      //reset history
-      for(int j=0;j<100;j++){
-        for(int i=0;i<16;i++){
-          history[j][i]=0;
+      if(counter>97){
+        counter = 0;
+        //reset history
+        for(int j=0;j<100;j++){
+          for(int i=0;i<16;i++){
+            history[j][i]=0;
+          }
         }
+      }else{
+        counter++;
       }
-      send_key(merged);
-    }
+    } else{
+      SDL_Delay(50);
+      if(pressed_key(buttons)){
+        int dest_x=0;
+        int dest_y=0;
+        int step=10;
 
-    if(counter>97){
-      counter = 0;
-      //reset history
-      for(int j=0;j<100;j++){
-        for(int i=0;i<16;i++){
-          history[j][i]=0;
-        }
+        if(buttons[14])
+          dest_y=-1;
+        if(buttons[15])
+          dest_y=1;
+        if(buttons[12])
+          dest_x=-1;
+        if(buttons[13])
+          dest_x=1;
+
+        Display* display = XOpenDisplay(0);
+        XWarpPointer(display, None, None, 0, 0, 0, 0, dest_x * step,dest_y * step);
+        XFlush(display);
+        XCloseDisplay(display);
       }
-    }else{
-      counter++;
     }
   }
 
