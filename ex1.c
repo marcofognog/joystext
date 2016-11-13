@@ -41,6 +41,20 @@ void send_keycode_modified(modifier, keysym){
   XFlush(display);
 }
 
+void send_keycode_mod_mod(mod1,mod2, keysym){
+  Display* display = XOpenDisplay(0);
+  int keycode = XKeysymToKeycode(display, keysym);
+  int modcode1 = XKeysymToKeycode(display, mod1);
+  int modcode2 = XKeysymToKeycode(display, mod2);
+
+  XTestFakeKeyEvent(display,modcode1,1,0);
+  XTestFakeKeyEvent(display,modcode2,1,0);
+  XTestFakeKeyEvent(display,keycode,1,0);
+  XTestFakeKeyEvent(display,keycode,0,0);
+  XTestFakeKeyEvent(display,modcode1,0,0);
+  XTestFakeKeyEvent(display,modcode2,0,0);
+  XFlush(display);
+}
 void send_key(int *binary_buttons){
   int a[16] = {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
   int e[16] = {0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
@@ -118,6 +132,15 @@ void send_key(int *binary_buttons){
   int eight[16] = {0,0,0,1,0,1,0,0,0,0,0,0,0,1,0,0};
   int nine[16] = {1,0,0,0,0,1,0,0,0,0,0,0,0,0,0,1};
   int zero[16] = {0,1,0,0,0,1,0,0,0,0,0,0,0,0,0,1};
+
+  int ctrl_w[16] = {0,0,0,0,0,0,0,1,0,0,0,0,0,0,1,0};
+  int super_right_arrow[16] = {0,0,0,0,0,0,0,1,0,0,0,0,0,1,0,0};
+  int super_shift_q[16] = {0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,1};
+  int super_left_arrow[16] = {0,0,0,0,0,0,0,1,0,0,0,0,1,0,0,0};
+  int super_d[16] = {1,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0};
+  int super_ctrl_right_arrow[16] = {0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,0};
+  int super_enter[16] = {0,0,1,0,0,0,0,1,0,0,0,0,0,0,0,0};
+  int super_ctrl_left_arrow[16] = {0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,0};
 
   if(memcmp(binary_buttons,a, sizeof(a)) == 0)
     send_keycode(XK_a);
@@ -272,6 +295,24 @@ void send_key(int *binary_buttons){
     send_keycode_modified(XK_Shift_L, XK_less);
   if(memcmp(binary_buttons,greater, sizeof(greater)) == 0)
     send_keycode_modified(XK_Shift_L, XK_greater);
+
+  //custom
+  if(memcmp(binary_buttons,ctrl_w, sizeof(ctrl_w)) == 0)
+    send_keycode_modified(XK_Control_L, XK_w);
+  if(memcmp(binary_buttons,super_right_arrow, sizeof(super_right_arrow)) == 0)
+    send_keycode_modified(XK_Super_L, XK_Right);
+  if(memcmp(binary_buttons,super_left_arrow, sizeof(super_left_arrow)) == 0)
+    send_keycode_modified(XK_Super_L, XK_Left);
+  if(memcmp(binary_buttons,super_d, sizeof(super_d)) == 0)
+    send_keycode_modified(XK_Super_L, XK_d);
+  if(memcmp(binary_buttons,super_enter, sizeof(super_enter)) == 0)
+    send_keycode_modified(XK_Super_L, XK_Return);
+  if(memcmp(binary_buttons,super_shift_q, sizeof(super_shift_q)) == 0)
+    send_keycode_mod_mod(XK_Super_L, XK_Shift_L, XK_q);
+  if(memcmp(binary_buttons,super_ctrl_right_arrow, sizeof(super_ctrl_right_arrow)) == 0)
+    send_keycode_mod_mod(XK_Super_L, XK_Control_L, XK_Right);
+  if(memcmp(binary_buttons,super_ctrl_left_arrow, sizeof(super_ctrl_left_arrow)) == 0)
+    send_keycode_mod_mod(XK_Super_L, XK_Control_L, XK_Left);
 }
 
 int main(int argc, char *argv[]){

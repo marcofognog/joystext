@@ -80,11 +80,11 @@ S3+A2+F4:eight
 S3+A3+F1:nine
 S3+A3+F2:zero
 
-S4+A1:ctr+w
-S4+A2:meta+right_arrow
-S4+A3:meta+shift+q
-S4+A4:meta+left_arrow
-S4+F1:meta_d
-S4+F2:meta+ctrl+right_arrow
-S4+F3:meta_enter
-S4+F4:meta+ctrl+left_arrow
+S4+A1:ctrl+w
+S4+A2:super+right_arrow
+S4+A3:super+shift+q
+S4+A4:super+left_arrow
+S4+F1:super+d
+S4+F2:super+ctrl+right_arrow
+S4+F3:super+enter
+S4+F4:super+ctrl+left_arrow
