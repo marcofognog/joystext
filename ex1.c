@@ -258,7 +258,7 @@ void send_key(int *binary_buttons){
   if(memcmp(binary_buttons,page_down, sizeof(page_down)) == 0)
     send_keycode(XK_Page_Down);
   if(memcmp(binary_buttons,home, sizeof(home)) == 0)
-    send_keycode(XK_Begin);
+    send_keycode(XK_Home);
   if(memcmp(binary_buttons,end, sizeof(end)) == 0)
     send_keycode(XK_End);
   if(memcmp(binary_buttons,arrow_up, sizeof(arrow_up)) == 0)
