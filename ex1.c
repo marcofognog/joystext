@@ -309,6 +309,7 @@ int main(int argc, char *argv[]){
   int merged[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 
   while(1){
+    SDL_Delay(40);
     SDL_JoystickUpdate();
 
     int pointer_mode=1;
@@ -343,7 +344,6 @@ int main(int argc, char *argv[]){
     }
 
     if(pointer_mode != 1){
-      SDL_Delay(40);
       //copy
       for(int i=0; i<16;i++){
         history[counter][i] = buttons[i];
@@ -384,11 +384,10 @@ int main(int argc, char *argv[]){
         counter++;
       }
     } else{
-      SDL_Delay(50);
       if(pressed_key(buttons)){
         int dest_x=0;
         int dest_y=0;
-        int step=10;
+        int step=1;
 
         if(buttons[14])
           dest_y=-1;
@@ -399,8 +398,49 @@ int main(int argc, char *argv[]){
         if(buttons[13])
           dest_x=1;
 
+        int speed1[16]={1,0,0,0};
+        int speed2[16]={1,1,0,0};
+        int speed3[16]={0,1,0,0};
+        int speed4[16]={0,1,1,0};
+        int speed5[16]={0,0,1,0};
+        int speed6[16]={0,0,1,1};
+        int speed7[16]={0,0,0,1};
+        int speed8[16]={1,0,0,1};
+        int segment[4]={0,0,0,0};
+
+        for(int i=0; i<4;i++){
+          segment[i] = buttons[i];
+        }
+
+        if(memcmp(segment,speed1, sizeof(segment)) == 0)
+          step = 10;
+        if(memcmp(segment,speed2, sizeof(segment)) == 0)
+          step = 20;
+        if(memcmp(segment,speed3, sizeof(segment)) == 0)
+          step = 30;
+        if(memcmp(segment,speed4, sizeof(segment)) == 0)
+          step = 40;
+        if(memcmp(segment,speed5, sizeof(segment)) == 0)
+          step = 55;
+        if(memcmp(segment,speed6, sizeof(segment)) == 0)
+          step = 65;
+        if(memcmp(segment,speed7, sizeof(segment)) == 0)
+          step = 75;
+        if(memcmp(segment,speed8, sizeof(segment)) == 0)
+          step = 85;
+
         Display* display = XOpenDisplay(0);
         XWarpPointer(display, None, None, 0, 0, 0, 0, dest_x * step,dest_y * step);
+
+        if(buttons[4]){
+          XTestFakeButtonEvent(display, 1, 1, 0);
+          XTestFakeButtonEvent(display, 1, 0, 0);
+        }
+        if(buttons[5]){
+          XTestFakeButtonEvent(display, 3, 1, 0);
+          XTestFakeButtonEvent(display, 3, 0, 0);
+        }
+
         XFlush(display);
         XCloseDisplay(display);
       }
