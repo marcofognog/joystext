@@ -299,6 +299,9 @@ int main(int argc, char *argv[]){
 
   int buttons[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
   int history[100][16];
+  int pointer_history[100];
+  int pointer_counter = 0;
+
   //reset history
   for(int j=0;j<10;j++){
     for(int i=0;i<16;i++){
@@ -308,11 +311,13 @@ int main(int argc, char *argv[]){
   int counter=0;
   int merged[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 
+  int pointer_mode=0;
+  int start_button = 9;
+
   while(1){
     SDL_Delay(40);
     SDL_JoystickUpdate();
 
-    int pointer_mode=1;
 
     //initialize
     for (int i=0; i < 16; i++){
@@ -383,7 +388,8 @@ int main(int argc, char *argv[]){
       }else{
         counter++;
       }
-    } else{
+    }
+    else{
       if(pressed_key(buttons)){
         int dest_x=0;
         int dest_y=0;
@@ -444,6 +450,41 @@ int main(int argc, char *argv[]){
         XFlush(display);
         XCloseDisplay(display);
       }
+
+    }
+
+    //filter for start button for switching modes.
+    pointer_history[pointer_counter] = buttons[start_button];
+    if(pressed_key(buttons)){
+    }else{
+      pointer_counter = 0;
+      int released = 0;
+      for(int j=0;j<100;j++){
+        released = (pointer_history[j] || released);
+      }
+
+      if(released){
+        if(pointer_mode){
+          pointer_mode=0;
+          printf("Pointer mode disabled.\n");
+        }else{
+          pointer_mode=1;
+          printf("Pointer mode enabled.\n");
+        }
+      }
+      for(int j=0;j<100;j++){
+        pointer_history[j]=0;
+      }
+    }
+
+    //reset pointer counter and history
+    if(pointer_counter>97){
+      pointer_counter = 0;
+      for(int j=0;j<100;j++){
+        pointer_history[j]=0;
+      }
+    }else{
+      pointer_counter++;
     }
   }
 
