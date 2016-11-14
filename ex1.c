@@ -378,6 +378,45 @@ void check_for_pointer_events(int *binary_buttons){
   }
 }
 
+void check_for_text_events(int *bin_buttons, int bin_history[100][16], int *bin_merged, int *counter_p){
+  for(int i=0; i<16;i++){
+    bin_history[*counter_p][i] = bin_buttons[i];
+  }
+
+  if(pressed_key(bin_buttons)){
+  }else{
+    for (int i=0; i<16; i++){
+      bin_merged[i]=0;
+    }
+
+    for(int j=0;j<100;j++){
+      for(int i=0;i<16;i++){
+        bin_merged[i] = (bin_history[j][i] || bin_merged[i]);
+      }
+    }
+
+    //reset history
+    for(int j=0;j<100;j++){
+      for(int i=0;i<16;i++){
+        bin_history[j][i]=0;
+      }
+    }
+    send_key(bin_merged);
+  }
+
+  if(*counter_p>97){
+    *counter_p = 0;
+    //reset history
+    for(int j=0;j<100;j++){
+      for(int i=0;i<16;i++){
+        bin_history[j][i]=0;
+      }
+    }
+  }else{
+    (*counter_p)++;
+  }
+}
+
 int main(int argc, char *argv[]){
   if (SDL_Init( SDL_INIT_VIDEO | SDL_INIT_JOYSTICK ) < 0)
   {
@@ -454,45 +493,7 @@ int main(int argc, char *argv[]){
     }
 
     if(pointer_mode != 1){
-      //copy
-      for(int i=0; i<16;i++){
-        history[counter][i] = buttons[i];
-      }
-
-      if(pressed_key(buttons)){
-      }else{
-        //reset merged
-        for (int i=0; i<16; i++){
-          merged[i]=0;
-        }
-
-        //merge
-        for(int j=0;j<100;j++){
-          for(int i=0;i<16;i++){
-            merged[i] = (history[j][i] || merged[i]);
-          }
-        }
-
-        //reset history
-        for(int j=0;j<100;j++){
-          for(int i=0;i<16;i++){
-            history[j][i]=0;
-          }
-        }
-        send_key(merged);
-      }
-
-      if(counter>97){
-        counter = 0;
-        //reset history
-        for(int j=0;j<100;j++){
-          for(int i=0;i<16;i++){
-            history[j][i]=0;
-          }
-        }
-      }else{
-        counter++;
-      }
+      check_for_text_events(buttons,history,merged, &counter);
     }
     else{
       check_for_pointer_events(buttons);
