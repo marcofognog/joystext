@@ -340,7 +340,8 @@ int main(int argc, char *argv[]){
 
   int buttons[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
   int history[100][16];
-  int pointer_history[100];
+  int pointer_mode_history[100];
+  int text_mode_history[100];
   int pointer_counter = 0;
 
   //reset history
@@ -354,6 +355,7 @@ int main(int argc, char *argv[]){
 
   int pointer_mode=0;
   int start_button = 9;
+  int select_button = 8;
 
   while(1){
     SDL_Delay(40);
@@ -494,27 +496,33 @@ int main(int argc, char *argv[]){
 
     }
 
-    //filter for start button for switching modes.
-    pointer_history[pointer_counter] = buttons[start_button];
+    pointer_mode_history[pointer_counter] = buttons[start_button];
+    text_mode_history[pointer_counter] = buttons[select_button];
     if(pressed_key(buttons)){
     }else{
       pointer_counter = 0;
-      int released = 0;
+      int released_start = 0;
+      int released_select = 0;
       for(int j=0;j<100;j++){
-        released = (pointer_history[j] || released);
+        released_start = (pointer_mode_history[j] || released_start);
+      }
+      for(int j=0;j<100;j++){
+        released_select = (text_mode_history[j] || released_select);
       }
 
-      if(released){
-        if(pointer_mode){
-          pointer_mode=0;
-          printf("Pointer mode disabled.\n");
-        }else{
-          pointer_mode=1;
-          printf("Pointer mode enabled.\n");
-        }
+      if(released_select){
+        pointer_mode=0;
+        printf("Pointer mode disabled.\n");
+      }
+      if(released_start){
+        pointer_mode=1;
+        printf("Pointer mode enabled.\n");
       }
       for(int j=0;j<100;j++){
-        pointer_history[j]=0;
+        pointer_mode_history[j]=0;
+      }
+      for(int j=0;j<100;j++){
+        text_mode_history[j]=0;
       }
     }
 
@@ -522,7 +530,10 @@ int main(int argc, char *argv[]){
     if(pointer_counter>97){
       pointer_counter = 0;
       for(int j=0;j<100;j++){
-        pointer_history[j]=0;
+        pointer_mode_history[j]=0;
+      }
+      for(int j=0;j<100;j++){
+        text_mode_history[j]=0;
       }
     }else{
       pointer_counter++;
