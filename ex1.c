@@ -315,6 +315,69 @@ void send_key(int *binary_buttons){
     send_keycode_mod_mod(XK_Super_L, XK_Control_L, XK_Left);
 }
 
+void check_for_pointer_events(int *binary_buttons){
+  if(pressed_key(binary_buttons)){
+    int dest_x=0;
+    int dest_y=0;
+    int step=1;
+
+    if(binary_buttons[14])
+      dest_y=-1;
+    if(binary_buttons[15])
+      dest_y=1;
+    if(binary_buttons[12])
+      dest_x=-1;
+    if(binary_buttons[13])
+      dest_x=1;
+
+    int speed1[16]={1,0,0,0};
+    int speed2[16]={1,1,0,0};
+    int speed3[16]={0,1,0,0};
+    int speed4[16]={0,1,1,0};
+    int speed5[16]={0,0,1,0};
+    int speed6[16]={0,0,1,1};
+    int speed7[16]={0,0,0,1};
+    int speed8[16]={1,0,0,1};
+    int segment[4]={0,0,0,0};
+
+    for(int i=0; i<4;i++){
+      segment[i] = binary_buttons[i];
+    }
+
+    if(memcmp(segment,speed1, sizeof(segment)) == 0)
+      step = 10;
+    if(memcmp(segment,speed2, sizeof(segment)) == 0)
+      step = 20;
+    if(memcmp(segment,speed3, sizeof(segment)) == 0)
+      step = 30;
+    if(memcmp(segment,speed4, sizeof(segment)) == 0)
+      step = 40;
+    if(memcmp(segment,speed5, sizeof(segment)) == 0)
+      step = 55;
+    if(memcmp(segment,speed6, sizeof(segment)) == 0)
+      step = 65;
+    if(memcmp(segment,speed7, sizeof(segment)) == 0)
+      step = 75;
+    if(memcmp(segment,speed8, sizeof(segment)) == 0)
+      step = 85;
+
+    Display* display = XOpenDisplay(0);
+    XWarpPointer(display, None, None, 0, 0, 0, 0, dest_x * step,dest_y * step);
+
+    if(binary_buttons[4]){
+      XTestFakeButtonEvent(display, 1, 1, 0);
+      XTestFakeButtonEvent(display, 1, 0, 0);
+    }
+    if(binary_buttons[5]){
+      XTestFakeButtonEvent(display, 3, 1, 0);
+      XTestFakeButtonEvent(display, 3, 0, 0);
+    }
+
+    XFlush(display);
+    XCloseDisplay(display);
+  }
+}
+
 int main(int argc, char *argv[]){
   if (SDL_Init( SDL_INIT_VIDEO | SDL_INIT_JOYSTICK ) < 0)
   {
@@ -342,7 +405,7 @@ int main(int argc, char *argv[]){
   int history[100][16];
   int pointer_mode_history[100];
   int text_mode_history[100];
-  int pointer_counter = 0;
+  int mode_counter = 0;
 
   //reset history
   for(int j=0;j<10;j++){
@@ -360,7 +423,6 @@ int main(int argc, char *argv[]){
   while(1){
     SDL_Delay(40);
     SDL_JoystickUpdate();
-
 
     //initialize
     for (int i=0; i < 16; i++){
@@ -433,74 +495,14 @@ int main(int argc, char *argv[]){
       }
     }
     else{
-      if(pressed_key(buttons)){
-        int dest_x=0;
-        int dest_y=0;
-        int step=1;
-
-        if(buttons[14])
-          dest_y=-1;
-        if(buttons[15])
-          dest_y=1;
-        if(buttons[12])
-          dest_x=-1;
-        if(buttons[13])
-          dest_x=1;
-
-        int speed1[16]={1,0,0,0};
-        int speed2[16]={1,1,0,0};
-        int speed3[16]={0,1,0,0};
-        int speed4[16]={0,1,1,0};
-        int speed5[16]={0,0,1,0};
-        int speed6[16]={0,0,1,1};
-        int speed7[16]={0,0,0,1};
-        int speed8[16]={1,0,0,1};
-        int segment[4]={0,0,0,0};
-
-        for(int i=0; i<4;i++){
-          segment[i] = buttons[i];
-        }
-
-        if(memcmp(segment,speed1, sizeof(segment)) == 0)
-          step = 10;
-        if(memcmp(segment,speed2, sizeof(segment)) == 0)
-          step = 20;
-        if(memcmp(segment,speed3, sizeof(segment)) == 0)
-          step = 30;
-        if(memcmp(segment,speed4, sizeof(segment)) == 0)
-          step = 40;
-        if(memcmp(segment,speed5, sizeof(segment)) == 0)
-          step = 55;
-        if(memcmp(segment,speed6, sizeof(segment)) == 0)
-          step = 65;
-        if(memcmp(segment,speed7, sizeof(segment)) == 0)
-          step = 75;
-        if(memcmp(segment,speed8, sizeof(segment)) == 0)
-          step = 85;
-
-        Display* display = XOpenDisplay(0);
-        XWarpPointer(display, None, None, 0, 0, 0, 0, dest_x * step,dest_y * step);
-
-        if(buttons[4]){
-          XTestFakeButtonEvent(display, 1, 1, 0);
-          XTestFakeButtonEvent(display, 1, 0, 0);
-        }
-        if(buttons[5]){
-          XTestFakeButtonEvent(display, 3, 1, 0);
-          XTestFakeButtonEvent(display, 3, 0, 0);
-        }
-
-        XFlush(display);
-        XCloseDisplay(display);
-      }
-
+      check_for_pointer_events(buttons);
     }
 
-    pointer_mode_history[pointer_counter] = buttons[start_button];
-    text_mode_history[pointer_counter] = buttons[select_button];
+    pointer_mode_history[mode_counter] = buttons[start_button];
+    text_mode_history[mode_counter] = buttons[select_button];
     if(pressed_key(buttons)){
     }else{
-      pointer_counter = 0;
+      mode_counter = 0;
       int released_start = 0;
       int released_select = 0;
       for(int j=0;j<100;j++){
@@ -526,9 +528,8 @@ int main(int argc, char *argv[]){
       }
     }
 
-    //reset pointer counter and history
-    if(pointer_counter>97){
-      pointer_counter = 0;
+    if(mode_counter>97){
+      mode_counter = 0;
       for(int j=0;j<100;j++){
         pointer_mode_history[j]=0;
       }
@@ -536,7 +537,7 @@ int main(int argc, char *argv[]){
         text_mode_history[j]=0;
       }
     }else{
-      pointer_counter++;
+      mode_counter++;
     }
   }
 
