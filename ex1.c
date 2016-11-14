@@ -494,8 +494,7 @@ int main(int argc, char *argv[]){
 
     if(pointer_mode != 1){
       check_for_text_events(buttons,history,merged, &counter);
-    }
-    else{
+    }else{
       check_for_pointer_events(buttons);
     }
 
