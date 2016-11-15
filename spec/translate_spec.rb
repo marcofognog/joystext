@@ -22,6 +22,10 @@ S1+A1+F1:super+b
 S1+A1+F2:greater
 END
 
+file_name = "tmp/source"
+File.open(file_name, "w") do |file|
+  file.write(config)
+end
     expected =<<END
 {{1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0},XK_a,0,0},
 {{0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0},XK_e,0,0},
@@ -39,7 +43,8 @@ END
 {{0,1,0,0,1,0,0,0,0,0,0,0,0,0,1,0},XK_Shift_L,XK_greater,0},
 END
 
-    expect(ConfigMap.translate(config)).to eq(expected)
+    `gcc -Wall -g parse_config.c -o parser`
+    expect(`./parser #{file_name}`).to eq(expected)
 
   end
 end
