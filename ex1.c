@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <unistd.h>
 #include "SDL.h"
 #include <X11/extensions/XTest.h>
 #include <X11/keysym.h>
@@ -394,10 +395,12 @@ void check_for_pointer_events(int *binary_buttons){
     if(binary_buttons[4]){
       XTestFakeButtonEvent(display, 1, 1, 0);
       XTestFakeButtonEvent(display, 1, 0, 0);
+      usleep(200000);
     }
     if(binary_buttons[5]){
       XTestFakeButtonEvent(display, 3, 1, 0);
       XTestFakeButtonEvent(display, 3, 0, 0);
+      usleep(200000);
     }
 
     XFlush(display);
