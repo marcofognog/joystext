@@ -106,7 +106,7 @@ void send_key(int *binary_buttons){
   int sharp[16] = {1,0,0,0,1,0,0,0,0,0,0,0,0,0,0,1};
   int dollar[16] = {0,1,0,0,1,0,0,0,0,0,0,0,0,0,0,1};
   int percent[16] = {0,0,1,0,1,0,0,0,0,0,0,0,0,0,0,1};
-  int single_quote[16] = {0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,1};
+  int question_mark[16] = {0,0,0,1,1,0,0,0,0,0,0,0,0,0,0,1};
   int pipe[16] = {1,0,0,0,1,0,0,0,0,0,0,0,1,0,0,0};
   int asterisk[16] = {0,1,0,0,1,0,0,0,0,0,0,0,1,0,0,0};
   int underscore[16] = {0,0,1,0,1,0,0,0,0,0,0,0,1,0,0,0};
@@ -151,9 +151,9 @@ void send_key(int *binary_buttons){
   int ctrl_d[16] = {0,1,0,0,0,0,0,1,0,0,0,0,0,1,0,0};
   int ctrl_tab[16] = {0,1,0,0,0,0,0,1,0,0,0,0,0,0,0,1};
   int ctrl_shift_tab[16] = {0,0,0,1,0,0,0,1,0,0,0,0,0,0,0,1};
+  int single_quote[16] = {0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0};
 
   int double_quote2[16] = {0,0,0,0,1,1,1,1,0,0,0,0,0,0,0,0};
-  int single_quote2[16] = {0,0,0,0,1,1,0,0,0,0,0,0,0,0,0,0};
 
   if(memcmp(binary_buttons,a, sizeof(a)) == 0)
     send_keycode(XK_a);
@@ -254,8 +254,8 @@ void send_key(int *binary_buttons){
     send_keycode_modified(XK_Shift_L,XK_dollar);
   if(memcmp(binary_buttons,percent, sizeof(percent)) == 0)
     send_keycode_modified(XK_Shift_L,XK_percent);
-  if(memcmp(binary_buttons,single_quote, sizeof(single_quote)) == 0)
-    send_keycode(XK_quotedbl);
+  if(memcmp(binary_buttons,question_mark, sizeof(question_mark)) == 0)
+    send_keycode_modified(XK_Shift_L,XK_question);
   if(memcmp(binary_buttons,pipe, sizeof(pipe)) == 0)
     send_keycode_modified(XK_Shift_L,XK_bar);
   if(memcmp(binary_buttons,asterisk, sizeof(asterisk)) == 0)
@@ -344,7 +344,7 @@ void send_key(int *binary_buttons){
     send_keycode_modified(XK_Super_L, XK_b);
   if(memcmp(binary_buttons,ctrl_d, sizeof(ctrl_d)) == 0)
     send_keycode_modified(XK_Control_L, XK_d);
-  if(memcmp(binary_buttons,single_quote2, sizeof(single_quote2)) == 0)
+  if(memcmp(binary_buttons,single_quote, sizeof(single_quote)) == 0)
     send_keycode(XK_quotedbl);
   if(memcmp(binary_buttons,double_quote2, sizeof(double_quote2)) == 0)
     send_keycode_modified(XK_Shift_L,XK_quotedbl);
