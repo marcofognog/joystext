@@ -97,3 +97,6 @@ S4+A2+F1:ctrl+z
 S4+A2+F2:ctrl+d
 S4+A3+F2:ctrl+tab
 S4+A3+F4:ctrl+shift+tab
+
+S1+S2+S3+S4:double_quote
+S1+S3:single_quote
