@@ -469,8 +469,7 @@ int main(int argc, char *argv[]){
   printf("%i joysticks were found.\n\n", SDL_NumJoysticks() );
   printf("The names of the joysticks are:\n");
 
-  int i;
-  for( i=0; i < SDL_NumJoysticks(); i++ )
+  for(int i=0; i < SDL_NumJoysticks(); i++ )
   {
     printf("    %s\n", SDL_JoystickName(i));
   }
