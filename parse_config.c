@@ -18,6 +18,7 @@ int main(int argc, char *argv[]){
   };
 
   struct key keys[120] = {
+    {"b",{XK_b}},
     {"shift",{XK_Shift_L}},
     {"semi_colon",{XK_semicolon}},
     {"colon",{XK_Shift_L,XK_colon}},
@@ -108,9 +109,9 @@ int main(int argc, char *argv[]){
 
   struct keymap {
     int binary_buttons[16];
-    int key1;
-    int key2;
-    int key3;
+    int keycode1;
+    int keycode2;
+    int keycode3;
   };
 
   struct keymap keymaps[200]; //make this dinamic.
@@ -122,6 +123,9 @@ int main(int argc, char *argv[]){
         char delimiter[2] = ":";
         char *signifier = strtok(line, delimiter);
         char *signified = strtok(NULL, delimiter); // This feels wierd
+
+        //remove \n
+        char *sanitized = strtok(signified, "\n");
 
         char *key1 = strtok(signifier, "+");
         char *key2 = strtok(NULL, "+");
@@ -149,11 +153,37 @@ int main(int argc, char *argv[]){
               }
             }
           }
-        }
-
-        for(int k=0; k<16;k++){
           keymaps[i].binary_buttons[k] = merged[k];
         }
+
+        char *keycode_name1;
+        keycode_name1 = strtok(sanitized, "+");
+        char *keycode_name2;
+        keycode_name2 = strtok(NULL, "+");
+        char *keycode_name3;
+        keycode_name3 = strtok(NULL, "+");
+
+        for(int k=0; k<120; k++){
+          if(keycode_name1 != NULL){
+            if(strcmp(keycode_name1, keys[k].name) == 0){
+              keymaps[i].keycode1 = keys[k].keycode;
+              printf("key1: %s\n",keycode_name1);
+            }
+          }
+          if(keycode_name2 != NULL){
+            if(strcmp(keycode_name2, keys[k].name) == 0){
+              keymaps[i].keycode2 = keys[k].keycode;
+              printf("key2: %s\n",keycode_name2);
+            }
+          }
+          if(keycode_name3 != NULL){
+            if(strcmp(keycode_name3, keys[k].name) == 0){
+              keymaps[i].keycode3 = keys[k].keycode;
+              printf("key3: %s\n",keycode_name3);
+            }
+          }
+        }
+
         print_binary(keymaps[i].binary_buttons);
       }
     }
