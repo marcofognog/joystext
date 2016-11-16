@@ -1,5 +1,8 @@
 #include <stdio.h>
 #include <string.h>
+#include "SDL.h"
+#include <X11/extensions/XTest.h>
+#include <X11/keysym.h>
 
 void print_binary(int *binary_buttons){
   for (int i=0; i < 16; i++) {
@@ -9,6 +12,69 @@ void print_binary(int *binary_buttons){
 }
 
 int main(int argc, char *argv[]){
+  struct key {
+    char name[32];
+    int keycode[3];
+  };
+
+  struct key keys[120] = {
+    {"shift",{XK_Shift_L}},
+    {"semi_colon",{XK_semicolon}},
+    {"colon",{XK_Shift_L,XK_colon}},
+    {"slash",{XK_slash}},
+    {"escape",{XK_Escape}},
+    {"comma",{XK_comma}},
+    {"dot",{XK_period}},
+    {"minus",{XK_minus}},
+    {"plus",{XK_Shift_L,XK_plus}},
+    {"left_parenthesis",{XK_parenleft}},
+    {"right_parenthesis",{XK_parenright}},
+    {"right_square_bracket",{XK_bracketleft}},
+    {"left_square_bracket",{XK_bracketright}},
+    {"left_curly_bracket",{XK_Shift_L,XK_braceleft}},
+    {"right_curly_bracket",{XK_Shift_L,XK_braceright}},
+    {"exclamation",{XK_Shift_L,XK_exclam}},
+    {"at",{XK_Shift_L,XK_at}},
+    {"sharp",{XK_Shift_L,XK_numbersign}},
+    {"dollar",{XK_Shift_L,XK_dollar}},
+    {"percent",{XK_Shift_L,XK_percent}},
+    {"question_mark",{XK_Shift_L,XK_question}},
+    {"pipe",{XK_Shift_L,XK_bar}},
+    {"asterisk",{XK_Shift_L,XK_asterisk}},
+    {"underscore",{XK_Shift_L,XK_underscore}},
+    {"double_quote",{XK_Shift_L,XK_quotedbl}},
+    {"single_quote",{XK_quotedbl}},
+    {"ampersand",{XK_Shift_L,XK_ampersand}},
+    {"equal",{XK_equal}},
+    {"less",{XK_Shift_L,XK_less}},
+    {"greater",{XK_Shift_L,XK_greater}},
+    {"space",{XK_space}},
+    {"enter",{XK_Return}},
+    {"backspace",{XK_BackSpace}},
+    {"page_up",{XK_Page_Up}},
+    {"end",{XK_End}},
+    {"page_down",{XK_Page_Down}},
+    {"home",{XK_Home}},
+    {"arrow_up",{XK_Up}},
+    {"arrow_right",{XK_Right}},
+    {"arrow_down",{XK_Down}},
+    {"arrow_left",{XK_Left}},
+    {"one",{XK_1}},
+    {"two",{XK_2}},
+    {"three",{XK_3}},
+    {"four",{XK_4}},
+    {"five",{XK_5}},
+    {"six",{XK_6}},
+    {"seven",{XK_7}},
+    {"eight",{XK_8}},
+    {"nine",{XK_9}},
+    {"zero",{XK_0}},
+    {"tab",{XK_Tab}},
+    {"ctrl",{XK_Control_L}},
+    {"super",{XK_Super_L}}
+
+  };
+
   struct button{
     char name[16];
     int binary[16];
@@ -40,6 +106,14 @@ int main(int argc, char *argv[]){
     exit(1);
   }
 
+  struct keymap {
+    int binary_buttons[16];
+    int key1;
+    int key2;
+    int key3;
+  };
+
+  struct keymap keymaps[200]; //make this dinamic.
   int l;
   for (int i=0; i<210; i++){
     l = fgets(line, 255, (FILE*)fp);
@@ -49,35 +123,38 @@ int main(int argc, char *argv[]){
         char *signifier = strtok(line, delimiter);
         char *signified = strtok(NULL, delimiter); // This feels wierd
 
-        char keynames[16];
         char *key1 = strtok(signifier, "+");
         char *key2 = strtok(NULL, "+");
         char *key3 = strtok(NULL, "+");
 
         int merged[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 
-        for(int i=0; i<16; i++){
-          if(strcmp(key1, buttons[i].name) == 0){
+        for(int k=0; k<16; k++){
+          if(strcmp(key1, buttons[k].name) == 0){
             for(int j=0; j<16;j++){
-              merged[j] = (merged[j] || buttons[i].binary[j]);
+              merged[j] = (merged[j] || buttons[k].binary[j]);
             }
           }
           if(key2 != NULL){
-            if(strcmp(key2, buttons[i].name) == 0){
+            if(strcmp(key2, buttons[k].name) == 0){
               for(int j=0; j<16;j++){
-                merged[j] = (merged[j] || buttons[i].binary[j]);
+                merged[j] = (merged[j] || buttons[k].binary[j]);
               }
             }
           }
           if(key3 != NULL){
-            if(strcmp(key3, buttons[i].name) == 0){
+            if(strcmp(key3, buttons[k].name) == 0){
               for(int j=0; j<16;j++){
-                merged[j] = (merged[j] || buttons[i].binary[j]);
+                merged[j] = (merged[j] || buttons[k].binary[j]);
               }
             }
           }
         }
-        print_binary(merged);
+
+        for(int k=0; k<16;k++){
+          keymaps[i].binary_buttons[k] = merged[k];
+        }
+        print_binary(keymaps[i].binary_buttons);
       }
     }
   }
