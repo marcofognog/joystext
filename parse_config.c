@@ -13,15 +13,6 @@ struct keymap {
 
 struct keymap keymaps[200]; //make this dinamic.
 
-void print_result(struct keymap keymaps[]){
-  for(int l=0; l<200; l++){
-    if(pressed_key(keymaps[l].binary_buttons)){
-      print_binary(keymaps[l].binary_buttons);
-      printf(",%i,%i,%i\n", keymaps[l].keycode1, keymaps[l].keycode2,keymaps[l].keycode3);
-    }
-  }
-}
-
 int pressed_key(int *binary_buttons){
   int print_flag = 0;
   for (int i=0; i < 16; i++) {
@@ -39,7 +30,7 @@ void print_binary(int *binary_buttons){
   }
 }
 
-int main(int argc, char *argv[]){
+int parse_config(int argc, char *argv[]){
   struct key {
     char name[32];
     int keycode[3];
@@ -156,7 +147,7 @@ int main(int argc, char *argv[]){
   FILE *fp = fopen(argv[1], "r");
   char line[255];
   if (fp == NULL) {
-    fprintf(stderr, "Can't open file\n");
+    fprintf(stderr, "Can't open file: %s\n", argv[1]);
     exit(1);
   }
 
@@ -240,6 +231,5 @@ int main(int argc, char *argv[]){
     }
   }
 
-  print_result(keymaps);
   return 0;
 }

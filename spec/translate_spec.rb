@@ -46,8 +46,8 @@ end
 END
 
     `rm parser`
-    `gcc -std=c99 -Wall -g -I/usr/include/SDL2/ parse_config.c -L/usr/local/lib/ -lSDL -lXtst -lX11 -o parser`
-    expect(`./parser #{file_name}`).to eq(expected)
+    `gcc -std=c99 -Wall -g -I/usr/include/SDL2/ tester.c -L/usr/local/lib/ -lSDL -lXtst -lX11 -o tester`
+    expect(`./tester #{file_name}`).to eq(expected)
 
   end
 end
