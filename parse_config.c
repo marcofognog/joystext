@@ -4,11 +4,39 @@
 #include <X11/extensions/XTest.h>
 #include <X11/keysym.h>
 
+struct keymap {
+  int binary_buttons[16];
+  int keycode1;
+  int keycode2;
+  int keycode3;
+};
+
+struct keymap keymaps[200]; //make this dinamic.
+
+void print_result(struct keymap keymaps[]){
+  for(int l=0; l<200; l++){
+    if(pressed_key(keymaps[l].binary_buttons)){
+      print_binary(keymaps[l].binary_buttons);
+      printf(",%i,%i,%i\n", keymaps[l].keycode1, keymaps[l].keycode2,keymaps[l].keycode3);
+    }
+  }
+}
+
+int pressed_key(int *binary_buttons){
+  int print_flag = 0;
+  for (int i=0; i < 16; i++) {
+    int b = binary_buttons[i] -0;
+    if(b){
+      print_flag = 1;
+    }
+  }
+  return print_flag;
+}
+
 void print_binary(int *binary_buttons){
   for (int i=0; i < 16; i++) {
     printf("%i", binary_buttons[i]);
   }
-  printf("\n");
 }
 
 int main(int argc, char *argv[]){
@@ -18,7 +46,32 @@ int main(int argc, char *argv[]){
   };
 
   struct key keys[120] = {
+    {"a",{XK_a}},
     {"b",{XK_b}},
+    {"c",{XK_c}},
+    {"d",{XK_d}},
+    {"e",{XK_e}},
+    {"f",{XK_f}},
+    {"g",{XK_g}},
+    {"h",{XK_h}},
+    {"i",{XK_i}},
+    {"j",{XK_j}},
+    {"k",{XK_k}},
+    {"l",{XK_l}},
+    {"m",{XK_m}},
+    {"n",{XK_n}},
+    {"o",{XK_o}},
+    {"p",{XK_p}},
+    {"q",{XK_q}},
+    {"r",{XK_r}},
+    {"s",{XK_s}},
+    {"t",{XK_t}},
+    {"u",{XK_u}},
+    {"v",{XK_v}},
+    {"w",{XK_w}},
+    {"x",{XK_x}},
+    {"y",{XK_y}},
+    {"z",{XK_z}},
     {"shift",{XK_Shift_L}},
     {"semi_colon",{XK_semicolon}},
     {"colon",{XK_Shift_L,XK_colon}},
@@ -107,16 +160,8 @@ int main(int argc, char *argv[]){
     exit(1);
   }
 
-  struct keymap {
-    int binary_buttons[16];
-    int keycode1;
-    int keycode2;
-    int keycode3;
-  };
-
-  struct keymap keymaps[200]; //make this dinamic.
   int l;
-  for (int i=0; i<210; i++){
+  for (int i=0; i<200; i++){
     l = fgets(line, 255, (FILE*)fp);
     if(l != NULL){
       if(strcmp(line, "\n") != 0){
@@ -132,7 +177,6 @@ int main(int argc, char *argv[]){
         char *key3 = strtok(NULL, "+");
 
         int merged[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-
         for(int k=0; k<16; k++){
           if(strcmp(key1, buttons[k].name) == 0){
             for(int j=0; j<16;j++){
@@ -153,7 +197,9 @@ int main(int argc, char *argv[]){
               }
             }
           }
-          keymaps[i].binary_buttons[k] = merged[k];
+          for(int j=0;j<16;j++){
+            keymaps[i].binary_buttons[j] = merged[j];
+          }
         }
 
         char *keycode_name1;
@@ -166,28 +212,34 @@ int main(int argc, char *argv[]){
         for(int k=0; k<120; k++){
           if(keycode_name1 != NULL){
             if(strcmp(keycode_name1, keys[k].name) == 0){
-              keymaps[i].keycode1 = keys[k].keycode;
-              printf("key1: %s\n",keycode_name1);
+              keymaps[i].keycode1 = keys[k].keycode[0];
+              if(keys[k].keycode[1] != 0)
+                keymaps[i].keycode2 = keys[k].keycode[1];
             }
           }
           if(keycode_name2 != NULL){
             if(strcmp(keycode_name2, keys[k].name) == 0){
-              keymaps[i].keycode2 = keys[k].keycode;
-              printf("key2: %s\n",keycode_name2);
+              if(keymaps[i].keycode2 == 0){
+                keymaps[i].keycode2 = keys[k].keycode[0];
+                if(keys[k].keycode[1] != 0)
+                  keymaps[i].keycode3 = keys[k].keycode[1];
+              }else{
+                keymaps[i].keycode3 = keys[k].keycode[0];
+              }
             }
           }
           if(keycode_name3 != NULL){
             if(strcmp(keycode_name3, keys[k].name) == 0){
-              keymaps[i].keycode3 = keys[k].keycode;
-              printf("key3: %s\n",keycode_name3);
+              if(keymaps[i].keycode2 == 0)
+                keymaps[i].keycode3 = keys[k].keycode[0];
             }
           }
         }
 
-        print_binary(keymaps[i].binary_buttons);
       }
     }
   }
 
+  print_result(keymaps);
   return 0;
 }
