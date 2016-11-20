@@ -21,6 +21,8 @@ A1+F4+F1:space
 S3+A1+F1:super+b
 S4+A1+F2:greater
 select:c
+
+S4+A1+F2+F3:equal
 END
 
 file_name = "tmp/source"
@@ -43,6 +45,7 @@ end
 1000010000000010,65515,98,0
 0100000100000010,65505,62,0
 0000000010000000,99,0,0
+0110000100000010,61,0,0
 END
 
     `rm parser`
