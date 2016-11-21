@@ -23,6 +23,7 @@ S4+A1+F2:greater
 select:c
 
 S4+A1+F2+F3:equal
+S1+S2+S3+S4:double_quote
 END
 
 file_name = "tmp/source"
@@ -46,6 +47,7 @@ end
 0100000100000010,65505,62,0
 0000000010000000,99,0,0
 0110000100000010,61,0,0
+0000111100000000,65505,34,0
 END
 
     `rm parser`
