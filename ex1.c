@@ -41,7 +41,8 @@ void send_keycode_mod_mod(mod1,mod2, keysym){
 }
 
 void send_key(int *binary_buttons){
-  for(int i=0;i<96;i++){
+  // Make this limit the same as the number of keybindings in the conf file.
+  for(int i=0;i<110;i++){
     if(memcmp(binary_buttons,keymaps[i].binary_buttons, sizeof(keymaps[i].binary_buttons)) == 0){
       if(keymaps[i].keycode2 !=0){
         if(keymaps[i].keycode3 !=0){
