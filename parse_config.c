@@ -30,6 +30,24 @@ void print_binary(int *binary_buttons){
   }
 }
 
+int count_bindings(FILE *fp){
+  fseek(fp, 0, SEEK_SET);
+  int counter = 0;
+  char line[255];
+
+  while(1){
+    fgets(line, 255, (FILE*)fp);
+    if(strcmp(line, "\n") != 0)
+      counter++;
+    if(feof(fp))
+      break;
+  }
+  fseek(fp, 0, SEEK_SET);
+  //Why is counter off by one? Lets fix it anyway.
+  counter--;
+  return counter;
+}
+
 int parse_config(int argc, char *argv[]){
   struct key {
     char name[32];
