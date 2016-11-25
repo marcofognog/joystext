@@ -50,7 +50,7 @@ end
 0000111100000000,65505,34,0
 END
 
-    `rm parser`
+    `rm tester`
     `gcc -std=c99 -Wall -g -I/usr/include/SDL2/ tester.c -L/usr/local/lib/ -lSDL -lXtst -lX11 -o tester`
     expect(`./tester #{file_name}`).to eq(expected)
 
