@@ -25,7 +25,7 @@ A4+F3:w
 A4+F4:x
 
 A1+F1+F2:y
-A1+F2+F3:z
+A1+F3+F4:z
 S1:space
 S3:enter
 S4:backspace
@@ -42,8 +42,8 @@ S1+A3:minus
 S1+A4:plus
 S1+A1+F1:left_parenthesis
 S1+A1+F2:right_parenthesis
-S1+A1+F3:right_square_bracket
-S1+A1+F4:left_square_bracket
+S1+A1+F3:left_square_bracket
+S1+A1+F4:right_square_bracket
 S1+A2+F1:left_curly_bracket
 S1+A2+F2:right_curly_bracket
 S1+A2+F3:exclamation
