@@ -1,7 +1,7 @@
 require 'spec_helper.rb'
 
 describe ConfigMap do
-  it 'translate' do
+  it 'transforms the config file keybindings into the binary version' do
     config =<<END
 F1:a
 F2:e
