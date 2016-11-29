@@ -1,8 +1,10 @@
 require 'spec_helper.rb'
 
+HELPER = "keymaps_printer"
+
 def build
-  `rm tester`
-  `gcc -std=c99 -Wall -g -I/usr/include/SDL2/ tester.c -L/usr/local/lib/ -lSDL -lXtst -lX11 -o tester`
+  `rm #{HELPER}`
+  `gcc -std=c99 -Wall -g -I/usr/include/SDL2/ #{HELPER}.c -L/usr/local/lib/ -lSDL -lXtst -lX11 -o #{HELPER}`
 end
 
 describe ConfigMap do
@@ -28,7 +30,7 @@ END
 1000000000000010,102,0,0
 END
       build
-      expect(`./tester #{file_name}`).to eq(expected)
+      expect(`./#{HELPER} #{file_name}`).to eq(expected)
     end
 
     it 'for medium sized file' do
@@ -81,7 +83,7 @@ END
 END
 
       build
-      expect(`./tester #{file_name}`).to eq(expected)
+      expect(`./#{HELPER} #{file_name}`).to eq(expected)
     end
   end
 end
