@@ -1,8 +1,38 @@
 require 'spec_helper.rb'
 
+def build
+  `rm tester`
+  `gcc -std=c99 -Wall -g -I/usr/include/SDL2/ tester.c -L/usr/local/lib/ -lSDL -lXtst -lX11 -o tester`
+end
+
 describe ConfigMap do
-  it 'transforms the config file keybindings into the binary version' do
-    config =<<END
+  context 'transforms the config file keybindings into the binary version' do
+    it 'for medium sized file' do
+      config =<<END
+F1:a
+F2:e
+A2:b
+A4:d
+A1+F1:f
+END
+      file_name = "tmp/source1"
+      File.open(file_name, "w") do |file|
+        file.write(config)
+      end
+
+      expected =<<END
+1000000000000000,97,0,0
+0100000000000000,101,0,0
+0000000000000100,98,0,0
+0000000000001000,100,0,0
+1000000000000010,102,0,0
+END
+      build
+      expect(`./tester #{file_name}`).to eq(expected)
+    end
+
+    it 'for medium sized file' do
+      config =<<END
 F1:a
 F2:e
 A2:b
@@ -26,11 +56,11 @@ S4+A1+F2+F3:equal
 S1+S2+S3+S4:double_quote
 END
 
-file_name = "tmp/source"
-File.open(file_name, "w") do |file|
-  file.write(config)
-end
-    expected =<<END
+      file_name = "tmp/source"
+      File.open(file_name, "w") do |file|
+        file.write(config)
+      end
+      expected =<<END
 1000000000000000,97,0,0
 0100000000000000,101,0,0
 0000000000000100,98,0,0
@@ -50,9 +80,8 @@ end
 0000111100000000,65505,34,0
 END
 
-    `rm tester`
-    `gcc -std=c99 -Wall -g -I/usr/include/SDL2/ tester.c -L/usr/local/lib/ -lSDL -lXtst -lX11 -o tester`
-    expect(`./tester #{file_name}`).to eq(expected)
-
+      build
+      expect(`./tester #{file_name}`).to eq(expected)
+    end
   end
 end
