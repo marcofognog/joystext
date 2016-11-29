@@ -1,5 +1,3 @@
-require 'spec_helper.rb'
-
 HELPER = "keymaps_printer"
 
 def build
@@ -7,7 +5,7 @@ def build
   `gcc -std=c99 -Wall -g -I/usr/include/SDL2/ #{HELPER}.c -L/usr/local/lib/ -lSDL -lXtst -lX11 -o #{HELPER}`
 end
 
-describe ConfigMap do
+describe "config_parser.c" do
   context 'transforms the config file keybindings into the binary version' do
     it 'for medium sized file' do
       config =<<END
