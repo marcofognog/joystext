@@ -11,7 +11,7 @@ struct keymap {
   int keycode3;
 };
 
-struct keymap keymaps[200]; //make this dinamic.
+struct keymap *keymaps;
 
 int pressed_key(int *binary_buttons){
   int print_flag = 0;
@@ -30,15 +30,14 @@ void print_binary(int *binary_buttons){
   }
 }
 
-int count_bindings(FILE *fp){
+int count_lines(FILE *fp){
   fseek(fp, 0, SEEK_SET);
   int counter = 0;
   char line[255];
 
   while(1){
     fgets(line, 255, (FILE*)fp);
-    if(strcmp(line, "\n") != 0)
-      counter++;
+    counter++;
     if(feof(fp))
       break;
   }
@@ -47,6 +46,8 @@ int count_bindings(FILE *fp){
   counter--;
   return counter;
 }
+
+int number_of_lines;
 
 int parse_config(int argc, char *argv[]){
   struct key {
@@ -169,90 +170,91 @@ int parse_config(int argc, char *argv[]){
     exit(1);
   }
 
+  number_of_lines= count_lines(fp);
+  keymaps = malloc(number_of_lines * sizeof(struct keymap));
+
   int l;
-  for (int i=0; i<200; i++){
+  for (int i=0; i<number_of_lines; i++){
     l = fgets(line, 255, (FILE*)fp);
     if(l != NULL){
-      if(strcmp(line, "\n") != 0){
-        char delimiter[2] = ":";
-        char *signifier = strtok(line, delimiter);
-        char *signified = strtok(NULL, delimiter); // This feels wierd
+      char delimiter[2] = ":";
+      char *signifier = strtok(line, delimiter);
+      char *signified = strtok(NULL, delimiter); // This feels wierd
 
-        //remove \n
-        char *sanitized = strtok(signified, "\n");
+      //remove \n
+      char *sanitized = strtok(signified, "\n");
 
-        char *key1 = strtok(signifier, "+");
-        char *key2 = strtok(NULL, "+");
-        char *key3 = strtok(NULL, "+");
-        char *key4 = strtok(NULL, "+");
+      char *key1 = strtok(signifier, "+");
+      char *key2 = strtok(NULL, "+");
+      char *key3 = strtok(NULL, "+");
+      char *key4 = strtok(NULL, "+");
 
-        int merged[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-        for(int k=0; k<16; k++){
-          if(strcmp(key1, buttons[k].name) == 0){
+      int merged[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+      for(int k=0; k<16; k++){
+        if(strcmp(key1, buttons[k].name) == 0){
+          for(int j=0; j<16;j++){
+            merged[j] = (merged[j] || buttons[k].binary[j]);
+          }
+        }
+        if(key2 != NULL){
+          if(strcmp(key2, buttons[k].name) == 0){
             for(int j=0; j<16;j++){
               merged[j] = (merged[j] || buttons[k].binary[j]);
             }
           }
-          if(key2 != NULL){
-            if(strcmp(key2, buttons[k].name) == 0){
-              for(int j=0; j<16;j++){
-                merged[j] = (merged[j] || buttons[k].binary[j]);
-              }
+        }
+        if(key3 != NULL){
+          if(strcmp(key3, buttons[k].name) == 0){
+            for(int j=0; j<16;j++){
+              merged[j] = (merged[j] || buttons[k].binary[j]);
             }
           }
-          if(key3 != NULL){
-            if(strcmp(key3, buttons[k].name) == 0){
-              for(int j=0; j<16;j++){
-                merged[j] = (merged[j] || buttons[k].binary[j]);
-              }
+        }
+        if(key4 != NULL){
+          if(strcmp(key4, buttons[k].name) == 0){
+            for(int j=0; j<16;j++){
+              merged[j] = (merged[j] || buttons[k].binary[j]);
             }
-          }
-          if(key4 != NULL){
-            if(strcmp(key4, buttons[k].name) == 0){
-              for(int j=0; j<16;j++){
-                merged[j] = (merged[j] || buttons[k].binary[j]);
-              }
-            }
-          }
-          for(int j=0;j<16;j++){
-            keymaps[i].binary_buttons[j] = merged[j];
           }
         }
 
-        char *keycode_name1;
-        keycode_name1 = strtok(sanitized, "+");
-        char *keycode_name2;
-        keycode_name2 = strtok(NULL, "+");
-        char *keycode_name3;
-        keycode_name3 = strtok(NULL, "+");
+        for(int j=0;j<16;j++){
+          keymaps[i].binary_buttons[j] = merged[j];
+        }
+      }
 
-        for(int k=0; k<120; k++){
-          if(keycode_name1 != NULL){
-            if(strcmp(keycode_name1, keys[k].name) == 0){
-              keymaps[i].keycode1 = keys[k].keycode[0];
+      char *keycode_name1;
+      keycode_name1 = strtok(sanitized, "+");
+      char *keycode_name2;
+      keycode_name2 = strtok(NULL, "+");
+      char *keycode_name3;
+      keycode_name3 = strtok(NULL, "+");
+
+      for(int k=0; k<120; k++){
+        if(keycode_name1 != NULL){
+          if(strcmp(keycode_name1, keys[k].name) == 0){
+            keymaps[i].keycode1 = keys[k].keycode[0];
+            if(keys[k].keycode[1] != 0)
+              keymaps[i].keycode2 = keys[k].keycode[1];
+          }
+        }
+        if(keycode_name2 != NULL){
+          if(strcmp(keycode_name2, keys[k].name) == 0){
+            if(keymaps[i].keycode2 == 0){
+              keymaps[i].keycode2 = keys[k].keycode[0];
               if(keys[k].keycode[1] != 0)
-                keymaps[i].keycode2 = keys[k].keycode[1];
-            }
-          }
-          if(keycode_name2 != NULL){
-            if(strcmp(keycode_name2, keys[k].name) == 0){
-              if(keymaps[i].keycode2 == 0){
-                keymaps[i].keycode2 = keys[k].keycode[0];
-                if(keys[k].keycode[1] != 0)
-                  keymaps[i].keycode3 = keys[k].keycode[1];
-              }else{
-                keymaps[i].keycode3 = keys[k].keycode[0];
-              }
-            }
-          }
-          if(keycode_name3 != NULL){
-            if(strcmp(keycode_name3, keys[k].name) == 0){
-              if(keymaps[i].keycode2 == 0)
-                keymaps[i].keycode3 = keys[k].keycode[0];
+                keymaps[i].keycode3 = keys[k].keycode[1];
+            }else{
+              keymaps[i].keycode3 = keys[k].keycode[0];
             }
           }
         }
-
+        if(keycode_name3 != NULL){
+          if(strcmp(keycode_name3, keys[k].name) == 0){
+            if(keymaps[i].keycode2 == 0)
+              keymaps[i].keycode3 = keys[k].keycode[0];
+          }
+        }
       }
     }
   }

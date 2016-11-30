@@ -1,11 +1,9 @@
 #include "parse_config.c"
 
 void print_result(struct keymap keymaps[]){
-  for(int l=0; l<200; l++){
-    if(pressed_key(keymaps[l].binary_buttons)){
-      print_binary(keymaps[l].binary_buttons);
-      printf(",%i,%i,%i\n", keymaps[l].keycode1, keymaps[l].keycode2,keymaps[l].keycode3);
-    }
+  for(int l=0; l<number_of_lines; l++){
+    print_binary(keymaps[l].binary_buttons);
+    printf(",%i,%i,%i\n", keymaps[l].keycode1, keymaps[l].keycode2,keymaps[l].keycode3);
   }
 }
 
