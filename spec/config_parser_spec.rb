@@ -1,13 +1,13 @@
 HELPER = "keymaps_printer"
 
 def build
-  `rm #{HELPER}`
+  `rm bin/#{HELPER}`
   `gcc -std=c99 -Wall -g -I/usr/include/SDL2/ #{HELPER}.c -L/usr/local/lib/ -lSDL -lXtst -lX11 -o bin/#{HELPER}`
 end
 
 describe "config_parser.c" do
   context 'transforms the config file keybindings into the binary version' do
-    it 'for medium sized file' do
+    it 'for small sized file' do
       config =<<END
 F1:a
 F2:e
