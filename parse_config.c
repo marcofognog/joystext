@@ -276,10 +276,8 @@ int parse_config(int argc, char *argv[]){
           }
         }
         if(keycode_name3 != NULL){
-          if(strcmp(keycode_name3, keys[k].name) == 0){
-            if(keymaps[i].keycode2 == 0)
-              keymaps[i].keycode3 = keys[k].keycode[0];
-          }
+          if(strcmp(keycode_name3, keys[k].name) == 0)
+            keymaps[i].keycode3 = keys[k].keycode[0];
         }
       }
     }
