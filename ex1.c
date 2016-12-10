@@ -81,7 +81,6 @@ void send_key(int *binary_buttons){
     return;
   }
 
-  // Make this limit the same as the number of keybindings in the conf file.
   for(int i=0;i<number_of_lines;i++){
     if(memcmp(binary_buttons,keymaps[i].binary_buttons, sizeof(keymaps[i].binary_buttons)) == 0){
       if(keymaps[i].keycode2 !=0){
