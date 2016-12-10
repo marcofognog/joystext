@@ -57,6 +57,30 @@ void send_key(int *binary_buttons){
     return;
   }
 
+  if(binary_buttons[10]){
+    Display* display = XOpenDisplay(0);
+    Screen* screen = DefaultScreenOfDisplay(display);
+    Window default_window = XDefaultRootWindow(display);
+    int width = WidthOfScreen(screen);
+    int  height = HeightOfScreen(screen);
+    XWarpPointer(display, None, default_window, 0, 0, 0, 0, width/2, height/2);
+    XFlush(display);
+    XCloseDisplay(display);
+    return;
+  }
+
+  if(binary_buttons[11]){
+    Display* display = XOpenDisplay(0);
+    Screen* screen = DefaultScreenOfDisplay(display);
+    Window default_window = XDefaultRootWindow(display);
+    int width = WidthOfScreen(screen);
+    int  height = HeightOfScreen(screen);
+    XWarpPointer(display, None, default_window, 0, 0, 0, 0, width, height);
+    XFlush(display);
+    XCloseDisplay(display);
+    return;
+  }
+
   // Make this limit the same as the number of keybindings in the conf file.
   for(int i=0;i<number_of_lines;i++){
     if(memcmp(binary_buttons,keymaps[i].binary_buttons, sizeof(keymaps[i].binary_buttons)) == 0){
