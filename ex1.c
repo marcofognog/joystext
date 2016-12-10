@@ -5,6 +5,8 @@
 #include <X11/keysym.h>
 #include "parse_config.c"
 
+int pointer_mode=0;
+
 void send_keycode(keysym){
   Display* display = XOpenDisplay(0);
   int val = XKeysymToKeycode(display, keysym);
@@ -41,6 +43,20 @@ void send_keycode_mod_mod(mod1,mod2, keysym){
 }
 
 void send_key(int *binary_buttons){
+  int start_button = 9;
+  int select_button = 8;
+
+  if(binary_buttons[select_button]){
+    pointer_mode=0;
+    printf("Pointer mode disabled.\n");
+    return;
+  }
+  if(binary_buttons[start_button]){
+    pointer_mode=1;
+    printf("Pointer mode enabled.\n");
+    return;
+  }
+
   // Make this limit the same as the number of keybindings in the conf file.
   for(int i=0;i<number_of_lines;i++){
     if(memcmp(binary_buttons,keymaps[i].binary_buttons, sizeof(keymaps[i].binary_buttons)) == 0){
@@ -145,6 +161,7 @@ void check_for_text_events(int *bin_buttons, int bin_history[100][16], int *bin_
         bin_history[j][i]=0;
       }
     }
+
     send_key(bin_merged);
   }
 
@@ -187,9 +204,6 @@ int main(int argc, char *argv[]){
 
   int buttons[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
   int history[100][16];
-  int pointer_mode_history[100];
-  int text_mode_history[100];
-  int mode_counter = 0;
 
   //reset history
   for(int j=0;j<10;j++){
@@ -199,10 +213,6 @@ int main(int argc, char *argv[]){
   }
   int counter=0;
   int merged[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-
-  int pointer_mode=0;
-  int start_button = 9;
-  int select_button = 8;
 
   while(1){
     SDL_Delay(40);
@@ -237,52 +247,11 @@ int main(int argc, char *argv[]){
       }
     }
 
-    if(pointer_mode != 1){
+    if(pointer_mode == 1){
+      check_for_pointer_events(buttons);
       check_for_text_events(buttons,history,merged, &counter);
     }else{
-      check_for_pointer_events(buttons);
-    }
-
-    pointer_mode_history[mode_counter] = buttons[start_button];
-    text_mode_history[mode_counter] = buttons[select_button];
-    if(pressed_key(buttons)){
-    }else{
-      mode_counter = 0;
-      int released_start = 0;
-      int released_select = 0;
-      for(int j=0;j<100;j++){
-        released_start = (pointer_mode_history[j] || released_start);
-      }
-      for(int j=0;j<100;j++){
-        released_select = (text_mode_history[j] || released_select);
-      }
-
-      if(released_select){
-        pointer_mode=0;
-        printf("Pointer mode disabled.\n");
-      }
-      if(released_start){
-        pointer_mode=1;
-        printf("Pointer mode enabled.\n");
-      }
-      for(int j=0;j<100;j++){
-        pointer_mode_history[j]=0;
-      }
-      for(int j=0;j<100;j++){
-        text_mode_history[j]=0;
-      }
-    }
-
-    if(mode_counter>97){
-      mode_counter = 0;
-      for(int j=0;j<100;j++){
-        pointer_mode_history[j]=0;
-      }
-      for(int j=0;j<100;j++){
-        text_mode_history[j]=0;
-      }
-    }else{
-      mode_counter++;
+      check_for_text_events(buttons,history,merged, &counter);
     }
   }
 
