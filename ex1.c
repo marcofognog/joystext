@@ -81,16 +81,18 @@ void send_key(int *binary_buttons){
     return;
   }
 
-  for(int i=0;i<number_of_lines;i++){
-    if(memcmp(binary_buttons,keymaps[i].binary_buttons, sizeof(keymaps[i].binary_buttons)) == 0){
-      if(keymaps[i].keycode2 !=0){
-        if(keymaps[i].keycode3 !=0){
-          send_keycode_mod_mod(keymaps[i].keycode1, keymaps[i].keycode2, keymaps[i].keycode3);
+  if(pointer_mode == 0){
+    for(int i=0;i<number_of_lines;i++){
+      if(memcmp(binary_buttons,keymaps[i].binary_buttons, sizeof(keymaps[i].binary_buttons)) == 0){
+        if(keymaps[i].keycode2 !=0){
+          if(keymaps[i].keycode3 !=0){
+            send_keycode_mod_mod(keymaps[i].keycode1, keymaps[i].keycode2, keymaps[i].keycode3);
+          }else{
+            send_keycode_modified(keymaps[i].keycode1, keymaps[i].keycode2);
+          }
         }else{
-          send_keycode_modified(keymaps[i].keycode1, keymaps[i].keycode2);
+          send_keycode(keymaps[i].keycode1);
         }
-      }else{
-        send_keycode(keymaps[i].keycode1);
       }
     }
   }
