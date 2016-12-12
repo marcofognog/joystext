@@ -196,7 +196,11 @@ int parse_config(int argc, char *argv[]){
   }
 
   number_of_lines= count_lines(fp);
-  keymaps = malloc(number_of_lines * sizeof(struct keymap));
+  keymaps = calloc(number_of_lines, sizeof(struct keymap));
+  if (keymaps == NULL){
+    perror("Failed allocating map of keys.");
+    return (NULL);
+  }
 
   int l;
   for (int i=0; i<number_of_lines; i++){
