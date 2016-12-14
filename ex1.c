@@ -103,15 +103,25 @@ void check_for_pointer_events(int *binary_buttons){
     int dest_x=0;
     int dest_y=0;
     int step=1;
+    int scroll_step=1;
+    int scroll_direction;
 
-    if(binary_buttons[14])
+    if(binary_buttons[14]){
       dest_y=-1;
-    if(binary_buttons[15])
+      scroll_direction=4;
+    }
+    if(binary_buttons[15]){
       dest_y=1;
-    if(binary_buttons[12])
+      scroll_direction=5;
+    }
+    if(binary_buttons[12]){
       dest_x=-1;
-    if(binary_buttons[13])
+      scroll_direction=6;
+    }
+    if(binary_buttons[13]){
       dest_x=1;
+      scroll_direction=7;
+    }
 
     int speed1[16]={1,0,0,0};
     int speed2[16]={1,1,0,0};
@@ -127,26 +137,49 @@ void check_for_pointer_events(int *binary_buttons){
       segment[i] = binary_buttons[i];
     }
 
-    if(memcmp(segment,speed1, sizeof(segment)) == 0)
+    if(memcmp(segment,speed1, sizeof(segment)) == 0){
       step = 10;
-    if(memcmp(segment,speed2, sizeof(segment)) == 0)
+      scroll_step=2;
+    }
+    if(memcmp(segment,speed2, sizeof(segment)) == 0){
       step = 20;
-    if(memcmp(segment,speed3, sizeof(segment)) == 0)
+      scroll_step=3;
+    }
+    if(memcmp(segment,speed3, sizeof(segment)) == 0){
       step = 30;
-    if(memcmp(segment,speed4, sizeof(segment)) == 0)
+      scroll_step=4;
+    }
+    if(memcmp(segment,speed4, sizeof(segment)) == 0){
       step = 40;
-    if(memcmp(segment,speed5, sizeof(segment)) == 0)
+      scroll_step=5;
+    }
+    if(memcmp(segment,speed5, sizeof(segment)) == 0){
       step = 55;
-    if(memcmp(segment,speed6, sizeof(segment)) == 0)
+      scroll_step=6;
+    }
+    if(memcmp(segment,speed6, sizeof(segment)) == 0){
       step = 65;
-    if(memcmp(segment,speed7, sizeof(segment)) == 0)
+      scroll_step=7;
+    }
+    if(memcmp(segment,speed7, sizeof(segment)) == 0){
       step = 75;
-    if(memcmp(segment,speed8, sizeof(segment)) == 0)
+      scroll_step=8;
+    }
+    if(memcmp(segment,speed8, sizeof(segment)) == 0){
       step = 85;
+      scroll_step=9;
+    }
 
     Display* display = XOpenDisplay(0);
-    XWarpPointer(display, None, None, 0, 0, 0, 0, dest_x * step,dest_y * step);
-
+    if(binary_buttons[7] && (binary_buttons[12] || binary_buttons[13] || binary_buttons[14] || binary_buttons[15])){
+      for(int i=0; i < scroll_step; i++){
+        XTestFakeButtonEvent(display, scroll_direction, 1, 0);
+        XTestFakeButtonEvent(display, scroll_direction, 0, 0);
+      }
+      usleep(200000);
+    }else{
+      XWarpPointer(display, None, None, 0, 0, 0, 0, dest_x * step,dest_y * step);
+    }
     if(binary_buttons[4]){
       XTestFakeButtonEvent(display, 1, 1, 0);
       XTestFakeButtonEvent(display, 1, 0, 0);
