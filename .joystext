@@ -151,3 +151,14 @@ S1+S2+A4+F3:ctrl+w
 S1+S2+A4+F4:ctrl+x
 S1+S2+F1+F2:ctrl+y
 S1+S2+F3+F4:ctrl+z
+
+S1+S3+A1+F1:ctrl+one
+S1+S3+A1+F2:ctrl+two
+S1+S3+A1+F3:ctrl+three
+S1+S3+A1+F4:ctrl+four
+S1+S3+A2+F1:ctrl+five
+S1+S3+A2+F2:ctrl+six
+S1+S3+A2+F3:ctrl+seven
+S1+S3+A2+F4:ctrl+eight
+S1+S3+A3+F1:ctrl+nine
+S1+S3+A3+F2:ctrl+zero
