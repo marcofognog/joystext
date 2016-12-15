@@ -217,6 +217,7 @@ int parse_config(int argc, char *argv[]){
       char *key2 = strtok(NULL, "+");
       char *key3 = strtok(NULL, "+");
       char *key4 = strtok(NULL, "+");
+      char *key5 = strtok(NULL, "+");
 
       int merged[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
       for(int k=0; k<16; k++){
@@ -241,6 +242,13 @@ int parse_config(int argc, char *argv[]){
         }
         if(key4 != NULL){
           if(strcmp(key4, buttons[k].name) == 0){
+            for(int j=0; j<16;j++){
+              merged[j] = (merged[j] || buttons[k].binary[j]);
+            }
+          }
+        }
+        if(key5 != NULL){
+          if(strcmp(key5, buttons[k].name) == 0){
             for(int j=0; j<16;j++){
               merged[j] = (merged[j] || buttons[k].binary[j]);
             }
