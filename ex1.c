@@ -236,6 +236,37 @@ void check_for_release_events(int *bin_buttons, int bin_history[100][16], int *b
   }
 }
 
+void fetch_presses_from_js(int *bin_buttons, SDL_Joystick *joystick){
+  //initialize
+  for (int i=0; i < 16; i++){
+    bin_buttons[i] = 0;
+  }
+
+  for ( int i=0; i < 12; i++ )
+  {
+    unsigned int n = SDL_JoystickGetButton ( joystick, i );
+    if ( n != 0 )
+      bin_buttons[i] = 1;
+  }
+
+  signed short a1 = SDL_JoystickGetAxis ( joystick, 0 );
+  signed short a2 = SDL_JoystickGetAxis ( joystick, 1 );
+  if ( a1 != 0 ){
+    if ( a1 < 0 ){
+      bin_buttons[12] = 1;
+    } else {
+      bin_buttons[13] = 1;
+    }
+  }
+  if ( a2 != 0 ){
+    if ( a2 < 0 ){
+      bin_buttons[14] = 1;
+    } else {
+      bin_buttons[15] = 1;
+    }
+  }
+}
+
 int main(int argc, char *argv[]){
   parse_config(argc, argv);
 
@@ -276,34 +307,7 @@ int main(int argc, char *argv[]){
     SDL_Delay(40);
     SDL_JoystickUpdate();
 
-    //initialize
-    for (int i=0; i < 16; i++){
-      buttons[i] = 0;
-    }
-
-    for ( int i=0; i < 12; i++ )
-    {
-      unsigned int n = SDL_JoystickGetButton ( joystick, i );
-      if ( n != 0 )
-        buttons[i] = 1;
-    }
-
-    signed short a1 = SDL_JoystickGetAxis ( joystick, 0 );
-    signed short a2 = SDL_JoystickGetAxis ( joystick, 1 );
-    if ( a1 != 0 ){
-      if ( a1 < 0 ){
-        buttons[12] = 1;
-      } else {
-        buttons[13] = 1;
-      }
-    }
-    if ( a2 != 0 ){
-      if ( a2 < 0 ){
-        buttons[14] = 1;
-      } else {
-        buttons[15] = 1;
-      }
-    }
+    fetch_presses_from_js(buttons, joystick);
 
     if(pointer_mode == 1){
       check_for_press_events(buttons);
