@@ -3,7 +3,7 @@
 void print_result(struct keymap keymaps[]){
   for(int l=0; l<number_of_lines; l++){
     print_binary(keymaps[l].binary_buttons);
-    printf(",%i,%i,%i\n", keymaps[l].keycode1, keymaps[l].keycode2,keymaps[l].keycode3);
+    printf(",%i,%i,%i, mode:%i\n", keymaps[l].keycode1, keymaps[l].keycode2,keymaps[l].keycode3, keymaps[l].mode);
   }
 }
 

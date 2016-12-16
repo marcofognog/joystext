@@ -81,9 +81,12 @@ void send_key(int *binary_buttons, struct keymap *key_ref){
     return;
   }
 
+  int chosen_mode = 0; // temporary!
+
   if(pointer_mode == 0){
     for(int i=0;i<number_of_lines;i++){
-      if(memcmp(binary_buttons,key_ref[i].binary_buttons, sizeof(key_ref[i].binary_buttons)) == 0){
+      if(memcmp(binary_buttons,key_ref[i].binary_buttons, sizeof(key_ref[i].binary_buttons)) == 0
+          && key_ref[i].mode == chosen_mode){
         if(key_ref[i].keycode2 !=0){
           if(key_ref[i].keycode3 !=0){
             send_keycode_mod_mod(key_ref[i].keycode1, key_ref[i].keycode2, key_ref[i].keycode3);
