@@ -50,12 +50,12 @@ int count_lines(FILE *fp){
 int number_of_lines;
 
 int parse_config(int argc, char *argv[]){
-  struct key {
+  struct command {
     char name[32];
     int keycode[3];
   };
 
-  struct key keys[120] = {
+  struct command commands[120] = {
     {"a",{XK_a}},
     {"b",{XK_b}},
     {"c",{XK_c}},
@@ -269,26 +269,26 @@ int parse_config(int argc, char *argv[]){
 
       for(int k=0; k<120; k++){
         if(keycode_name1 != NULL){
-          if(strcmp(keycode_name1, keys[k].name) == 0){
-            keymaps[i].keycode1 = keys[k].keycode[0];
-            if(keys[k].keycode[1] != 0)
-              keymaps[i].keycode2 = keys[k].keycode[1];
+          if(strcmp(keycode_name1, commands[k].name) == 0){
+            keymaps[i].keycode1 = commands[k].keycode[0];
+            if(commands[k].keycode[1] != 0)
+              keymaps[i].keycode2 = commands[k].keycode[1];
           }
         }
         if(keycode_name2 != NULL){
-          if(strcmp(keycode_name2, keys[k].name) == 0){
+          if(strcmp(keycode_name2, commands[k].name) == 0){
             if(keymaps[i].keycode2 == 0){
-              keymaps[i].keycode2 = keys[k].keycode[0];
-              if(keys[k].keycode[1] != 0)
-                keymaps[i].keycode3 = keys[k].keycode[1];
+              keymaps[i].keycode2 = commands[k].keycode[0];
+              if(commands[k].keycode[1] != 0)
+                keymaps[i].keycode3 = commands[k].keycode[1];
             }else{
-              keymaps[i].keycode3 = keys[k].keycode[0];
+              keymaps[i].keycode3 = commands[k].keycode[0];
             }
           }
         }
         if(keycode_name3 != NULL){
-          if(strcmp(keycode_name3, keys[k].name) == 0)
-            keymaps[i].keycode3 = keys[k].keycode[0];
+          if(strcmp(keycode_name3, commands[k].name) == 0)
+            keymaps[i].keycode3 = commands[k].keycode[0];
         }
       }
     }
