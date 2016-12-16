@@ -98,7 +98,7 @@ void send_key(int *binary_buttons){
   }
 }
 
-void check_for_pointer_events(int *binary_buttons){
+void check_for_press_events(int *binary_buttons){
   if(pressed_key(binary_buttons)){
     int dest_x=0;
     int dest_y=0;
@@ -196,7 +196,7 @@ void check_for_pointer_events(int *binary_buttons){
   }
 }
 
-void check_for_text_events(int *bin_buttons, int bin_history[100][16], int *bin_merged, int *counter_p){
+void check_for_release_events(int *bin_buttons, int bin_history[100][16], int *bin_merged, int *counter_p){
   for(int i=0; i<16;i++){
     bin_history[*counter_p][i] = bin_buttons[i];
   }
@@ -306,10 +306,10 @@ int main(int argc, char *argv[]){
     }
 
     if(pointer_mode == 1){
-      check_for_pointer_events(buttons);
-      check_for_text_events(buttons,history,merged, &counter);
+      check_for_press_events(buttons);
+      check_for_release_events(buttons,history,merged, &counter);
     }else{
-      check_for_text_events(buttons,history,merged, &counter);
+      check_for_release_events(buttons,history,merged, &counter);
     }
   }
 
