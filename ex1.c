@@ -42,7 +42,7 @@ void send_keycode_mod_mod(mod1,mod2, keysym){
   XFlush(display);
 }
 
-void send_key(int *binary_buttons){
+void send_key(int *binary_buttons, struct keymap *key_ref){
   int start_button = 9;
   int select_button = 8;
 
@@ -83,15 +83,15 @@ void send_key(int *binary_buttons){
 
   if(pointer_mode == 0){
     for(int i=0;i<number_of_lines;i++){
-      if(memcmp(binary_buttons,keymaps[i].binary_buttons, sizeof(keymaps[i].binary_buttons)) == 0){
-        if(keymaps[i].keycode2 !=0){
-          if(keymaps[i].keycode3 !=0){
-            send_keycode_mod_mod(keymaps[i].keycode1, keymaps[i].keycode2, keymaps[i].keycode3);
+      if(memcmp(binary_buttons,key_ref[i].binary_buttons, sizeof(key_ref[i].binary_buttons)) == 0){
+        if(key_ref[i].keycode2 !=0){
+          if(key_ref[i].keycode3 !=0){
+            send_keycode_mod_mod(key_ref[i].keycode1, key_ref[i].keycode2, key_ref[i].keycode3);
           }else{
-            send_keycode_modified(keymaps[i].keycode1, keymaps[i].keycode2);
+            send_keycode_modified(key_ref[i].keycode1, key_ref[i].keycode2);
           }
         }else{
-          send_keycode(keymaps[i].keycode1);
+          send_keycode(key_ref[i].keycode1);
         }
       }
     }
@@ -196,7 +196,7 @@ void check_for_press_events(int *binary_buttons){
   }
 }
 
-void check_for_release_events(int *bin_buttons, int bin_history[100][16], int *bin_merged, int *counter_p){
+void check_for_release_events(int *bin_buttons, int bin_history[100][16], int *bin_merged, int *counter_p, struct keymap *key_referece){
   for(int i=0; i<16;i++){
     bin_history[*counter_p][i] = bin_buttons[i];
   }
@@ -220,7 +220,7 @@ void check_for_release_events(int *bin_buttons, int bin_history[100][16], int *b
       }
     }
 
-    send_key(bin_merged);
+    send_key(bin_merged, key_referece);
   }
 
   if(*counter_p>97){
@@ -311,9 +311,9 @@ int main(int argc, char *argv[]){
 
     if(pointer_mode == 1){
       check_for_press_events(buttons);
-      check_for_release_events(buttons,history,merged, &counter);
+      check_for_release_events(buttons,history,merged, &counter,keymaps);
     }else{
-      check_for_release_events(buttons,history,merged, &counter);
+      check_for_release_events(buttons,history,merged, &counter,keymaps);
     }
   }
 
