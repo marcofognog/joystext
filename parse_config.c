@@ -10,6 +10,7 @@ struct keymap {
   int keycode2;
   int keycode3;
   int mode;
+  int onpress;
 };
 
 struct keymap *keymaps;
@@ -214,7 +215,9 @@ int parse_config(int argc, char *argv[]){
       char *command = strtok(signified, ",");
       char *command_mode = strtok(NULL, ",");
       char *sanitized = strtok(command_mode, "\n");
-      keymaps[i].mode = atoi(sanitized);
+      keymaps[i].onpress = atoi(&sanitized[1]);
+      sanitized[1] = '\n';
+      keymaps[i].mode = atoi(&sanitized[0]);
 
       char *key1 = strtok(signifier, "+");
       char *key2 = strtok(NULL, "+");
