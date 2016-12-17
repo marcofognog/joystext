@@ -211,7 +211,6 @@ int parse_config(int argc, char *argv[]){
       char *signifier = strtok(line, delimiter);
       char *signified = strtok(NULL, delimiter); // This feels wierd
 
-      //remove \n
       char *command = strtok(signified, ",");
       char *command_mode = strtok(NULL, ",");
       char *sanitized = strtok(command_mode, "\n");
