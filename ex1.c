@@ -42,6 +42,24 @@ void send_keycode_mod_mod(mod1,mod2, keysym){
   XFlush(display);
 }
 
+void mouse_up(){
+  int dest_x = 0;
+  int dest_y = 1;
+  int step = 1;
+  Display* display = XOpenDisplay(0);
+  XWarpPointer(display, None, None, 0, 0, 0, 0, dest_x * step,dest_y * step);
+  XFlush(display);
+  XCloseDisplay(display);
+}
+
+void call_func(struct keymap keyref){
+  if(keyref.keycode1 == 0){
+    mouse_up();
+  }else{
+    printf("Function not found.");
+  }
+}
+
 void send_key(int *binary_buttons, struct keymap *key_ref,int onpress){
   int chosen_mode = 0; // temporary!
 
@@ -50,14 +68,18 @@ void send_key(int *binary_buttons, struct keymap *key_ref,int onpress){
       if(memcmp(binary_buttons,key_ref[i].binary_buttons, sizeof(key_ref[i].binary_buttons)) == 0
           && key_ref[i].mode == chosen_mode
           && key_ref[i].onpress == onpress){
-        if(key_ref[i].keycode2 !=0){
-          if(key_ref[i].keycode3 !=0){
-            send_keycode_mod_mod(key_ref[i].keycode1, key_ref[i].keycode2, key_ref[i].keycode3);
-          }else{
-            send_keycode_modified(key_ref[i].keycode1, key_ref[i].keycode2);
-          }
+        if(key_ref[i].is_func){
+          call_func(key_ref[i]);
         }else{
-          send_keycode(key_ref[i].keycode1);
+          if(key_ref[i].keycode2 !=0){
+            if(key_ref[i].keycode3 !=0){
+              send_keycode_mod_mod(key_ref[i].keycode1, key_ref[i].keycode2, key_ref[i].keycode3);
+            }else{
+              send_keycode_modified(key_ref[i].keycode1, key_ref[i].keycode2);
+            }
+          }else{
+            send_keycode(key_ref[i].keycode1);
+          }
         }
       }
     }
