@@ -42,21 +42,31 @@ void send_keycode_mod_mod(mod1,mod2, keysym){
   XFlush(display);
 }
 
-void mouse_up(){
-  int dest_x = 0;
-  int dest_y = 1;
-  int step = 1;
+void move_pointer(int dest_x,int dest_y, int step){
   Display* display = XOpenDisplay(0);
   XWarpPointer(display, None, None, 0, 0, 0, 0, dest_x * step,dest_y * step);
   XFlush(display);
   XCloseDisplay(display);
 }
 
+void mouse_up(){
+  move_pointer(0,1,1);
+}
+
+void mouse_down(){
+  move_pointer(0,-1,1);
+}
+
 void call_func(struct keymap keyref){
-  if(keyref.keycode1 == 0){
-    mouse_up();
-  }else{
-    printf("Function not found.");
+  switch(keyref.keycode1){
+    case 0 :
+      mouse_up();
+      break;
+    case 1 :
+      mouse_down();
+      break;
+    default:
+      printf("Function not found.");
   }
 }
 
