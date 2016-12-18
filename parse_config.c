@@ -169,7 +169,22 @@ int parse_config(int argc, char *argv[]){
     {1,"mouse_up",{0}},
     {1,"mouse_down",{1}},
     {1,"mouse_left",{2}},
-    {1,"mouse_right",{3}}
+    {1,"mouse_right",{3}},
+    {1,"set_mouse_step_5",{4}},
+    {1,"set_mouse_step_10",{5}},
+    {1,"set_mouse_step_15",{6}},
+    {1,"set_mouse_step_20",{7}},
+    {1,"set_mouse_step_25",{8}},
+    {1,"set_mouse_step_30",{9}},
+    {1,"set_mouse_step_35",{10}},
+    {1,"set_mouse_step_40",{11}},
+    {1,"set_mouse_step_45",{12}},
+    {1,"set_mouse_step_50",{13}},
+    {1,"set_mouse_step_55",{14}},
+    {1,"set_mouse_step_60",{15}},
+    {1,"set_mouse_step_65",{16}},
+    {1,"set_mouse_step_70",{17}},
+    {1,"set_mouse_step_75",{18}},
   };
 
   struct button{

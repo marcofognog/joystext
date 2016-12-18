@@ -6,6 +6,7 @@
 #include "parse_config.c"
 
 int pointer_mode=0;
+int pointer_step = 1;
 
 void send_keycode(keysym){
   Display* display = XOpenDisplay(0);
@@ -44,7 +45,7 @@ void send_keycode_mod_mod(mod1,mod2, keysym){
 
 void move_pointer(int dest_x,int dest_y, int step){
   Display* display = XOpenDisplay(0);
-  XWarpPointer(display, None, None, 0, 0, 0, 0, dest_x * step,dest_y * step);
+  XWarpPointer(display, None, None, 0, 0, 0, 0, dest_x * pointer_step, dest_y * pointer_step);
   XFlush(display);
   XCloseDisplay(display);
 }
@@ -64,6 +65,11 @@ void mouse_left(){
 void mouse_right(){
   move_pointer(1,0,1);
 }
+
+void set_step(int step){
+  pointer_step = step;
+}
+
 void call_func(struct keymap keyref){
   switch(keyref.keycode1){
     case 0 :
@@ -77,6 +83,51 @@ void call_func(struct keymap keyref){
       break;
     case 3 :
       mouse_right();
+      break;
+    case 4 :
+      set_step(5);
+      break;
+    case 5 :
+      set_step(10);
+      break;
+    case 6 :
+      set_step(15);
+      break;
+    case 7 :
+      set_step(20);
+      break;
+    case 8 :
+      set_step(25);
+      break;
+    case 9 :
+      set_step(30);
+      break;
+    case 10 :
+      set_step(35);
+      break;
+    case 11 :
+      set_step(40);
+      break;
+    case 12 :
+      set_step(45);
+      break;
+    case 13 :
+      set_step(50);
+      break;
+    case 14 :
+      set_step(55);
+      break;
+    case 15 :
+      set_step(60);
+      break;
+    case 16 :
+      set_step(65);
+      break;
+    case 17 :
+      set_step(70);
+      break;
+    case 18 :
+      set_step(75);
       break;
     default:
       printf("Function not found.");
@@ -124,6 +175,7 @@ void check_for_press_events(int *binary_buttons, struct keymap *key_reference){
         send_key(single, key_reference, 1);
       }
     }
+    pointer_step =1;
   }
 }
 
