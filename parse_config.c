@@ -167,7 +167,9 @@ int parse_config(int argc, char *argv[]){
     {0,"ctrl",{XK_Control_L}},
     {0,"super",{XK_Super_L}},
     {1,"mouse_up",{0}},
-    {1,"mouse_down",{1}}
+    {1,"mouse_down",{1}},
+    {1,"mouse_left",{2}},
+    {1,"mouse_right",{3}}
   };
 
   struct button{

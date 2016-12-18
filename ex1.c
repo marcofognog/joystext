@@ -50,13 +50,20 @@ void move_pointer(int dest_x,int dest_y, int step){
 }
 
 void mouse_up(){
-  move_pointer(0,1,1);
-}
-
-void mouse_down(){
   move_pointer(0,-1,1);
 }
 
+void mouse_down(){
+  move_pointer(0,1,1);
+}
+
+void mouse_left(){
+  move_pointer(-1,0,1);
+}
+
+void mouse_right(){
+  move_pointer(1,0,1);
+}
 void call_func(struct keymap keyref){
   switch(keyref.keycode1){
     case 0 :
@@ -64,6 +71,12 @@ void call_func(struct keymap keyref){
       break;
     case 1 :
       mouse_down();
+      break;
+    case 2 :
+      mouse_left();
+      break;
+    case 3 :
+      mouse_right();
       break;
     default:
       printf("Function not found.");
