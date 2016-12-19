@@ -4,7 +4,7 @@
 #include <X11/extensions/XTest.h>
 #include <X11/keysym.h>
 
-struct keymap {
+typedef struct keymap {
   int binary_buttons[16];
   int is_func;
   int mode;
@@ -12,9 +12,9 @@ struct keymap {
   int keycode1;
   int keycode2;
   int keycode3;
-};
+} Keymap;
 
-struct keymap *keymaps;
+Keymap *keymaps;
 
 int pressed_key(int *binary_buttons){
   int print_flag = 0;
@@ -53,13 +53,13 @@ int count_lines(FILE *fp){
 int number_of_lines;
 
 int parse_config(int argc, char *argv[]){
-  struct command {
+  typedef struct command {
     int is_func;
     char name[32];
     int keycode[3];
-  };
+  } Command;
 
-  struct command commands[120] = {
+  Command commands[120] = {
     {0,"a",{XK_a}},
     {0,"b",{XK_b}},
     {0,"c",{XK_c}},
@@ -187,12 +187,12 @@ int parse_config(int argc, char *argv[]){
     {1,"set_mouse_step_75",{18}},
   };
 
-  struct button{
+  typedef struct button{
     char name[16];
     int binary[16];
-  };
+  } Button;
 
-  struct button buttons[16] = {
+  Button buttons[16] = {
     {"F1",     {1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0}},
     {"F2",     {0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0}},
     {"F3",     {0,0,1,0,0,0,0,0,0,0,0,0,0,0,0,0}},
@@ -219,7 +219,7 @@ int parse_config(int argc, char *argv[]){
   }
 
   number_of_lines= count_lines(fp);
-  keymaps = calloc(number_of_lines, sizeof(struct keymap));
+  keymaps = calloc(number_of_lines, sizeof(Keymap));
   if (keymaps == NULL){
     perror("Failed allocating map of keys.");
     return (NULL);
