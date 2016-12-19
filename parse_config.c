@@ -59,7 +59,7 @@ int parse_config(int argc, char *argv[]){
     int keycode[3];
   } Command;
 
-  Command commands[120] = {
+  Command commands[150] = {
     {0,"a",{XK_a}},
     {0,"b",{XK_b}},
     {0,"c",{XK_c}},
