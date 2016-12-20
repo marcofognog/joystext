@@ -8,6 +8,11 @@
 int pointer_mode=0;
 int pointer_step = 1;
 
+typedef struct t_array{
+  Keymap * repository;
+  int size;
+} TArray;
+
 void send_keycode(keysym){
   Display* display = XOpenDisplay(0);
   int val = XKeysymToKeycode(display, keysym);
@@ -134,25 +139,27 @@ void call_func(struct keymap keyref){
   }
 }
 
-void send_key(int *binary_buttons, struct keymap *key_ref,int onpress){
+void send_key(int *binary_buttons, TArray * ref_array,int onpress){
   int chosen_mode = 0; // temporary!
 
   if(pointer_mode == 0){
-    for(int i=0;i<number_of_lines;i++){
-      if(memcmp(binary_buttons,key_ref[i].binary_buttons, sizeof(key_ref[i].binary_buttons)) == 0
-          && key_ref[i].mode == chosen_mode
-          && key_ref[i].onpress == onpress){
-        if(key_ref[i].is_func){
-          call_func(key_ref[i]);
+    for(int i=0;i<(*ref_array).size;i++){
+      if(memcmp(binary_buttons,(*ref_array).repository[i].binary_buttons, sizeof((*ref_array).repository[i].binary_buttons)) == 0
+          && (*ref_array).repository[i].mode == chosen_mode
+          && (*ref_array).repository[i].onpress == onpress){
+        if((*ref_array).repository[i].is_func){
+          call_func((*ref_array).repository[i]);
         }else{
-          if(key_ref[i].keycode2 !=0){
-            if(key_ref[i].keycode3 !=0){
-              send_keycode_mod_mod(key_ref[i].keycode1, key_ref[i].keycode2, key_ref[i].keycode3);
+          if((*ref_array).repository[i].keycode2 !=0){
+            if((*ref_array).repository[i].keycode3 !=0){
+              send_keycode_mod_mod((*ref_array).repository[i].keycode1,
+                  (*ref_array).repository[i].keycode2,
+                  (*ref_array).repository[i].keycode3);
             }else{
-              send_keycode_modified(key_ref[i].keycode1, key_ref[i].keycode2);
+              send_keycode_modified((*ref_array).repository[i].keycode1, (*ref_array).repository[i].keycode2);
             }
           }else{
-            send_keycode(key_ref[i].keycode1);
+            send_keycode((*ref_array).repository[i].keycode1);
           }
         }
       }
@@ -160,7 +167,7 @@ void send_key(int *binary_buttons, struct keymap *key_ref,int onpress){
   }
 }
 
-void check_for_press_events(int *binary_buttons, struct keymap *key_reference){
+void check_for_press_events(int *binary_buttons, TArray * ref_array){
   int single[16];
   if(pressed_key(binary_buttons)){
     for(int i=0; i<16; i++){
@@ -172,14 +179,14 @@ void check_for_press_events(int *binary_buttons, struct keymap *key_reference){
             single[k] = 0;
           }
         }
-        send_key(single, key_reference, 1);
+        send_key(single, ref_array, 1);
       }
     }
     pointer_step =1;
   }
 }
 
-void check_for_release_events(int *bin_buttons, int bin_history[100][16], int *bin_merged, int *counter_p, struct keymap *key_referece){
+void check_for_release_events(int *bin_buttons, int bin_history[100][16], int *bin_merged, int *counter_p, TArray * ref_array){
   for(int i=0; i<16;i++){
     bin_history[*counter_p][i] = bin_buttons[i];
   }
@@ -203,7 +210,7 @@ void check_for_release_events(int *bin_buttons, int bin_history[100][16], int *b
       }
     }
 
-    send_key(bin_merged, key_referece,0);
+    send_key(bin_merged, ref_array,0);
   }
 
   if(*counter_p>97){
@@ -286,14 +293,16 @@ int main(int argc, char *argv[]){
   int counter=0;
   int merged[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 
+  TArray ref_array = { keymaps, number_of_lines };
+
   while(1){
     SDL_Delay(40);
     SDL_JoystickUpdate();
 
     fetch_presses_from_js(buttons, joystick);
 
-    check_for_press_events(buttons, keymaps);
-    check_for_release_events(buttons,history,merged, &counter,keymaps);
+    check_for_press_events(buttons, &ref_array);
+    check_for_release_events(buttons,history,merged, &counter,&ref_array);
   }
 
   SDL_Quit();
