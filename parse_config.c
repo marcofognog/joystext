@@ -12,6 +12,7 @@ typedef struct keymap {
   int keycode1;
   int keycode2;
   int keycode3;
+  struct keymap * modified;
 } Keymap;
 
 Keymap *keymaps;
@@ -226,6 +227,7 @@ int parse_config(int argc, char *argv[]){
   }
 
   int l;
+  int next_line_is_a_modified_key = 0;
   for (int i=0; i<number_of_lines; i++){
     l = fgets(line, 255, (FILE*)fp);
     if(l != NULL){
@@ -245,7 +247,6 @@ int parse_config(int argc, char *argv[]){
       char *key3 = strtok(NULL, "+");
       char *key4 = strtok(NULL, "+");
       char *key5 = strtok(NULL, "+");
-
       int merged[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
       for(int k=0; k<16; k++){
         if(strcmp(key1, buttons[k].name) == 0){
@@ -287,37 +288,59 @@ int parse_config(int argc, char *argv[]){
         }
       }
 
-      char *keycode_name1;
-      keycode_name1 = strtok(command, "+");
-      char *keycode_name2;
-      keycode_name2 = strtok(NULL, "+");
-      char *keycode_name3;
-      keycode_name3 = strtok(NULL, "+");
+      if(strcmp(command, "=") == 0){
+        next_line_is_a_modified_key = 1;
+      }else{
+        if(next_line_is_a_modified_key == 1){
+          Keymap * new_keymap = malloc(sizeof(Keymap));
 
-      for(int k=0; k<120; k++){
-        if(keycode_name1 != NULL){
-          if(strcmp(keycode_name1, commands[k].name) == 0){
-            keymaps[i].is_func = commands[k].is_func;
-
-            keymaps[i].keycode1 = commands[k].keycode[0];
-            if(commands[k].keycode[1] != 0)
-              keymaps[i].keycode2 = commands[k].keycode[1];
-          }
-        }
-        if(keycode_name2 != NULL){
-          if(strcmp(keycode_name2, commands[k].name) == 0){
-            if(keymaps[i].keycode2 == 0){
-              keymaps[i].keycode2 = commands[k].keycode[0];
-              if(commands[k].keycode[1] != 0)
-                keymaps[i].keycode3 = commands[k].keycode[1];
+          for(int k=0;k<16;k++){
+            if(k == 14){
+              (*new_keymap).binary_buttons[k] =1;
             }else{
-              keymaps[i].keycode3 = commands[k].keycode[0];
+              (*new_keymap).binary_buttons[k] =0;
             }
           }
-        }
-        if(keycode_name3 != NULL){
-          if(strcmp(keycode_name3, commands[k].name) == 0)
-            keymaps[i].keycode3 = commands[k].keycode[0];
+          (*new_keymap).is_func =0;
+          (*new_keymap).onpress =1;
+          (*new_keymap).keycode1 = XK_r;
+          keymaps[i-1].modified = new_keymap;
+
+          next_line_is_a_modified_key = 0;
+        }else{
+          char *keycode_name1;
+          keycode_name1 = strtok(command, "+");
+          char *keycode_name2;
+          keycode_name2 = strtok(NULL, "+");
+          char *keycode_name3;
+          keycode_name3 = strtok(NULL, "+");
+
+          for(int k=0; k<120; k++){
+            if(keycode_name1 != NULL){
+              if(strcmp(keycode_name1, commands[k].name) == 0){
+                keymaps[i].is_func = commands[k].is_func;
+
+                keymaps[i].keycode1 = commands[k].keycode[0];
+                if(commands[k].keycode[1] != 0)
+                  keymaps[i].keycode2 = commands[k].keycode[1];
+              }
+            }
+            if(keycode_name2 != NULL){
+              if(strcmp(keycode_name2, commands[k].name) == 0){
+                if(keymaps[i].keycode2 == 0){
+                  keymaps[i].keycode2 = commands[k].keycode[0];
+                  if(commands[k].keycode[1] != 0)
+                    keymaps[i].keycode3 = commands[k].keycode[1];
+                }else{
+                  keymaps[i].keycode3 = commands[k].keycode[0];
+                }
+              }
+            }
+            if(keycode_name3 != NULL){
+              if(strcmp(keycode_name3, commands[k].name) == 0)
+                keymaps[i].keycode3 = commands[k].keycode[0];
+            }
+          }
         }
       }
     }

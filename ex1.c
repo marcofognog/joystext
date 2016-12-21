@@ -257,6 +257,21 @@ void fetch_presses_from_js(int *bin_buttons, SDL_Joystick *joystick){
   }
 }
 
+TArray * get_ref_array(int * jsbuttons, TArray * ref){
+  int chosen_mode = 0;
+  for(int j=0; j< (*ref).size; j++){
+    if(memcmp(jsbuttons,(*ref).repository[j].binary_buttons, sizeof((*ref).repository[j].binary_buttons)) == 0
+          && (*ref).repository[j].mode == chosen_mode
+          && (*ref).repository[j].modified != 0){
+      TArray to_return;
+      to_return.repository = (*ref).repository[j].modified;
+      to_return.size = 1;
+      return &to_return;
+    }
+  }
+  return ref;
+}
+
 int main(int argc, char *argv[]){
   parse_config(argc, argv);
 
@@ -293,7 +308,6 @@ int main(int argc, char *argv[]){
   int counter=0;
   int merged[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 
-  TArray ref_array = { keymaps, number_of_lines };
 
   while(1){
     SDL_Delay(40);
@@ -301,6 +315,8 @@ int main(int argc, char *argv[]){
 
     fetch_presses_from_js(buttons, joystick);
 
+    TArray ref_array = { keymaps, number_of_lines };
+    ref_array = * get_ref_array(buttons, &ref_array);
     check_for_press_events(buttons, &ref_array);
     check_for_release_events(buttons,history,merged, &counter,&ref_array);
   }
