@@ -260,13 +260,17 @@ void fetch_presses_from_js(int *bin_buttons, SDL_Joystick *joystick){
 TArray * get_ref_array(int * jsbuttons, TArray * ref){
   int chosen_mode = 0;
   for(int j=0; j< (*ref).size; j++){
-    if(memcmp(jsbuttons,(*ref).repository[j].binary_buttons, sizeof((*ref).repository[j].binary_buttons)) == 0
-          && (*ref).repository[j].mode == chosen_mode
-          && (*ref).repository[j].modified != 0){
-      TArray to_return;
-      to_return.repository = (*ref).repository[j].modified;
-      to_return.size = 1;
-      return &to_return;
+    for(int i=0;i<16;i++){
+      if(jsbuttons[i] == 1 && (*ref).repository[j].binary_buttons[i] == 1){
+        if((*ref).repository[j].mode == chosen_mode
+            && (*ref).repository[j].modified != 0){
+          jsbuttons[i] = 0;
+          TArray to_return;
+          to_return.repository = (*ref).repository[j].modified;
+          to_return.size = 1;
+          return &to_return;
+        }
+      }
     }
   }
   return ref;
