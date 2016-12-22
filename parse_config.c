@@ -342,7 +342,7 @@ int parse_config(int argc, char *argv[]){
         }
 
         for(int j=0;j<16;j++){
-          keymaps[i].binary_buttons[j] = merged[j];
+          keymaps[el_index].binary_buttons[j] = merged[j];
         }
         next_line_is_a_modified_key = 1;
       }else{
