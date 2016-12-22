@@ -340,6 +340,10 @@ int parse_config(int argc, char *argv[]){
             el_index = i;
           }
         }
+
+        for(int j=0;j<16;j++){
+          keymaps[i].binary_buttons[j] = merged[j];
+        }
         next_line_is_a_modified_key = 1;
       }else{
         if(next_line_is_a_modified_key == 1){
@@ -349,7 +353,7 @@ int parse_config(int argc, char *argv[]){
           Keymap * new_keymaps = realloc(new_keymaps,(*keymaps[el_index].t_modified).size * sizeof(Keymap));
 
           for(int k=0;k<16;k++){
-            new_keymaps[pos].binary_buttons[k] = keymaps[i].binary_buttons[k];
+            new_keymaps[pos].binary_buttons[k] = merged[k];
           }
           new_keymaps[pos].is_func = keymaps[i].is_func;
           new_keymaps[pos].onpress = keymaps[i].onpress;
@@ -359,11 +363,11 @@ int parse_config(int argc, char *argv[]){
           next_line_is_a_modified_key = 0;
         }else{
           populate_keycodes(&keymaps[i], command, commands);
-        }
-      }
 
-      for(int j=0;j<16;j++){
-        keymaps[i].binary_buttons[j] = merged[j];
+          for(int j=0;j<16;j++){
+            keymaps[i].binary_buttons[j] = merged[j];
+          }
+        }
       }
     }
   }
