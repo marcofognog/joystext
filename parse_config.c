@@ -351,10 +351,10 @@ int parse_config(int argc, char *argv[]){
           }
           new_keymaps[pos].is_func = keymaps[i].is_func;
           new_keymaps[pos].onpress = keymaps[i].onpress;
-          new_keymaps[pos].keycode1 = XK_r;
           (*keymaps[i-1].t_modified).repository = new_keymaps;
 
           next_line_is_a_modified_key = 0;
+          populate_keycodes(&new_keymaps[pos], command, commands);
         }else{
           populate_keycodes(&keymaps[i], command, commands);
         }
