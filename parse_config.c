@@ -4,6 +4,8 @@
 #include <X11/extensions/XTest.h>
 #include <X11/keysym.h>
 
+struct t_array;
+
 typedef struct keymap {
   int binary_buttons[16];
   int is_func;
@@ -12,8 +14,13 @@ typedef struct keymap {
   int keycode1;
   int keycode2;
   int keycode3;
-  struct keymap * modified;
+  struct t_array * t_modified;
 } Keymap;
+
+typedef struct t_array{
+  Keymap * repository;
+  int size;
+} TArray;
 
 Keymap *keymaps;
 
@@ -288,23 +295,27 @@ int parse_config(int argc, char *argv[]){
         }
       }
 
+      keymaps[i].t_modified = malloc(sizeof(TArray));
       if(strcmp(command, "=") == 0){
         next_line_is_a_modified_key = 1;
       }else{
         if(next_line_is_a_modified_key == 1){
-          Keymap * new_keymap = malloc(sizeof(Keymap));
+          (*keymaps[i-1].t_modified).size++;
+          int pos = (*keymaps[i-1].t_modified).size - 1;
+
+          Keymap * new_keymaps = realloc(new_keymaps,(*keymaps[i-1].t_modified).size * sizeof(Keymap));
 
           for(int k=0;k<16;k++){
             if(k == 14){
-              (*new_keymap).binary_buttons[k] =1;
+              new_keymaps[pos].binary_buttons[k] =1;
             }else{
-              (*new_keymap).binary_buttons[k] =0;
+              new_keymaps[pos].binary_buttons[k] =0;
             }
           }
-          (*new_keymap).is_func =0;
-          (*new_keymap).onpress =1;
-          (*new_keymap).keycode1 = XK_r;
-          keymaps[i-1].modified = new_keymap;
+          (*new_keymaps).is_func =0;
+          (*new_keymaps).onpress =1;
+          (*new_keymaps).keycode1 = XK_r;
+          (*keymaps[i-1].t_modified).repository = new_keymaps;
 
           next_line_is_a_modified_key = 0;
         }else{

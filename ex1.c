@@ -8,11 +8,6 @@
 int pointer_mode=0;
 int pointer_step = 1;
 
-typedef struct t_array{
-  Keymap * repository;
-  int size;
-} TArray;
-
 void send_keycode(keysym){
   Display* display = XOpenDisplay(0);
   int val = XKeysymToKeycode(display, keysym);
@@ -263,12 +258,9 @@ TArray * get_ref_array(int * jsbuttons, TArray * ref){
     for(int i=0;i<16;i++){
       if(jsbuttons[i] == 1 && (*ref).repository[j].binary_buttons[i] == 1){
         if((*ref).repository[j].mode == chosen_mode
-            && (*ref).repository[j].modified != 0){
+            && (*(*ref).repository[j].t_modified).repository != 0){
           jsbuttons[i] = 0;
-          TArray to_return;
-          to_return.repository = (*ref).repository[j].modified;
-          to_return.size = 1;
-          return &to_return;
+          return (*ref).repository[j].t_modified;
         }
       }
     }
