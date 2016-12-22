@@ -352,7 +352,6 @@ int parse_config(int argc, char *argv[]){
           int pos = (*keymaps[el_index].t_modified).size - 1;
 
           Keymap * new_keymaps = realloc(new_keymaps,(*keymaps[el_index].t_modified).size * sizeof(Keymap));
-          memset(new_keymaps, 0, (*keymaps[el_index].t_modified).size * sizeof(Keymap));
 
           for(int k=0;k<16;k++){
             new_keymaps[pos].binary_buttons[k] = merged[k];
