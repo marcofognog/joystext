@@ -336,7 +336,6 @@ int parse_config(int argc, char *argv[]){
         for(int k=0;k<150;k++){
           if(memcmp(keymaps[k].binary_buttons, merged, sizeof(merged)) == 0){
             el_index = k;
-            printf("jah existe na pos: %i\n", k);
             break;
           }else{
             el_index = i;
