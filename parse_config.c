@@ -224,7 +224,7 @@ void populate_keycodes(Keymap * keymap, char command[], Command command_list[]){
   char *keycode_name3;
   keycode_name3 = strtok(NULL, "+");
 
-  for(int k=0; k<120; k++){
+  for(int k=0; k<150; k++){
     if(keycode_name1 != NULL){
       if(strcmp(keycode_name1, command_list[k].name) == 0){
         (*keymap).is_func = command_list[k].is_func;
@@ -253,6 +253,7 @@ void populate_keycodes(Keymap * keymap, char command[], Command command_list[]){
 }
 
 int number_of_lines;
+int el_index = 0;
 
 int parse_config(int argc, char *argv[]){
 
@@ -326,38 +327,43 @@ int parse_config(int argc, char *argv[]){
             }
           }
         }
-
-        for(int j=0;j<16;j++){
-          keymaps[i].binary_buttons[j] = merged[j];
-        }
       }
 
       keymaps[i].t_modified = malloc(sizeof(TArray));
       if(strcmp(command, "=") == 0){
+        for(int k=0;k<150;k++){
+          if(memcmp(keymaps[k].binary_buttons, merged, sizeof(merged)) == 0){
+            el_index = k;
+            printf("jah existe na pos: %i\n", k);
+            break;
+          }else{
+            el_index = i;
+          }
+        }
         next_line_is_a_modified_key = 1;
       }else{
         if(next_line_is_a_modified_key == 1){
-          (*keymaps[i-1].t_modified).size++;
-          int pos = (*keymaps[i-1].t_modified).size - 1;
+          (*keymaps[el_index].t_modified).size++;
+          int pos = (*keymaps[el_index].t_modified).size - 1;
 
-          Keymap * new_keymaps = realloc(new_keymaps,(*keymaps[i-1].t_modified).size * sizeof(Keymap));
+          Keymap * new_keymaps = realloc(new_keymaps,(*keymaps[el_index].t_modified).size * sizeof(Keymap));
 
           for(int k=0;k<16;k++){
-            if(k == 14){
-              new_keymaps[pos].binary_buttons[k] =1;
-            }else{
-              new_keymaps[pos].binary_buttons[k] =0;
-            }
+            new_keymaps[pos].binary_buttons[k] = keymaps[i].binary_buttons[k];
           }
           new_keymaps[pos].is_func = keymaps[i].is_func;
           new_keymaps[pos].onpress = keymaps[i].onpress;
-          (*keymaps[i-1].t_modified).repository = new_keymaps;
+          (*keymaps[el_index].t_modified).repository = new_keymaps;
 
-          next_line_is_a_modified_key = 0;
           populate_keycodes(&new_keymaps[pos], command, commands);
+          next_line_is_a_modified_key = 0;
         }else{
           populate_keycodes(&keymaps[i], command, commands);
         }
+      }
+
+      for(int j=0;j<16;j++){
+        keymaps[i].binary_buttons[j] = merged[j];
       }
     }
   }
