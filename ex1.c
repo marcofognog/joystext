@@ -70,6 +70,16 @@ void set_step(int step){
   pointer_step = step;
 }
 
+void switch_to_mode0(){
+  pointer_mode=0;
+  printf("switched to: %i\n", pointer_mode);
+}
+
+void switch_to_mode1(){
+  pointer_mode=1;
+  printf("switched to: %i\n", pointer_mode);
+}
+
 void call_func(struct keymap keyref){
   switch(keyref.keycode1){
     case 0 :
@@ -129,33 +139,35 @@ void call_func(struct keymap keyref){
     case 18 :
       set_step(75);
       break;
+    case 19 :
+      switch_to_mode0();
+      break;
+    case 20 :
+      switch_to_mode1();
+      break;
     default:
       printf("Function not found.");
   }
 }
 
 void send_key(int *binary_buttons, TArray * ref_array,int onpress){
-  int chosen_mode = 0; // temporary!
-
-  if(pointer_mode == 0){
-    for(int i=0;i<(*ref_array).size;i++){
-      if(memcmp(binary_buttons,(*ref_array).repository[i].binary_buttons, sizeof((*ref_array).repository[i].binary_buttons)) == 0
-          && (*ref_array).repository[i].mode == chosen_mode
-          && (*ref_array).repository[i].onpress == onpress){
-        if((*ref_array).repository[i].is_func){
-          call_func((*ref_array).repository[i]);
-        }else{
-          if((*ref_array).repository[i].keycode2 !=0){
-            if((*ref_array).repository[i].keycode3 !=0){
-              send_keycode_mod_mod((*ref_array).repository[i].keycode1,
-                  (*ref_array).repository[i].keycode2,
-                  (*ref_array).repository[i].keycode3);
-            }else{
-              send_keycode_modified((*ref_array).repository[i].keycode1, (*ref_array).repository[i].keycode2);
-            }
+  for(int i=0;i<(*ref_array).size;i++){
+    if(memcmp(binary_buttons,(*ref_array).repository[i].binary_buttons, sizeof((*ref_array).repository[i].binary_buttons)) == 0
+        && (*ref_array).repository[i].mode == pointer_mode
+        && (*ref_array).repository[i].onpress == onpress){
+      if((*ref_array).repository[i].is_func){
+        call_func((*ref_array).repository[i]);
+      }else{
+        if((*ref_array).repository[i].keycode2 !=0){
+          if((*ref_array).repository[i].keycode3 !=0){
+            send_keycode_mod_mod((*ref_array).repository[i].keycode1,
+                (*ref_array).repository[i].keycode2,
+                (*ref_array).repository[i].keycode3);
           }else{
-            send_keycode((*ref_array).repository[i].keycode1);
+            send_keycode_modified((*ref_array).repository[i].keycode1, (*ref_array).repository[i].keycode2);
           }
+        }else{
+          send_keycode((*ref_array).repository[i].keycode1);
         }
       }
     }
@@ -253,11 +265,10 @@ void fetch_presses_from_js(int *bin_buttons, SDL_Joystick *joystick){
 }
 
 TArray * get_ref_array(int * jsbuttons, TArray * ref){
-  int chosen_mode = 0;
   for(int j=0; j< (*ref).size; j++){
     for(int i=0;i<16;i++){
       if(jsbuttons[i] == 1 && (*ref).repository[j].binary_buttons[i] == 1){
-        if((*ref).repository[j].mode == chosen_mode
+        if((*ref).repository[j].mode == pointer_mode
             && (*(*ref).repository[j].t_modified).repository != 0){
           jsbuttons[i] = 0;
           return (*ref).repository[j].t_modified;
@@ -267,6 +278,12 @@ TArray * get_ref_array(int * jsbuttons, TArray * ref){
   }
   return ref;
 }
+
+Keymap modemaps[2] = {
+  {{0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0},1,1,0,19,0,0,0},
+  {{0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0},1,0,0,20,0,0,0}
+};
+int modemaps_size = 2;
 
 int main(int argc, char *argv[]){
   parse_config(argc, argv);
@@ -294,6 +311,7 @@ int main(int argc, char *argv[]){
 
   int buttons[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
   int history[100][16];
+  int mode_history[100][16];
 
   //reset history
   for(int j=0;j<10;j++){
@@ -302,6 +320,7 @@ int main(int argc, char *argv[]){
     }
   }
   int counter=0;
+  int mode_counter=0;
   int merged[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 
 
@@ -313,8 +332,12 @@ int main(int argc, char *argv[]){
 
     TArray ref_array = { keymaps, number_of_lines };
     ref_array = * get_ref_array(buttons, &ref_array);
+
+    TArray mode_array = { modemaps, modemaps_size };
+
     check_for_press_events(buttons, &ref_array);
     check_for_release_events(buttons,history,merged, &counter,&ref_array);
+    check_for_release_events(buttons,mode_history,merged, &mode_counter,&mode_array);
   }
 
   SDL_Quit();

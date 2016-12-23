@@ -190,6 +190,8 @@ Command commands[150] = {
   {1,"set_mouse_step_65",{16}},
   {1,"set_mouse_step_70",{17}},
   {1,"set_mouse_step_75",{18}},
+  {1,"switch_to_mode0",{19}},
+  {1,"switch_to_mode1",{20}}
 };
 
 typedef struct button{
