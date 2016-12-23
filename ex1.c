@@ -43,7 +43,7 @@ void send_keycode_mod_mod(mod1,mod2, keysym){
   XFlush(display);
 }
 
-void move_pointer(int dest_x,int dest_y, int step){
+void move_pointer(int dest_x,int dest_y){
   Display* display = XOpenDisplay(0);
   XWarpPointer(display, None, None, 0, 0, 0, 0, dest_x * pointer_step, dest_y * pointer_step);
   XFlush(display);
@@ -59,19 +59,19 @@ void scroll(int scroll_direction){
 }
 
 void mouse_up(){
-  move_pointer(0,-1,1);
+  move_pointer(0,-1);
 }
 
 void mouse_down(){
-  move_pointer(0,1,1);
+  move_pointer(0,1);
 }
 
 void mouse_left(){
-  move_pointer(-1,0,1);
+  move_pointer(-1,0);
 }
 
 void mouse_right(){
-  move_pointer(1,0,1);
+  move_pointer(1,0);
 }
 
 void set_step(int step){
