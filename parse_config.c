@@ -339,8 +339,10 @@ int parse_config(int argc, char *argv[]){
       memset(keymaps[i].t_modified,0, sizeof(TArray));
 
       if(strcmp(command, "=") == 0){
-        for(int k=0;k<150;k++){
-          if(memcmp(keymaps[k].binary_buttons, merged, sizeof(merged)) == 0){
+        for(int k=0;k<number_of_lines;k++){
+          if((memcmp(keymaps[k].binary_buttons, merged, sizeof(merged)) == 0)
+              && (keymaps[k].mode == keymaps[i].mode)
+              ){
             el_index = k;
             break;
           }else{
@@ -364,6 +366,7 @@ int parse_config(int argc, char *argv[]){
           }
           new_keymaps[pos].is_func = keymaps[i].is_func;
           new_keymaps[pos].onpress = keymaps[i].onpress;
+          new_keymaps[pos].mode = keymaps[i].mode;
           (*keymaps[el_index].t_modified).repository = new_keymaps;
 
           populate_keycodes(&new_keymaps[pos], command, commands);
