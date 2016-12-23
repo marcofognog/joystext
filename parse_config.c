@@ -230,7 +230,7 @@ void populate_keycodes(Keymap * keymap, char command[], Command command_list[]){
   char *keycode_name3;
   keycode_name3 = strtok(NULL, "+");
 
-  for(int k=0; k<150; k++){
+  for(int k=0; k<200; k++){
     if(keycode_name1 != NULL){
       if(strcmp(keycode_name1, command_list[k].name) == 0){
         (*keymap).is_func = command_list[k].is_func;
