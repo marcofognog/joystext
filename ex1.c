@@ -50,10 +50,18 @@ void move_pointer(int dest_x,int dest_y){
   XCloseDisplay(display);
 }
 
-void scroll(int scroll_direction){
+void scroll(int scroll_direction, int step){
   Display* display = XOpenDisplay(0);
-  XTestFakeButtonEvent(display, scroll_direction, 1, 0);
-  XTestFakeButtonEvent(display, scroll_direction, 0, 0);
+  int num;
+  if(step == 1){
+    num = 1;
+  }else{
+    num = step/5;
+  }
+  for(int i=0;i<(num); i++){
+    XTestFakeButtonEvent(display, scroll_direction, 1, 0);
+    XTestFakeButtonEvent(display, scroll_direction, 0, 0);
+  }
   XFlush(display);
   XCloseDisplay(display);
 }
@@ -79,19 +87,19 @@ void set_step(int step){
 }
 
 void scroll_up(){
-  scroll(4);
+  scroll(4, pointer_step);
 }
 
 void scroll_down(){
-  scroll(5);
+  scroll(5, pointer_step);
 }
 
 void scroll_right(){
-  scroll(6);
+  scroll(6, pointer_step);
 }
 
 void scroll_left(){
-  scroll(7);
+  scroll(7, pointer_step);
 }
 
 void switch_to_mode0(){
