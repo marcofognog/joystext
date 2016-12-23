@@ -174,3 +174,5 @@ F1:set_mouse_step_5,11
 F2:set_mouse_step_15,11
 F3:set_mouse_step_25,11
 F4:set_mouse_step_45,11
+S1:click_left,11
+S3:click_right,11

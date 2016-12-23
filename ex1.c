@@ -66,6 +66,23 @@ void scroll(int scroll_direction, int step){
   XCloseDisplay(display);
 }
 
+void click(int num){
+  Display* display = XOpenDisplay(0);
+  XTestFakeButtonEvent(display, num, 1, 0);
+  XTestFakeButtonEvent(display, num, 0, 0);
+  XFlush(display);
+  XCloseDisplay(display);
+  usleep(200000);
+}
+
+void click_right(){
+  click(3);
+}
+
+void click_left(){
+  click(1);
+}
+
 void mouse_up(){
   move_pointer(0,-1);
 }
@@ -188,6 +205,12 @@ void call_func(struct keymap keyref){
       break;
     case 24 :
       scroll_left();
+      break;
+    case 25 :
+      click_right();
+      break;
+    case 26 :
+      click_left();
       break;
     default:
       printf("Function not found.");
