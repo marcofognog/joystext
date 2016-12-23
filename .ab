@@ -1,0 +1,17 @@
+F1:a,10
+F2:c+d,00
+S1:s,01
+A1:mouse_up,01
+A3:mouse_down,01
+A2:mouse_right,01
+A4:mouse_left,01
+F1:set_mouse_step_5,01
+F2:set_mouse_step_15,01
+F3:set_mouse_step_25,01
+F4:set_mouse_step_45,01
+S2:=,00
+A1:w,01
+S2:=,00
+A2:f,01
+S2:=,00
+A3:g,01
