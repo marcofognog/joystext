@@ -191,7 +191,11 @@ Command commands[150] = {
   {1,"set_mouse_step_70",{17}},
   {1,"set_mouse_step_75",{18}},
   {1,"switch_to_mode0",{19}},
-  {1,"switch_to_mode1",{20}}
+  {1,"switch_to_mode1",{20}},
+  {1,"scroll_up",{21}},
+  {1,"scroll_down",{22}},
+  {1,"scroll_left",{23}},
+  {1,"scroll_right",{24}}
 };
 
 typedef struct button{

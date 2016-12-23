@@ -50,6 +50,14 @@ void move_pointer(int dest_x,int dest_y, int step){
   XCloseDisplay(display);
 }
 
+void scroll(int scroll_direction){
+  Display* display = XOpenDisplay(0);
+  XTestFakeButtonEvent(display, scroll_direction, 1, 0);
+  XTestFakeButtonEvent(display, scroll_direction, 0, 0);
+  XFlush(display);
+  XCloseDisplay(display);
+}
+
 void mouse_up(){
   move_pointer(0,-1,1);
 }
@@ -68,6 +76,22 @@ void mouse_right(){
 
 void set_step(int step){
   pointer_step = step;
+}
+
+void scroll_up(){
+  scroll(4);
+}
+
+void scroll_down(){
+  scroll(5);
+}
+
+void scroll_right(){
+  scroll(6);
+}
+
+void scroll_left(){
+  scroll(7);
 }
 
 void switch_to_mode0(){
@@ -144,6 +168,18 @@ void call_func(struct keymap keyref){
       break;
     case 20 :
       switch_to_mode1();
+      break;
+    case 21 :
+      scroll_up();
+      break;
+    case 22 :
+      scroll_down();
+      break;
+    case 23 :
+      scroll_right();
+      break;
+    case 24 :
+      scroll_left();
       break;
     default:
       printf("Function not found.");
