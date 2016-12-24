@@ -361,17 +361,19 @@ int parse_config(int argc, char *argv[]){
           (*keymaps[el_index].t_modified).size++;
           int pos = (*keymaps[el_index].t_modified).size - 1;
 
-          Keymap * new_keymaps = realloc(new_keymaps,(*keymaps[el_index].t_modified).size * sizeof(Keymap));
+          (*keymaps[el_index].t_modified).repository = realloc(
+              (*keymaps[el_index].t_modified).repository,
+              (*keymaps[el_index].t_modified).size * sizeof(Keymap)
+              );
 
           for(int k=0;k<16;k++){
-            new_keymaps[pos].binary_buttons[k] = merged[k];
+           (*keymaps[el_index].t_modified).repository[pos].binary_buttons[k] = merged[k];
           }
-          new_keymaps[pos].is_func = keymaps[i].is_func;
-          new_keymaps[pos].onpress = keymaps[i].onpress;
-          new_keymaps[pos].mode = keymaps[i].mode;
-          (*keymaps[el_index].t_modified).repository = new_keymaps;
+          (*keymaps[el_index].t_modified).repository[pos].is_func = keymaps[i].is_func;
+          (*keymaps[el_index].t_modified).repository[pos].onpress = keymaps[i].onpress;
+          (*keymaps[el_index].t_modified).repository[pos].mode = keymaps[i].mode;
 
-          populate_keycodes(&new_keymaps[pos], command, commands);
+          populate_keycodes(&(*keymaps[el_index].t_modified).repository[pos], command, commands);
           next_line_is_a_modified_key = 0;
         }else{
           populate_keycodes(&keymaps[i], command, commands);
