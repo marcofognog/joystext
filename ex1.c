@@ -217,32 +217,40 @@ void call_func(struct keymap keyref){
   }
 }
 
-void send_key(int *binary_buttons, TArray * ref_array,int onpress){
+int send_key(int *binary_buttons, TArray * ref_array,int onpress){
   for(int i=0;i<(*ref_array).size;i++){
     if(memcmp(binary_buttons,(*ref_array).repository[i].binary_buttons, sizeof((*ref_array).repository[i].binary_buttons)) == 0
         && (*ref_array).repository[i].mode == pointer_mode
         && (*ref_array).repository[i].onpress == onpress){
       if((*ref_array).repository[i].is_func){
         call_func((*ref_array).repository[i]);
+        return 1;
       }else{
         if((*ref_array).repository[i].keycode2 !=0){
           if((*ref_array).repository[i].keycode3 !=0){
             send_keycode_mod_mod((*ref_array).repository[i].keycode1,
                 (*ref_array).repository[i].keycode2,
                 (*ref_array).repository[i].keycode3);
+            return 1;
           }else{
             send_keycode_modified((*ref_array).repository[i].keycode1, (*ref_array).repository[i].keycode2);
+            return 1;
           }
         }else{
-          send_keycode((*ref_array).repository[i].keycode1);
+          if((*ref_array).repository[i].keycode1 != 0){
+            send_keycode((*ref_array).repository[i].keycode1);
+            return 1;
+          }
         }
       }
     }
   }
+  return 0;
 }
 
-void check_for_press_events(int *binary_buttons, TArray * ref_array){
+int check_for_press_events(int *binary_buttons, TArray * ref_array){
   int single[16];
+  int did_press_key = 0;
   if(pressed_key(binary_buttons)){
     for(int i=0; i<16; i++){
       if(binary_buttons[i] == 1){
@@ -253,19 +261,22 @@ void check_for_press_events(int *binary_buttons, TArray * ref_array){
             single[k] = 0;
           }
         }
-        send_key(single, ref_array, 1);
+       did_press_key = send_key(single, ref_array, 1);
       }
     }
     pointer_step =1;
   }
+  return did_press_key;
 }
 
-void check_for_release_events(int *bin_buttons, int bin_history[100][16], int *bin_merged, int *counter_p, TArray * ref_array){
+int check_for_release_events(int *bin_buttons, int bin_history[100][16], int *bin_merged, int *counter_p, TArray * ref_array){
+  int did_release_key = 0;
   for(int i=0; i<16;i++){
     bin_history[*counter_p][i] = bin_buttons[i];
   }
 
   if(pressed_key(bin_buttons)){
+    did_release_key = 0;
   }else{
     for (int i=0; i<16; i++){
       bin_merged[i]=0;
@@ -284,7 +295,7 @@ void check_for_release_events(int *bin_buttons, int bin_history[100][16], int *b
       }
     }
 
-    send_key(bin_merged, ref_array,0);
+    did_release_key = send_key(bin_merged, ref_array,0);
   }
 
   if(*counter_p>97){
@@ -298,6 +309,7 @@ void check_for_release_events(int *bin_buttons, int bin_history[100][16], int *b
   }else{
     (*counter_p)++;
   }
+  return did_release_key;
 }
 
 void fetch_presses_from_js(int *bin_buttons, SDL_Joystick *joystick){
@@ -377,16 +389,24 @@ int main(int argc, char *argv[]){
   printf("botaoes: %i\n", SDL_JoystickNumButtons(joystick));
 
   int buttons[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+  int mod_history[100][16];
   int history[100][16];
   int mode_history[100][16];
 
   //reset history
-  for(int j=0;j<10;j++){
+  for(int j=0;j<100;j++){
     for(int i=0;i<16;i++){
       history[j][i]=0;
     }
   }
+  //reset history
+  for(int j=0;j<100;j++){
+    for(int i=0;i<16;i++){
+      mod_history[j][i]=0;
+    }
+  }
   int counter=0;
+  int mod_counter=0;
   int mode_counter=0;
   int merged[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 
@@ -398,12 +418,14 @@ int main(int argc, char *argv[]){
     fetch_presses_from_js(buttons, joystick);
 
     TArray ref_array = { keymaps, number_of_lines };
-    ref_array = * get_ref_array(buttons, &ref_array);
+    TArray mod_array = * get_ref_array(buttons, &ref_array);
 
     TArray mode_array = { modemaps, modemaps_size };
 
-    check_for_press_events(buttons, &ref_array);
-    check_for_release_events(buttons,history,merged, &counter,&ref_array);
+    if((check_for_press_events(buttons, &mod_array) == 1) || (check_for_release_events(buttons,mod_history,merged, &mod_counter,&mod_array) == 1)){
+    }else{
+    }
+
     check_for_release_events(buttons,mode_history,merged, &mode_counter,&mode_array);
   }
 
