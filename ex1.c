@@ -389,6 +389,7 @@ int main(int argc, char *argv[]){
   printf("botaoes: %i\n", SDL_JoystickNumButtons(joystick));
 
   int buttons[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+  int mod_buttons[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
   int mod_history[100][16];
   int history[100][16];
   int mode_history[100][16];
@@ -408,25 +409,25 @@ int main(int argc, char *argv[]){
   int counter=0;
   int mod_counter=0;
   int mode_counter=0;
+  int mod_merged[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
   int merged[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-
+  int mode_merged[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 
   while(1){
     SDL_Delay(40);
     SDL_JoystickUpdate();
 
-    fetch_presses_from_js(buttons, joystick);
+    fetch_presses_from_js(mod_buttons, joystick);
+    memcpy(buttons, mod_buttons, sizeof(mod_buttons));
 
     TArray ref_array = { keymaps, number_of_lines };
     TArray mod_array = * get_ref_array(buttons, &ref_array);
 
     TArray mode_array = { modemaps, modemaps_size };
 
-    if((check_for_press_events(buttons, &mod_array) == 1) || (check_for_release_events(buttons,mod_history,merged, &mod_counter,&mod_array) == 1)){
-    }else{
-    }
-
-    check_for_release_events(buttons,mode_history,merged, &mode_counter,&mode_array);
+    check_for_press_events(mod_buttons, &mod_array);
+    check_for_release_events(mod_buttons,mod_history,mod_merged, &mod_counter,&mod_array);
+    check_for_release_events(mod_buttons,mode_history,mode_merged, &mode_counter,&mode_array);
   }
 
   SDL_Quit();
