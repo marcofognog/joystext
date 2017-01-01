@@ -435,7 +435,7 @@ int main(int argc, char *argv[]){
   loop_and_wait();
 
   SDL_Quit();
-  puts("quit sdl");
+  puts("Bye.");
 
   return 0;
 }
