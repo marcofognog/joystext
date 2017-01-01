@@ -2,3 +2,4 @@ ex1
 parser
 tmp
 bin/*
+spec/src/*
