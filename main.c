@@ -430,7 +430,7 @@ int main(int argc, char *argv[]){
     printf("    %s\n", SDL_JoystickName(i));
   }
 
-  printf("botaoes: %i\n", SDL_JoystickNumButtons(joystick));
+  printf("Number of buttons: %i\n", SDL_JoystickNumButtons(joystick));
 
   loop_and_wait();
 
