@@ -4,11 +4,11 @@
 #include <X11/extensions/XTest.h>
 #include <X11/keysym.h>
 #include "parse_config.c"
+#include "fetch_presses_from_js.c"
 #include "sends.c"
 
 int pointer_mode=0;
 int pointer_step = 1;
-SDL_Joystick *joystick;
 
 void move_pointer(int dest_x,int dest_y){
   Display* display = XOpenDisplay(0);
@@ -277,37 +277,6 @@ int check_for_release_events(int *bin_buttons, int bin_history[100][16], int *bi
     (*counter_p)++;
   }
   return did_release_key;
-}
-
-void fetch_presses_from_js(int *bin_buttons, SDL_Joystick *joystick){
-  //initialize
-  for (int i=0; i < 16; i++){
-    bin_buttons[i] = 0;
-  }
-
-  for ( int i=0; i < 12; i++ )
-  {
-    unsigned int n = SDL_JoystickGetButton ( joystick, i );
-    if ( n != 0 )
-      bin_buttons[i] = 1;
-  }
-
-  signed short a1 = SDL_JoystickGetAxis ( joystick, 0 );
-  signed short a2 = SDL_JoystickGetAxis ( joystick, 1 );
-  if ( a1 != 0 ){
-    if ( a1 < 0 ){
-      bin_buttons[12] = 1;
-    } else {
-      bin_buttons[13] = 1;
-    }
-  }
-  if ( a2 != 0 ){
-    if ( a2 < 0 ){
-      bin_buttons[14] = 1;
-    } else {
-      bin_buttons[15] = 1;
-    }
-  }
 }
 
 Keymap modemaps[2] = {
