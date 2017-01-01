@@ -7,6 +7,7 @@
 
 int pointer_mode=0;
 int pointer_step = 1;
+SDL_Joystick *joystick;
 
 void send_keycode(keysym){
   Display* display = XOpenDisplay(0);
@@ -343,6 +344,12 @@ void fetch_presses_from_js(int *bin_buttons, SDL_Joystick *joystick){
   }
 }
 
+Keymap modemaps[2] = {
+  {{0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0},1,1,0,19,0,0,0},
+  {{0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0},1,0,0,20,0,0,0}
+};
+int modemaps_size = 2;
+
 TArray * get_ref_array(int * jsbuttons, TArray * ref){
   for(int j=0; j< (*ref).size; j++){
     for(int i=0;i<16;i++){
@@ -358,36 +365,7 @@ TArray * get_ref_array(int * jsbuttons, TArray * ref){
   return ref;
 }
 
-Keymap modemaps[2] = {
-  {{0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0},1,1,0,19,0,0,0},
-  {{0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0},1,0,0,20,0,0,0}
-};
-int modemaps_size = 2;
-
-int main(int argc, char *argv[]){
-  parse_config(argc, argv);
-
-  if (SDL_Init( SDL_INIT_VIDEO | SDL_INIT_JOYSTICK ) < 0)
-  {
-    fprintf(stderr, "Couldn't initialize SDL: %s\n", SDL_GetError());
-    exit(1);
-  }
-
-  SDL_Joystick *joystick;
-
-  SDL_JoystickEventState(SDL_ENABLE);
-  joystick = SDL_JoystickOpen(0);
-
-  printf("%i joysticks were found.\n\n", SDL_NumJoysticks() );
-  printf("The names of the joysticks are:\n");
-
-  for(int i=0; i < SDL_NumJoysticks(); i++ )
-  {
-    printf("    %s\n", SDL_JoystickName(i));
-  }
-
-  printf("botaoes: %i\n", SDL_JoystickNumButtons(joystick));
-
+void loop_and_wait(){
   int buttons[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
   int mod_buttons[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
   int mod_history[100][16];
@@ -429,6 +407,32 @@ int main(int argc, char *argv[]){
     check_for_release_events(mod_buttons,mod_history,mod_merged, &mod_counter,&mod_array);
     check_for_release_events(mod_buttons,mode_history,mode_merged, &mode_counter,&mode_array);
   }
+}
+
+int main(int argc, char *argv[]){
+  parse_config(argc, argv);
+
+  if (SDL_Init( SDL_INIT_VIDEO | SDL_INIT_JOYSTICK ) < 0)
+  {
+    fprintf(stderr, "Couldn't initialize SDL: %s\n", SDL_GetError());
+    exit(1);
+  }
+
+
+  SDL_JoystickEventState(SDL_ENABLE);
+  joystick = SDL_JoystickOpen(0);
+
+  printf("%i joysticks were found.\n\n", SDL_NumJoysticks() );
+  printf("The names of the joysticks are:\n");
+
+  for(int i=0; i < SDL_NumJoysticks(); i++ )
+  {
+    printf("    %s\n", SDL_JoystickName(i));
+  }
+
+  printf("botaoes: %i\n", SDL_JoystickNumButtons(joystick));
+
+  loop_and_wait();
 
   SDL_Quit();
   puts("quit sdl");
