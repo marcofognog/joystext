@@ -1,0 +1,6 @@
+mkfifo pipe
+./spec/bin/ex1 .joystext <pipe &
+PID=$!
+cat spec/sample-input > pipe
+rm -f pipe
+kill -2 $PID
