@@ -5,9 +5,15 @@
 #include <X11/keysym.h>
 #include "fetch_presses_from_js.c"
 #include "sends.c"
+#include <signal.h>
 
 int pointer_mode=0;
 int pointer_step = 1;
+int should_run=1;
+
+void signal_handler(int sig){
+  should_run=0;
+}
 
 void move_pointer(int dest_x,int dest_y){
   Display* display = XOpenDisplay(0);
@@ -300,6 +306,8 @@ TArray * get_ref_array(int * jsbuttons, TArray * ref){
 }
 
 void loop_and_wait(){
+  (void) signal(SIGINT, signal_handler);
+
   int buttons[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
   int mod_buttons[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
   int mod_history[100][16];
@@ -325,7 +333,7 @@ void loop_and_wait(){
   int merged[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
   int mode_merged[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 
-  while(1){
+  while(should_run){
     SDL_Delay(40);
     SDL_JoystickUpdate();
 
