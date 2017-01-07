@@ -338,6 +338,12 @@ void loop_and_wait(){
     SDL_JoystickUpdate();
 
     fetch_presses_from_js(mod_buttons, joystick);
+    int all_pressed[16] = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
+    if(memcmp(mod_buttons, &all_pressed, sizeof(all_pressed)) == 0){
+      should_run=0;
+      break;
+    }
+
     memcpy(buttons, mod_buttons, sizeof(mod_buttons));
 
     TArray ref_array = { keymaps, number_of_lines };
