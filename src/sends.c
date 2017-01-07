@@ -20,6 +20,7 @@ void send_keycode_modified(modifier, keysym){
   XTestFakeKeyEvent(display,keycode,0,0);
   XTestFakeKeyEvent(display,modcode,0,0);
   XFlush(display);
+  XCloseDisplay(display);
 }
 
 void send_keycode_mod_mod(mod1,mod2, keysym){
@@ -35,5 +36,6 @@ void send_keycode_mod_mod(mod1,mod2, keysym){
   XTestFakeKeyEvent(display,modcode1,0,0);
   XTestFakeKeyEvent(display,modcode2,0,0);
   XFlush(display);
+  XCloseDisplay(display);
 }
 
