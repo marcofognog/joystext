@@ -178,8 +178,8 @@ A2:mouse_right,11
 A4:mouse_left,11
 F1:click_left,11
 F2:set_mouse_step_15,11
-F3:set_mouse_step_25,11
-F4:set_mouse_step_45,11
+F3:set_mouse_step_40,11
+F4:set_mouse_step_60,11
 S1+S3:click_right,10
 S3:enter,10
 S1+F4:escape,10
