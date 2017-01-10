@@ -1,4 +1,5 @@
 require 'spec_helper'
+
 describe "integration" do
   context 'for release presses' do
     context 'given a config file' do
@@ -13,15 +14,17 @@ END
       savef(config_file, config_content)
 
       context 'output the correct char' do
-        it 'on simple quick press' do
-          input_content =<<END
+        let(:input_content) do
+          <<END
 1000000000000000
 0000000000000000
 1111111111111111
 END
-          input_file = "tmp/input"
-          savef(input_file, input_content)
+        end
+        let(:input_file) { "tmp/quick-press" }
 
+        it 'on simple quick press' do
+          savef(input_file, input_content)
           expected =<<END
 38
 END
@@ -40,7 +43,7 @@ END
 0000000000000000
 1111111111111111
 END
-          input_file = "tmp/input"
+          input_file = "tmp/longer-press"
           savef(input_file, input_content)
 
           expected =<<END
@@ -58,16 +61,18 @@ END
 0000000000000000
 1111111111111111
 END
-          input_file = "tmp/input"
+          input_file = "tmp/combo-of-two"
           savef(input_file, input_content)
 
           expected =<<END
 41
 END
+        end
+
+        after do
           cmd = "cat #{input_file} | ./spec/bin/ex1 #{config_file}"
           puts "Running: #{cmd}"
           expect(`#{cmd}`).to eq(expected)
-
         end
       end
     end

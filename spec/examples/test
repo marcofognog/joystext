@@ -1,0 +1,19 @@
+test(){
+  INPUT_FILE=$1
+  CONFIG_FILE=$2
+  EXPECTED_FILE=$3
+
+  OUTPUT=$(cat $INPUT_FILE | ./spec/bin/ex1 $CONFIG_FILE)
+  EXPECTED=$(cat $EXPECTED_FILE)
+  if [ $OUTPUT -eq $EXPECTED ]
+  then
+    echo "passou"
+  else
+    echo "fracassou"
+  fi
+}
+
+test "spec/examples/quick-press"  "spec/examples/small" "spec/examples/quick-press-exp"
+test "spec/examples/longer-press" "spec/examples/small" "spec/examples/longer-press-exp"
+test "spec/examples/combo-of-two" "spec/examples/small" "spec/examples/combo-of-two-exp"
+
