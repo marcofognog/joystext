@@ -1,0 +1,38 @@
+IDEAL:
+busca a combinação na conf dentro dentro do modo
+se for um modificador:
+  carregue nova conf
+  busque o restante do combo na nova conf dentro do modo
+  se for um modificaro ...
+se for um comando:
+  verifique o tipo:
+    caso seja realease
+      guarde no historico e aguarde chegar o zero
+      quando chegar zero, oegue o merge e envia_tecla
+    senão:
+    para cada um das teclas individualmente
+      caso seja onpress sem filtro
+        envia_tecla
+      caso seja onpress com filtro
+        verifique se a tecla anterior é a mesma que agora,
+          caso seja, nao faça nada e acumule
+          caso não seja, imprima e acumule
+        sempre que o acumulado for maior que 10, envia_tecla.
+
+HOJE:
+busca a combinação na conf dentro do modo
+se for um modificador:
+  substitua o repositório de conf
+
+para cada bit:
+  se combo nao for zero
+    decomponha o combo
+    para cada combo decomposto:
+      busque na conf pelo combo decomposto e pelo tipo de valor 1 (onpress) e modo
+        imprima.
+
+guarde combo no historico
+se combo for zero:
+  megeie o historico
+  busque na conf pelo combo decomposto e pelo tipo de valor 0 (release) e modo
+  limpe o historico
