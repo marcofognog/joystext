@@ -91,13 +91,8 @@ void scroll_left(){
   scroll(7, pointer_step);
 }
 
-void switch_to_mode0(){
-  pointer_mode=0;
-  printf("switched to: %i\n", pointer_mode);
-}
-
-void switch_to_mode1(){
-  pointer_mode=1;
+void switch_to_mode(int mode_num){
+  pointer_mode=mode_num;
   printf("switched to: %i\n", pointer_mode);
 }
 
@@ -161,10 +156,10 @@ void call_func(struct keymap keyref){
       set_step(75);
       break;
     case 19 :
-      switch_to_mode0();
+      switch_to_mode(0);
       break;
     case 20 :
-      switch_to_mode1();
+      switch_to_mode(1);
       break;
     case 21 :
       scroll_up();
@@ -183,6 +178,30 @@ void call_func(struct keymap keyref){
       break;
     case 26 :
       click_left();
+      break;
+    case 27 :
+      switch_to_mode(2);
+      break;
+    case 28 :
+      switch_to_mode(3);
+      break;
+    case 29 :
+      switch_to_mode(4);
+      break;
+    case 30 :
+      switch_to_mode(5);
+      break;
+    case 31 :
+      switch_to_mode(6);
+      break;
+    case 32 :
+      switch_to_mode(7);
+      break;
+    case 33 :
+      switch_to_mode(8);
+      break;
+    case 34 :
+      switch_to_mode(9);
       break;
     default:
       printf("Function not found.");
@@ -284,12 +303,6 @@ int check_for_release_events(int *bin_buttons, int bin_history[100][16], int *bi
   return did_release_key;
 }
 
-Keymap modemaps[2] = {
-  {{0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0},1,1,0,19,0,0,0},
-  {{0,0,0,0,0,0,0,0,0,1,0,0,0,0,0,0},1,0,0,20,0,0,0}
-};
-int modemaps_size = 2;
-
 TArray * get_ref_array(int * jsbuttons, TArray * ref){
   for(int j=0; j< (*ref).size; j++){
     for(int i=0;i<16;i++){
@@ -349,11 +362,8 @@ void loop_and_wait(){
     TArray ref_array = { keymaps, number_of_lines };
     TArray mod_array = * get_ref_array(buttons, &ref_array);
 
-    TArray mode_array = { modemaps, modemaps_size };
-
     check_for_press_events(mod_buttons, &mod_array);
     check_for_release_events(mod_buttons,mod_history,mod_merged, &mod_counter,&mod_array);
-    check_for_release_events(mod_buttons,mode_history,mode_merged, &mode_counter,&mode_array);
   }
 }
 
