@@ -324,27 +324,15 @@ void loop_and_wait(){
   int buttons[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
   int mod_buttons[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
   int mod_history[100][16];
-  int history[100][16];
-  int mode_history[100][16];
 
-  //reset history
-  for(int j=0;j<100;j++){
-    for(int i=0;i<16;i++){
-      history[j][i]=0;
-    }
-  }
   //reset history
   for(int j=0;j<100;j++){
     for(int i=0;i<16;i++){
       mod_history[j][i]=0;
     }
   }
-  int counter=0;
   int mod_counter=0;
-  int mode_counter=0;
   int mod_merged[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-  int merged[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-  int mode_merged[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 
   while(should_run){
     SDL_Delay(40);
