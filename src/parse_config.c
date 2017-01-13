@@ -205,7 +205,8 @@ Command commands[150] = {
   {1,"switch_to_mode6",{31}},
   {1,"switch_to_mode7",{32}},
   {1,"switch_to_mode8",{33}},
-  {1,"switch_to_mode9",{34}}
+  {1,"switch_to_mode9",{34}},
+  {1,"toggle_left_click",{35}}
 };
 
 typedef struct button{

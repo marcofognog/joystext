@@ -41,18 +41,27 @@ void scroll(int scroll_direction, int step){
 void click(int num){
   Display* display = XOpenDisplay(0);
   XTestFakeButtonEvent(display, num, 1, 0);
+  XFlush(display);
+  XCloseDisplay(display);
+}
+
+void unclick(int num){
+  Display* display = XOpenDisplay(0);
   XTestFakeButtonEvent(display, num, 0, 0);
   XFlush(display);
   XCloseDisplay(display);
-  usleep(200000);
 }
 
 void click_right(){
   click(3);
+  unclick(3);
+  usleep(200000);
 }
 
 void click_left(){
   click(1);
+  unclick(1);
+  usleep(200000);
 }
 
 void mouse_up(){
@@ -94,6 +103,17 @@ void scroll_left(){
 void switch_to_mode(int mode_num){
   pointer_mode=mode_num;
   printf("switched to: %i\n", pointer_mode);
+}
+
+void toggle_left_click(){
+  static int clicked = 0;
+  if(clicked){
+    unclick(1);
+    clicked=0;
+  }else{
+    click(1);
+    clicked=1;
+  }
 }
 
 void call_func(struct keymap keyref){
@@ -202,6 +222,9 @@ void call_func(struct keymap keyref){
       break;
     case 34 :
       switch_to_mode(9);
+      break;
+    case 35 :
+      toggle_left_click();
       break;
     default:
       printf("Function not found.");
