@@ -25,6 +25,7 @@ A4+F3:w,00
 A4+F4:x,00
 F1+F2:y,00
 F3+F4:z,00
+F2+F3:ccedilla,00
 S1:space,00
 S3:enter,00
 S4:backspace,00

@@ -175,6 +175,7 @@ Command commands[150] = {
   {0,"grave",{XK_Shift_L, XK_acute}},
   {0,"tilde",{XK_dead_tilde}},
   {0,"circumflex",{XK_Shift_L, XK_dead_tilde}},
+  {0,"ccedilla",{XK_ccedilla}},
   {1,"mouse_up",{0}},
   {1,"mouse_down",{1}},
   {1,"mouse_left",{2}},
