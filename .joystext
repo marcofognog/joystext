@@ -105,6 +105,10 @@ A3+A2+F3:seven,00
 A3+A2+F4:eight,00
 A4+A3+F1:nine,00
 A4+A3+F2:zero,00
+A4+A1+F1+F2:acute,00
+A4+A1+F3+F4:grave,00
+A2+A3+F1+F2:tilde,00
+A2+A3+F3+F4:circumflex,00
 S3+A3+F3:tab,00
 S4+A1:super+b,00
 S4:=,00
