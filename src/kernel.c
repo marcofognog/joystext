@@ -326,6 +326,55 @@ int check_for_release_events(int *bin_buttons, int bin_history[100][16], int *bi
   return did_release_key;
 }
 
+int count_history(int history[100][16]){
+  int count = 0;
+  for(int i=0; i<100; i++){
+    if(pressed_key(history[i])){
+      count++;
+    }
+  }
+  return count;
+}
+
+void check_for_filtered_events(int * buttons, TArray * ref_array){
+  static int history[100][16];
+  static int sent_second = 0;
+  static int sent_first = 0;
+  static int counter = 0;
+  int loop_window;
+
+  if(pressed_key(buttons)){
+    if(count_history(history) == 0 && sent_first == 0){
+      send_key(buttons, ref_array,2);
+      memset(history, 0, sizeof(history));
+      counter=0;
+      sent_first = 1;
+      return;
+    }else{
+      if(sent_second == 1){
+        loop_window = 1;
+      }else{
+        loop_window = 20;
+      }
+      if(count_history(history) == loop_window){
+        send_key(buttons, ref_array,2);
+        memset(history, 0, sizeof(history));
+        counter=0;
+        sent_second = 1;
+        return;
+      }
+    }
+    for(int i=0; i<16; i++)
+      history[counter][i] = buttons[i];
+    counter++;
+  }else{
+    memset(history, 0, sizeof(history));
+    counter=0;
+    sent_second=0;
+    sent_first=0;
+  }
+}
+
 TArray * get_ref_array(int * jsbuttons, TArray * ref){
   for(int j=0; j< (*ref).size; j++){
     for(int i=0;i<16;i++){
@@ -345,7 +394,6 @@ void loop_and_wait(){
   (void) signal(SIGINT, signal_handler);
 
   int buttons[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-  int mod_buttons[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
   int mod_history[100][16];
 
   //reset history
@@ -361,20 +409,19 @@ void loop_and_wait(){
     SDL_Delay(40);
     SDL_JoystickUpdate();
 
-    fetch_presses_from_js(mod_buttons, joystick);
+    fetch_presses_from_js(buttons, joystick);
     int all_pressed[16] = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
-    if(memcmp(mod_buttons, &all_pressed, sizeof(all_pressed)) == 0){
+    if(memcmp(buttons, &all_pressed, sizeof(all_pressed)) == 0){
       should_run=0;
       break;
     }
 
-    memcpy(buttons, mod_buttons, sizeof(mod_buttons));
-
     TArray ref_array = { keymaps, number_of_lines };
     TArray mod_array = * get_ref_array(buttons, &ref_array);
 
-    check_for_press_events(mod_buttons, &mod_array);
-    check_for_release_events(mod_buttons,mod_history,mod_merged, &mod_counter,&mod_array);
+    check_for_press_events(buttons, &mod_array);
+    check_for_release_events(buttons,mod_history,mod_merged, &mod_counter,&mod_array);
+    check_for_filtered_events(buttons, &mod_array);
   }
 }
 
