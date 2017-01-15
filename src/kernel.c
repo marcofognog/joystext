@@ -394,6 +394,7 @@ void loop_and_wait(){
   (void) signal(SIGINT, signal_handler);
 
   int buttons[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+  int bck_buttons[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
   int mod_history[100][16];
 
   //reset history
@@ -416,11 +417,15 @@ void loop_and_wait(){
       break;
     }
 
+    memcpy(bck_buttons, buttons, sizeof(bck_buttons));
     TArray ref_array = { keymaps, number_of_lines };
     TArray mod_array = * get_ref_array(buttons, &ref_array);
 
     check_for_press_events(buttons, &mod_array);
-    check_for_release_events(buttons,mod_history,mod_merged, &mod_counter,&mod_array);
+    if(check_for_release_events(buttons,mod_history,mod_merged, &mod_counter,&mod_array)){
+    }else{
+      check_for_release_events(bck_buttons,mod_history,mod_merged, &mod_counter,&ref_array);
+    }
     check_for_filtered_events(buttons, &mod_array);
   }
 }
