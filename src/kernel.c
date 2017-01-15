@@ -10,6 +10,7 @@
 int pointer_mode=0;
 int pointer_step = 1;
 int should_run=1;
+int mine=0;
 
 void signal_handler(int sig){
   should_run=0;
@@ -336,7 +337,7 @@ int count_history(int history[100][16]){
   return count;
 }
 
-void check_for_filtered_events(int * buttons, TArray * ref_array){
+void check_for_filtered_events(int * buttons, TArray * ref_array, int * mine){
   static int history[100][16];
   static int sent_second = 0;
   static int sent_first = 0;
@@ -349,6 +350,7 @@ void check_for_filtered_events(int * buttons, TArray * ref_array){
       memset(history, 0, sizeof(history));
       counter=0;
       sent_first = 1;
+      *mine = 1;
       return;
     }else{
       if(sent_second == 1){
@@ -361,6 +363,7 @@ void check_for_filtered_events(int * buttons, TArray * ref_array){
         memset(history, 0, sizeof(history));
         counter=0;
         sent_second = 1;
+        *mine = 1;
         return;
       }
     }
@@ -417,16 +420,21 @@ void loop_and_wait(){
       break;
     }
 
+    if(pressed_key(buttons) == 0)
+      mine = 0;
+
     memcpy(bck_buttons, buttons, sizeof(bck_buttons));
     TArray ref_array = { keymaps, number_of_lines };
     TArray mod_array = * get_ref_array(buttons, &ref_array);
 
     check_for_press_events(buttons, &mod_array);
-    if(check_for_release_events(buttons,mod_history,mod_merged, &mod_counter,&mod_array)){
-    }else{
-      check_for_release_events(bck_buttons,mod_history,mod_merged, &mod_counter,&ref_array);
+    if(mine == 0){
+      if(check_for_release_events(buttons,mod_history,mod_merged, &mod_counter,&mod_array)){
+      }else{
+        check_for_release_events(bck_buttons,mod_history,mod_merged, &mod_counter,&ref_array);
+      }
     }
-    check_for_filtered_events(buttons, &mod_array);
+    check_for_filtered_events(buttons, &mod_array, &mine);
   }
 }
 
