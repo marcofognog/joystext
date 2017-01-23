@@ -12,3 +12,6 @@ spec: buildspec
 clean:
 	rm -f bin/ex1
 	rm -f spec/bin/ex1
+
+inspect:
+	gcc -std=c99 -Wall -g -I/usr/include/SDL2/ src/inspect.c -L/usr/local/lib/ -lSDL -lXtst -lX11 -o bin/inspect
