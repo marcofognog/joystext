@@ -413,7 +413,8 @@ void loop_and_wait(){
     SDL_Delay(40);
     SDL_JoystickUpdate();
 
-    fetch_presses_from_js(buttons, joystick);
+    fetch_microsoft_xbox360(buttons, joystick);
+
     int all_pressed[16] = {1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1};
     if(memcmp(buttons, &all_pressed, sizeof(all_pressed)) == 0){
       should_run=0;
