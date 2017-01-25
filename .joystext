@@ -191,6 +191,7 @@ F4:set_mouse_step_60,11
 S1+S3:click_right,10
 S1:toggle_left_click,10
 S1+F4:escape,10
+S2:click_scroll,10
 S4:=,10
 A2:super+arrow_right,12
 S4:=,10

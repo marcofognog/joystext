@@ -60,6 +60,12 @@ void click_right(){
   usleep(200000);
 }
 
+void click_scroll(){
+  click(2);
+  unclick(2);
+  usleep(200000);
+}
+
 void click_left(){
   click(1);
   unclick(1);
@@ -227,6 +233,9 @@ void call_func(struct keymap keyref){
       break;
     case 35 :
       toggle_left_click();
+      break;
+    case 36 :
+      click_scroll();
       break;
     default:
       printf("Function not found.");
