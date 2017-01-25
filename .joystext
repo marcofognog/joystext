@@ -200,14 +200,14 @@ S4+F4:super+ctrl+arrow_left,10
 S4+A3+F2:ctrl+tab,10
 S4+A3+F4:ctrl+shift+tab,10
 S3+S4:switch_to_mode2,10
-F1:set_mouse_step_5,21
+F1:click_left,21
 F2:set_mouse_step_15,21
 F3:set_mouse_step_25,21
 F4:set_mouse_step_45,21
 A1:scroll_up,21
 A3:scroll_down,21
-A2:scroll_right,21
-A4:scroll_left,21
+A2:mouse_right,21
+A4:mouse_left,21
 S3+S4:switch_to_mode1,20
 start:switch_to_mode1,20
 select:switch_to_mode0,20
