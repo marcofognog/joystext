@@ -11,6 +11,7 @@ int pointer_mode=0;
 int pointer_step = 1;
 int should_run=1;
 int mine=0;
+int modified=0;
 
 void signal_handler(int sig){
   should_run=0;
@@ -385,11 +386,13 @@ TArray * get_ref_array(int * jsbuttons, TArray * ref){
         if((*ref).repository[j].mode == pointer_mode
             && (*(*ref).repository[j].t_modified).repository != 0){
           jsbuttons[i] = 0;
+          modified = 1;
           return (*ref).repository[j].t_modified;
         }
       }
     }
   }
+  modified = 0;
   return ref;
 }
 
@@ -429,13 +432,25 @@ void loop_and_wait(){
     TArray mod_array = * get_ref_array(buttons, &ref_array);
 
     check_for_press_events(buttons, &mod_array);
-    if(mine == 0){
-      if(check_for_release_events(buttons,mod_history,mod_merged, &mod_counter,&mod_array)){
+
+    if(modified){
+      if(mine == 0){
+        if(check_for_release_events(buttons,mod_history,mod_merged, &mod_counter,&mod_array)){
+        }else{
+          check_for_release_events(bck_buttons,mod_history,mod_merged, &mod_counter,&ref_array);
+        }
+      }
+      check_for_filtered_events(buttons, &mod_array, &mine);
+    }else{
+      if(mine == 0){
+        if(check_for_release_events(buttons,mod_history,mod_merged, &mod_counter,&mod_array)){
+        }else{
+          check_for_release_events(bck_buttons,mod_history,mod_merged, &mod_counter,&ref_array);
+        }
       }else{
-        check_for_release_events(bck_buttons,mod_history,mod_merged, &mod_counter,&ref_array);
+        check_for_filtered_events(buttons, &mod_array, &mine);
       }
     }
-    check_for_filtered_events(buttons, &mod_array, &mine);
   }
 }
 
