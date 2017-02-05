@@ -243,34 +243,36 @@ void call_func(struct keymap keyref){
 }
 
 int send_key(int *binary_buttons, TArray * ref_array,int onpress){
+  int found_something=0;
+  int cached_mode = pointer_mode;
   for(int i=0;i<(*ref_array).size;i++){
     if(memcmp(binary_buttons,(*ref_array).repository[i].binary_buttons, sizeof((*ref_array).repository[i].binary_buttons)) == 0
-        && (*ref_array).repository[i].mode == pointer_mode
+        && (*ref_array).repository[i].mode == cached_mode
         && (*ref_array).repository[i].onpress == onpress){
       if((*ref_array).repository[i].is_func){
         call_func((*ref_array).repository[i]);
-        return 1;
+        found_something=1;
       }else{
         if((*ref_array).repository[i].keycode2 !=0){
           if((*ref_array).repository[i].keycode3 !=0){
             send_keycode_mod_mod((*ref_array).repository[i].keycode1,
                 (*ref_array).repository[i].keycode2,
                 (*ref_array).repository[i].keycode3);
-            return 1;
+            found_something=1;
           }else{
             send_keycode_modified((*ref_array).repository[i].keycode1, (*ref_array).repository[i].keycode2);
-            return 1;
+            found_something=1;
           }
         }else{
           if((*ref_array).repository[i].keycode1 != 0){
             send_keycode((*ref_array).repository[i].keycode1);
-            return 1;
+            found_something=1;
           }
         }
       }
     }
   }
-  return 0;
+  return found_something;
 }
 
 int check_for_press_events(int *binary_buttons, TArray * ref_array){
