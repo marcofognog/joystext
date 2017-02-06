@@ -170,6 +170,7 @@ Command commands[150] = {
   {0,"zero",{XK_0}},
   {0,"tab",{XK_Tab}},
   {0,"ctrl",{XK_Control_L}},
+  {0,"alt",{XK_Alt_L}},
   {0,"super",{XK_Super_L}},
   {0,"acute",{XK_acute}},
   {0,"grave",{XK_Shift_L, XK_acute}},
