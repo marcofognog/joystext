@@ -311,6 +311,31 @@ int check_for_press_events(int *binary_buttons, TArray * ref_array){
   return did_press_key;
 }
 
+int check_for_indiviual_release(int * buttons, TArray * ref_array){
+  static int previous[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+  int did_release_key = 0;
+  int single[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+
+  for(int i=0; i<16; i++){
+    if(buttons[i] < previous[i]){
+      for(int k=0; k<16;k++){
+        if(k == i){
+          single[k] = 1;
+        }else{
+          single[k] = 0;
+        }
+      }
+      did_release_key = send_key(single, ref_array, 4);
+    }
+  }
+
+  for(int i=0; i<16;i++){
+    previous[i] = buttons[i];
+  }
+
+  return did_release_key;
+}
+
 int check_for_release_events(int *bin_buttons, int bin_history[100][16], int *bin_merged, int *counter_p, TArray * ref_array){
   int did_release_key = 0;
   for(int i=0; i<16;i++){
@@ -497,6 +522,7 @@ void loop_and_wait(){
       }
       check_for_filtered_events(buttons, &mod_array, &mine);
       check_for_once_filter(buttons, &mod_array);
+      check_for_indiviual_release(buttons, &mod_array);
     }else{
       if(mine == 0){
         if(check_for_release_events(buttons,mod_history,mod_merged, &mod_counter,&mod_array)){
@@ -507,6 +533,7 @@ void loop_and_wait(){
         check_for_filtered_events(buttons, &mod_array, &mine);
       }
       check_for_once_filter(buttons, &ref_array);
+      check_for_indiviual_release(buttons, &ref_array);
     }
   }
 }
