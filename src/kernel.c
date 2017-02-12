@@ -56,20 +56,26 @@ void unclick(int num){
 
 void click_right(){
   click(3);
+}
+
+void unclick_right(){
   unclick(3);
-  usleep(200000);
 }
 
 void click_scroll(){
   click(2);
+}
+
+void unclick_scroll(){
   unclick(2);
-  usleep(200000);
 }
 
 void click_left(){
   click(1);
+}
+
+void unclick_left(){
   unclick(1);
-  usleep(200000);
 }
 
 void mouse_up(){
@@ -237,8 +243,17 @@ void call_func(struct keymap keyref){
     case 36 :
       click_scroll();
       break;
+    case 37 :
+      unclick_scroll();
+      break;
+    case 38 :
+      unclick_right();
+      break;
+    case 39 :
+      unclick_left();
+      break;
     default:
-      printf("Function not found.");
+      printf("Function not found: %i\n", keyref.keycode1);
   }
 }
 
@@ -481,6 +496,7 @@ void loop_and_wait(){
         }
       }
       check_for_filtered_events(buttons, &mod_array, &mine);
+      check_for_once_filter(buttons, &mod_array);
     }else{
       if(mine == 0){
         if(check_for_release_events(buttons,mod_history,mod_merged, &mod_counter,&mod_array)){
@@ -490,6 +506,7 @@ void loop_and_wait(){
       }else{
         check_for_filtered_events(buttons, &mod_array, &mine);
       }
+      check_for_once_filter(buttons, &ref_array);
     }
   }
 }

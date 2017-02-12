@@ -183,7 +183,8 @@ A1:mouse_up,11
 A3:mouse_down,11
 A2:mouse_right,11
 A4:mouse_left,11
-F1:click_left,11
+F1:click_left,13
+F1:unclick_left,10
 F2:set_mouse_step_15,11
 F3:set_mouse_step_40,11
 F4:set_mouse_step_60,11

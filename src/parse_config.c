@@ -64,7 +64,7 @@ typedef struct command {
   int keycode[3];
 } Command;
 
-Command commands[150] = {
+Command commands[170] = {
   {0,"a",{XK_a}},
   {0,"b",{XK_b}},
   {0,"c",{XK_c}},
@@ -213,7 +213,10 @@ Command commands[150] = {
   {1,"switch_to_mode8",{33}},
   {1,"switch_to_mode9",{34}},
   {1,"toggle_left_click",{35}},
-  {1,"click_scroll",{36}}
+  {1,"click_scroll",{36}},
+  {1,"unclick_scroll",{37}},
+  {1,"unclick_right",{38}},
+  {1,"unclick_left",{39}}
 };
 
 typedef struct button{
