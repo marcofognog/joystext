@@ -349,6 +349,35 @@ int count_history(int history[100][16]){
   return count;
 }
 
+void check_for_once_filter(int * buttons, TArray * ref_array){
+  static int history[100][16];
+  static int counter = 0;
+  int did_press_key= 0;
+  int single[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+
+  if(pressed_key(buttons)){
+    if(counter == 0){
+      for(int i=0; i<16; i++){
+        if(buttons[i] == 1){
+          for(int k=0; k<16;k++){
+            if(k == i){
+              single[k] = 1;
+            }else{
+              single[k] = 0;
+            }
+          }
+          did_press_key = send_key(single, ref_array, 3);
+        }
+      }
+      if(did_press_key){
+        counter++;
+      }
+    }
+  }else{
+    counter=0;
+  }
+}
+
 void check_for_filtered_events(int * buttons, TArray * ref_array, int * mine){
   static int history[100][16];
   static int sent_second = 0;
