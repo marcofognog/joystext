@@ -112,7 +112,7 @@ A2+A3+F1+F2:tilde,00
 A2+A3+F3+F4:circumflex,00
 S3+A3+F3:tab,00
 A4+A3+F4:tab,00
-S4+A1:super+enter,00
+S4+A1:super+t,00
 S4:=,00
 A2:super+arrow_right,02
 S4+A3:super+shift+q,00
