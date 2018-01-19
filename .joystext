@@ -200,9 +200,11 @@ A4:ctrl+shift+tab,12
 S4+A1:ctrl+t,10
 S4+A3:ctrl+w,10
 S4:=,10
-F2:super+ctrl+arrow_right,12
+F1:super+j,12
 S4:=,10
-F4:super+ctrl+arrow_left,12
+F2:super+k,12
+S4:=,10
+F3:super+l,12
 S3+S4:switch_to_mode2,10
 F1:click_left,23
 F1:unclick_left,24
