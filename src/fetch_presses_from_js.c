@@ -33,9 +33,9 @@ void fetch_presses_from_js(int *bin_buttons, SDL_Joystick *joystick){
 
 int fetch_button(SDL_Joystick *joystick, int num){
   unsigned int n = SDL_JoystickGetButton ( joystick, num );
-  if ( n != 0 )
-    return 1;
-  return 0;
+  if ( n != 1 )
+    return 0;
+  return 1;
 }
 
 void fetch_microsoft_xbox360(int *bin_buttons, SDL_Joystick *joystick){
