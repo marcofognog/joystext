@@ -3,6 +3,7 @@
 #include "SDL.h"
 #include <X11/extensions/XTest.h>
 #include <X11/keysym.h>
+#include "fetch_presses_from_js.c"
 #include "sends.c"
 #include <signal.h>
 
@@ -17,9 +18,13 @@ SDL_Event event;
 void loop_and_print(){
   (void) signal(SIGINT, signal_handler);
 
+  int buttons[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+
   while(should_run){
     SDL_Delay(140);
     SDL_JoystickUpdate();
+
+    fetch_microsoft_xbox360(buttons, joystick);
 
     int number_of_buttons = 16;
     for ( int i=0; i < number_of_buttons; i++ )
@@ -37,8 +42,8 @@ void loop_and_print(){
     printf("hat1:%i\n", hat1);
     printf("hat2:%i\n", hat2);
 
-    if(SDL_PollEvent(&event))
-      printf("opa!tipo: %i, valor: %i\n", event.type, event.caxis);
+    print_binary(buttons);
+    printf("\n");
   }
 }
 
