@@ -1,0 +1,11 @@
+F1:a,00
+S1:switch_to_mode1,00
+F1:b,10
+S1:switch_to_mode2,10
+F1:c,20
+S1:switch_to_mode3,20
+F1:d,30
+S1:switch_to_mode4,30
+F1:e,40
+S1:switch_to_mode5,40
+F1:f,51
