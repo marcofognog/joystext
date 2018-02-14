@@ -1,0 +1,12 @@
+#! /bin/bash
+
+set -xe
+
+TIMESTAMPED=$(date +"%Y%m%d%H%M")
+
+pushd vendor/jhl
+bundle
+bundle exec ruby lib/compile.rb ~/.joystext > bin/$TIMESTAMPED.jll
+popd
+
+bin/./joystext vendor/jhl/bin/$TIMESTAMPED.jll
