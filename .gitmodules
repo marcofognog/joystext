@@ -1,0 +1,3 @@
+[submodule "vendor/jhl"]
+	path = vendor/jhl
+	url = git@gitlab.com:marcofognog/joystext-high-lang.git
