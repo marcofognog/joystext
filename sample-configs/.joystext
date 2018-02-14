@@ -197,8 +197,10 @@ S4:=,10
 A2:ctrl+tab,12
 S4:=,10
 A4:ctrl+shift+tab,12
-S4+A1:ctrl+t,10
-S4+A3:ctrl+w,10
+S4:=,10
+A1:ctrl+t,12
+S4:=,10
+A3:ctrl+w,12
 S4:=,10
 F1:super+j,12
 S4:=,10
