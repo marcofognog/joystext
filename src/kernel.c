@@ -472,21 +472,49 @@ TArray * get_ref_array(int * jsbuttons, TArray * ref){
   return ref;
 }
 
+void iterate(int *buttons){
+  static int bck_buttons[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+  static int mod_history[100][16];
+  static int mod_counter=0;
+  static int mod_merged[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+
+  if(pressed_key(buttons) == 0)
+    mine = 0;
+
+  memcpy(bck_buttons, buttons, sizeof(bck_buttons));
+  TArray ref_array = { keymaps, number_of_lines };
+  TArray mod_array = * get_ref_array(buttons, &ref_array);
+
+  check_for_press_events(buttons, &mod_array);
+
+  if(modified){
+    if(mine == 0){
+      if(check_for_release_events(buttons,mod_history,mod_merged, &mod_counter,&mod_array)){
+      }else{
+        check_for_release_events(bck_buttons,mod_history,mod_merged, &mod_counter,&ref_array);
+      }
+    }
+    check_for_filtered_events(buttons, &mod_array, &mine);
+    check_for_once_filter(buttons, &mod_array);
+    check_for_indiviual_release(buttons, &mod_array);
+  }else{
+    if(mine == 0){
+      if(check_for_release_events(buttons,mod_history,mod_merged, &mod_counter,&mod_array)){
+      }else{
+        check_for_release_events(bck_buttons,mod_history,mod_merged, &mod_counter,&ref_array);
+      }
+    }else{
+      check_for_filtered_events(buttons, &mod_array, &mine);
+    }
+    check_for_once_filter(buttons, &ref_array);
+    check_for_indiviual_release(buttons, &ref_array);
+  }
+}
+
 void loop_and_wait(){
   (void) signal(SIGINT, signal_handler);
 
   int buttons[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-  int bck_buttons[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-  int mod_history[100][16];
-
-  //reset history
-  for(int j=0;j<100;j++){
-    for(int i=0;i<16;i++){
-      mod_history[j][i]=0;
-    }
-  }
-  int mod_counter=0;
-  int mod_merged[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
 
   while(should_run){
     SDL_Delay(40);
@@ -500,37 +528,7 @@ void loop_and_wait(){
       break;
     }
 
-    if(pressed_key(buttons) == 0)
-      mine = 0;
-
-    memcpy(bck_buttons, buttons, sizeof(bck_buttons));
-    TArray ref_array = { keymaps, number_of_lines };
-    TArray mod_array = * get_ref_array(buttons, &ref_array);
-
-    check_for_press_events(buttons, &mod_array);
-
-    if(modified){
-      if(mine == 0){
-        if(check_for_release_events(buttons,mod_history,mod_merged, &mod_counter,&mod_array)){
-        }else{
-          check_for_release_events(bck_buttons,mod_history,mod_merged, &mod_counter,&ref_array);
-        }
-      }
-      check_for_filtered_events(buttons, &mod_array, &mine);
-      check_for_once_filter(buttons, &mod_array);
-      check_for_indiviual_release(buttons, &mod_array);
-    }else{
-      if(mine == 0){
-        if(check_for_release_events(buttons,mod_history,mod_merged, &mod_counter,&mod_array)){
-        }else{
-          check_for_release_events(bck_buttons,mod_history,mod_merged, &mod_counter,&ref_array);
-        }
-      }else{
-        check_for_filtered_events(buttons, &mod_array, &mine);
-      }
-      check_for_once_filter(buttons, &ref_array);
-      check_for_indiviual_release(buttons, &ref_array);
-    }
+    iterate(buttons);
   }
 }
 
