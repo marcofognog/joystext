@@ -9,4 +9,4 @@ bundle
 bundle exec ruby lib/compile.rb ~/.joystext > bin/$TIMESTAMPED.jll
 popd
 
-bin/./joystext vendor/jhl/bin/$TIMESTAMPED.jll
+release/./joystext vendor/jhl/bin/$TIMESTAMPED.jll
