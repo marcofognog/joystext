@@ -8,7 +8,7 @@ Watch it in action: https://www.youtube.com/watch?v=zohGnmS97-I
 
 1. Copy the sample config file from `vendor/jhl/samples/simple-nav.jhl` to `~/.joystext`
 2. Plug your XBox 360 joystick
-3. Run (in the root of the project):
+3. Run (in the root of the project), you'll need Ruby installed:
 
 ```
 $ ./start
