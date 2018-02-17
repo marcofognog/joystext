@@ -2,6 +2,8 @@
 
 Joystext allows you to use you XBox 360 joystick as keyboard and mouse for computers. More supported joystiscks are to come.
 
+Watch it in action: https://www.youtube.com/watch?v=zohGnmS97-I
+
 ## Run a sample config
 
 1. Copy the sample config file from `vendor/jhl/samples/simple-nav.jhl` to `~/.joystext`
