@@ -1,24 +1,23 @@
-# Joystext Language
-
-Is a compiler that takes the Joystext high level language (as source) and outputs the corresponding Joystext configuration language (as target).
+# Joystext
 
 Joystext allows you to use you XBox 360 joystick as keyboard and mouse for computers. More supported joystiscks are to come.
 
 ## Run a sample config
 
-Plug your XBox 360 joystick and run:
-```
-$ bundle exec ruby compile.rb samples/simple-nav > ~/.joystext
-$ PATH_TO/joystext ~/.joystext
-```
-You should be able to move your mouse and left click.
+1. Copy the sample config file from `vendor/jhl/samples/simple-nav.jhl` to `~/.joystext`
+2. Plug your XBox 360 joystick
+3. Run (in the root of the project):
 
-Evidently, you need to have joystext binary somewhere in your machine.
+```
+$ ./start
+```
+4. You should be able to move your mouse and left click using the joystick.
 
-## Syntax
+## Configuration Language Syntax
 
 Each configuration definition has three parts: the trigger type, the trigger name (joystick key) and an action to be performed.
-So the line in our example:
+
+So the line in our simple-nav.jhl sample
 
 `>F1: click_left`
 
@@ -36,7 +35,7 @@ means 'whenever theres a press on the key F1 of the joystick, run the command cl
 
 ### Trigger types
 
-Its the way a joystick button behaves when pressed/released.
+It's the way a joystick button behaves when pressed/released.
 
 There are 5 types of triggers:
 
