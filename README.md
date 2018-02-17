@@ -13,7 +13,7 @@ $ ./start
 ```
 4. You should be able to move your mouse and left click using the joystick.
 
-## Configuration Language Syntax
+## JHL - Configuration Language Syntax
 
 Each configuration definition has three parts: the trigger type, the trigger name (joystick key) and an action to be performed.
 
