@@ -37,7 +37,7 @@ It's the way a joystick button behaves when pressed/released.
 
 There are 5 types of triggers:
 
-`*F1` triggers when pressed, than waits for a while, then repeats the action (kind of what a normal keyboard does, try holding the 'g'key on a text editor to see what I mean)
+`*F1` triggers when pressed, than waits for a while, then repeats the action (kind of what a normal keyboard does, try holding the 'g' key on a text editor, for example, to see what I mean)
 
 `>F1` triggers once when the key is pressed, no matter how long it is held, triggers only once, ignore combinations.
 
