@@ -8,10 +8,7 @@ Watch it in action: https://www.youtube.com/watch?v=zohGnmS97-I
 
 1. Copy the sample config file from `vendor/jhl/samples/simple-nav.jhl` to `~/.joystext`
 2. Plug your XBox 360 joystick
-3. Run (in the root of the project), you'll need Ruby installed:
-```
-$ ./start
-```
+3. Run (in the root of the project), you'll need Ruby installed: `$ ./start`
 4. You should be able to move your mouse and left click using the joystick.
 
 ## JHL - Configuration Language Syntax
