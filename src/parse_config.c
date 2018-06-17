@@ -281,6 +281,109 @@ void populate_keycodes(Keymap * keymap, char command[], Command command_list[]){
 
 int number_of_lines;
 int el_index = 0;
+int next_line_is_a_modified_key = 0;
+
+void parse_line(char * line, int line_num){
+  char delimiter[2] = ":";
+  char *signifier = strtok(line, delimiter);
+  char *signified = strtok(NULL, delimiter); // This feels wierd
+
+  char *command = strtok(signified, ",");
+  char *command_mode = strtok(NULL, ",");
+  char *sanitized = strtok(command_mode, "\n");
+  keymaps[line_num].onpress = atoi(&sanitized[1]);
+  sanitized[1] = '\n';
+  keymaps[line_num].mode = atoi(&sanitized[0]);
+
+  char *key1 = strtok(signifier, "+");
+  char *key2 = strtok(NULL, "+");
+  char *key3 = strtok(NULL, "+");
+  char *key4 = strtok(NULL, "+");
+  char *key5 = strtok(NULL, "+");
+  int merged[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+  for(int k=0; k<16; k++){
+    if(strcmp(key1, buttons[k].name) == 0){
+      for(int j=0; j<16;j++){
+        merged[j] = (merged[j] || buttons[k].binary[j]);
+      }
+    }
+    if(key2 != NULL){
+      if(strcmp(key2, buttons[k].name) == 0){
+        for(int j=0; j<16;j++){
+          merged[j] = (merged[j] || buttons[k].binary[j]);
+        }
+      }
+    }
+    if(key3 != NULL){
+      if(strcmp(key3, buttons[k].name) == 0){
+        for(int j=0; j<16;j++){
+          merged[j] = (merged[j] || buttons[k].binary[j]);
+        }
+      }
+    }
+    if(key4 != NULL){
+      if(strcmp(key4, buttons[k].name) == 0){
+        for(int j=0; j<16;j++){
+          merged[j] = (merged[j] || buttons[k].binary[j]);
+        }
+      }
+    }
+    if(key5 != NULL){
+      if(strcmp(key5, buttons[k].name) == 0){
+        for(int j=0; j<16;j++){
+          merged[j] = (merged[j] || buttons[k].binary[j]);
+        }
+      }
+    }
+  }
+
+  keymaps[line_num].t_modified = malloc(sizeof(TArray));
+  memset(keymaps[line_num].t_modified,0, sizeof(TArray));
+
+  if(strcmp(command, "=") == 0){
+    for(int k=0;k<number_of_lines;k++){
+      if((memcmp(keymaps[k].binary_buttons, merged, sizeof(merged)) == 0)
+         && (keymaps[k].mode == keymaps[line_num].mode)
+         ){
+        el_index = k;
+        break;
+      }else{
+        el_index = line_num;
+      }
+    }
+
+    for(int j=0;j<16;j++){
+      keymaps[el_index].binary_buttons[j] = merged[j];
+    }
+    next_line_is_a_modified_key = 1;
+  }else{
+    if(next_line_is_a_modified_key == 1){
+      (*keymaps[el_index].t_modified).size++;
+      int pos = (*keymaps[el_index].t_modified).size - 1;
+
+      (*keymaps[el_index].t_modified).repository = realloc(
+                                                           (*keymaps[el_index].t_modified).repository,
+                                                           (*keymaps[el_index].t_modified).size * sizeof(Keymap)
+                                                           );
+
+      for(int k=0;k<16;k++){
+        (*keymaps[el_index].t_modified).repository[pos].binary_buttons[k] = merged[k];
+      }
+      (*keymaps[el_index].t_modified).repository[pos].is_func = keymaps[line_num].is_func;
+      (*keymaps[el_index].t_modified).repository[pos].onpress = keymaps[line_num].onpress;
+      (*keymaps[el_index].t_modified).repository[pos].mode = keymaps[line_num].mode;
+
+      populate_keycodes(&(*keymaps[el_index].t_modified).repository[pos], command, commands);
+      next_line_is_a_modified_key = 0;
+    }else{
+      populate_keycodes(&keymaps[line_num], command, commands);
+
+      for(int j=0;j<16;j++){
+        keymaps[line_num].binary_buttons[j] = merged[j];
+      }
+    }
+  }
+}
 
 int parse_config(int argc, char *argv[]){
 
@@ -299,109 +402,10 @@ int parse_config(int argc, char *argv[]){
   }
 
   int l;
-  int next_line_is_a_modified_key = 0;
   for (int i=0; i<number_of_lines; i++){
     l = fgets(line, 255, (FILE*)fp);
     if(l != NULL){
-      char delimiter[2] = ":";
-      char *signifier = strtok(line, delimiter);
-      char *signified = strtok(NULL, delimiter); // This feels wierd
-
-      char *command = strtok(signified, ",");
-      char *command_mode = strtok(NULL, ",");
-      char *sanitized = strtok(command_mode, "\n");
-      keymaps[i].onpress = atoi(&sanitized[1]);
-      sanitized[1] = '\n';
-      keymaps[i].mode = atoi(&sanitized[0]);
-
-      char *key1 = strtok(signifier, "+");
-      char *key2 = strtok(NULL, "+");
-      char *key3 = strtok(NULL, "+");
-      char *key4 = strtok(NULL, "+");
-      char *key5 = strtok(NULL, "+");
-      int merged[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
-      for(int k=0; k<16; k++){
-        if(strcmp(key1, buttons[k].name) == 0){
-          for(int j=0; j<16;j++){
-            merged[j] = (merged[j] || buttons[k].binary[j]);
-          }
-        }
-        if(key2 != NULL){
-          if(strcmp(key2, buttons[k].name) == 0){
-            for(int j=0; j<16;j++){
-              merged[j] = (merged[j] || buttons[k].binary[j]);
-            }
-          }
-        }
-        if(key3 != NULL){
-          if(strcmp(key3, buttons[k].name) == 0){
-            for(int j=0; j<16;j++){
-              merged[j] = (merged[j] || buttons[k].binary[j]);
-            }
-          }
-        }
-        if(key4 != NULL){
-          if(strcmp(key4, buttons[k].name) == 0){
-            for(int j=0; j<16;j++){
-              merged[j] = (merged[j] || buttons[k].binary[j]);
-            }
-          }
-        }
-        if(key5 != NULL){
-          if(strcmp(key5, buttons[k].name) == 0){
-            for(int j=0; j<16;j++){
-              merged[j] = (merged[j] || buttons[k].binary[j]);
-            }
-          }
-        }
-      }
-
-      keymaps[i].t_modified = malloc(sizeof(TArray));
-      memset(keymaps[i].t_modified,0, sizeof(TArray));
-
-      if(strcmp(command, "=") == 0){
-        for(int k=0;k<number_of_lines;k++){
-          if((memcmp(keymaps[k].binary_buttons, merged, sizeof(merged)) == 0)
-              && (keymaps[k].mode == keymaps[i].mode)
-              ){
-            el_index = k;
-            break;
-          }else{
-            el_index = i;
-          }
-        }
-
-        for(int j=0;j<16;j++){
-          keymaps[el_index].binary_buttons[j] = merged[j];
-        }
-        next_line_is_a_modified_key = 1;
-      }else{
-        if(next_line_is_a_modified_key == 1){
-          (*keymaps[el_index].t_modified).size++;
-          int pos = (*keymaps[el_index].t_modified).size - 1;
-
-          (*keymaps[el_index].t_modified).repository = realloc(
-              (*keymaps[el_index].t_modified).repository,
-              (*keymaps[el_index].t_modified).size * sizeof(Keymap)
-              );
-
-          for(int k=0;k<16;k++){
-           (*keymaps[el_index].t_modified).repository[pos].binary_buttons[k] = merged[k];
-          }
-          (*keymaps[el_index].t_modified).repository[pos].is_func = keymaps[i].is_func;
-          (*keymaps[el_index].t_modified).repository[pos].onpress = keymaps[i].onpress;
-          (*keymaps[el_index].t_modified).repository[pos].mode = keymaps[i].mode;
-
-          populate_keycodes(&(*keymaps[el_index].t_modified).repository[pos], command, commands);
-          next_line_is_a_modified_key = 0;
-        }else{
-          populate_keycodes(&keymaps[i], command, commands);
-
-          for(int j=0;j<16;j++){
-            keymaps[i].binary_buttons[j] = merged[j];
-          }
-        }
-      }
+      parse_line(line, i);
     }
   }
 
