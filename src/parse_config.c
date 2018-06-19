@@ -285,7 +285,7 @@ int next_line_is_a_modified_key = 0;
 
 // TODO: make this function not depend on line_num var
 void parse_line(char * line){
-  static line_num = 0;
+  static int line_num = 0;
 
   char delimiter[2] = ":";
   char *signifier = strtok(line, delimiter);
