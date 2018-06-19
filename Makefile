@@ -1,5 +1,7 @@
 build:
-	gcc -std=c99 -Wall -g -I/usr/include/SDL2/ src/main.c -L/usr/local/lib/ -lSDL -lXtst -lX11 -o bin/joystext
+	flex src/lexer.l
+	bison -d src/parser.y
+	gcc -std=c99 -Wall -g -I/usr/include/SDL2/ src/main.c -L/usr/local/lib/ -lSDL -lXtst -lX11 -lfl -o bin/joystext
 
 buildspec:
 	cp src/* spec/src
