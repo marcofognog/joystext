@@ -85,7 +85,6 @@ int find_max(int a[], int n) {
 int next_num(){
   int res;
   int nums[10];
-  int cmp;
   int length = 0;
 
   int i = 0;
