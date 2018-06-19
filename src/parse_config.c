@@ -399,12 +399,11 @@ int parse_high_level_config(){
   yyparse();
 }
 
-int parse_lower_level_config(int argc, char *argv[]){
-
-  FILE *fp = fopen(argv[1], "r");
+int parse_lower_level_config(int argc, char *config_filename){
+  FILE *fp = fopen(config_filename, "r");
   char line[255];
   if (fp == NULL) {
-    fprintf(stderr, "Can't open file: %s\n", argv[1]);
+    fprintf(stderr, "Can't open file: %s\n", config_filename);
     exit(1);
   }
 

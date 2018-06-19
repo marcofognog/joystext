@@ -12,8 +12,6 @@ int remap = 0;
 char *remap_button;
 NumberedMode modes[10];
 
-int print_parsed_lower_level_config = 0;
-
 int get_mode_num(char * mode_name){
   int i = 0;
   int res;
