@@ -389,7 +389,17 @@ void parse_line(char * line){
   line_num++;
 }
 
-int parse_config(int argc, char *argv[]){
+int parse_high_level_config(){
+  number_of_lines = 32;
+  keymaps = calloc(number_of_lines, sizeof(Keymap));
+  if (keymaps == NULL){
+    perror("Failed allocating map of keys.");
+    return NULL;
+  }
+  yyparse();
+}
+
+int parse_lower_level_config(int argc, char *argv[]){
 
   FILE *fp = fopen(argv[1], "r");
   char line[255];

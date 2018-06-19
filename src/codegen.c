@@ -12,6 +12,8 @@ int remap = 0;
 char *remap_button;
 NumberedMode modes[10];
 
+int print_parsed_lower_level_config = 0;
+
 int get_mode_num(char * mode_name){
   int i = 0;
   int res;
@@ -42,6 +44,14 @@ void gen_mode(char *parsed_text) {
   add_mode(parsed_text, current_mode);
 }
 
+void take_action(char *line){
+  if(print_parsed_lower_level_config == 1){
+    printf(line);
+  } else {
+    parse_line(line);
+  }
+}
+
 void action_definition(char type_operand, char *action, char *cmd) {
   int type_val = 0;
   if (type_operand != '0'){
@@ -61,12 +71,12 @@ void action_definition(char type_operand, char *action, char *cmd) {
     char *remap_str;
     remap_str = malloc(40);
     snprintf(remap_str, 40, "%s:=,%i,%i\n", remap_button, current_mode, 0);
-    printf(remap_str);
+    take_action(remap_str);
   }
   char *cmd_str;
   cmd_str = malloc(40);
   snprintf(cmd_str, 40, "%s:%s,%i,%i\n", action, cmd, current_mode, type_val);
-  printf(cmd_str);
+  take_action(cmd_str);
 }
 
 int find_max(int a[], int n) {
