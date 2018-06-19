@@ -283,7 +283,10 @@ int number_of_lines;
 int el_index = 0;
 int next_line_is_a_modified_key = 0;
 
-void parse_line(char * line, int line_num){
+// TODO: make this function not depend on line_num var
+void parse_line(char * line){
+  static line_num = 0;
+
   char delimiter[2] = ":";
   char *signifier = strtok(line, delimiter);
   char *signified = strtok(NULL, delimiter); // This feels wierd
@@ -383,6 +386,7 @@ void parse_line(char * line, int line_num){
       }
     }
   }
+  line_num++;
 }
 
 int parse_config(int argc, char *argv[]){
@@ -405,7 +409,7 @@ int parse_config(int argc, char *argv[]){
   for (int i=0; i<number_of_lines; i++){
     l = fgets(line, 255, (FILE*)fp);
     if(l != NULL){
-      parse_line(line, i);
+      parse_line(line);
     }
   }
 
