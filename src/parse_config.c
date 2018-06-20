@@ -389,13 +389,20 @@ void parse_line(char * line){
   line_num++;
 }
 
-int parse_high_level_config(){
+int parse_high_level_config(char * config_filename){
   number_of_lines = 32;
   keymaps = calloc(number_of_lines, sizeof(Keymap));
   if (keymaps == NULL){
     perror("Failed allocating map of keys.");
     return NULL;
   }
+
+  yyin = fopen(config_filename,"r");
+  if (yyin == NULL) {
+    fprintf(stderr, "Can't open file: %s\n", config_filename);
+    exit(1);
+  }
+
   yyparse();
 }
 

@@ -4,10 +4,10 @@
 #include <X11/extensions/XTest.h>
 #include <X11/keysym.h>
 # include "joystext.h"
-#include "parse_config.c"
-#include "kernel.c"
 #include "../parser.tab.c"
 #include "../lex.yy.c"
+#include "parse_config.c"
+#include "kernel.c"
 #include "options.c"
 
 int main(int argc, char *argv[]){
@@ -15,13 +15,12 @@ int main(int argc, char *argv[]){
 
   if(print_parsed_lower_level_config == 0){
     if(read_lower_level_config_file == 0){
-      parse_high_level_config();
+      parse_high_level_config(argv[1]);
     } else {
-      printf("filname:%s\n", argv[2]);
       parse_lower_level_config(argc, argv[2]);
     }
   }else{
-    parse_high_level_config();
+    parse_high_level_config(argv[2]);
   }
 
   if(print_parsed_lower_level_config == 0){
