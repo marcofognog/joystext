@@ -60,13 +60,13 @@ void action_definition(char type_operand, char *action, char *cmd) {
   if (type_operand != '0'){
     switch (type_operand) {
       case '<' :
-        type_val = 1;
+        type_val = 4;
         break;
       case '>' :
-        type_val = 2;
+        type_val = 3;
         break;
       case '.' :
-        type_val = 3;
+        type_val = 1;
         break;
     }
   }
