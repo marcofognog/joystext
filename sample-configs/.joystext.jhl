@@ -1,0 +1,251 @@
+mode 'text'
+
+start:switch_to_mode 'navegation'
+
+F1:a
+F2:e
+F3:i
+F4:o
+A1:u
+A2:b
+A3:c
+A4:d
+A1+F1:f
+A1+F2:g
+A1+F3:h
+A1+F4:j
+A2+F1:k
+A2+F2:l
+A2+F3:m
+A2+F4:n
+A3+F1:p
+A3+F2:q
+A3+F3:r
+A3+F4:s
+A4+F1:t
+A4+F2:v
+A4+F3:w
+A4+F4:x
+F1+F2:y
+F3+F4:z
+F2+F3:ccedilla
+S1:space
+S3:enter
+S4:backspace
+S2:shift
+S2+F1:A
+S2+F2:E
+S2+F3:I
+S2+F4:O
+S2+A1:U
+S2+A2:B
+S2+A3:C
+S2+A4:D
+S2+A1+F1:F
+S2+A1+F2:G
+S2+A1+F3:H
+S2+A1+F4:J
+S2+A2+F1:K
+S2+A2+F2:L
+S2+A2+F3:M
+S2+A2+F4:N
+S2+A3+F1:P
+S2+A3+F2:Q
+S2+A3+F3:R
+S2+A3+F4:S
+S2+A4+F1:T
+S2+A4+F2:V
+S2+A4+F3:W
+S2+A4+F4:X
+S2+F1+F2:Y
+S2+F3+F4:Z
+S1+F1:semi_colon
+S1+F2:colon
+S1+F3:slash
+S1+F4:escape
+S1+A1:comma
+S1+A2:dot
+S1+A3:minus
+S1+A4:plus
+S1+A1+F1:left_parenthesis
+S1+A1+F2:right_parenthesis
+S1+A1+F3:left_square_bracket
+S1+A1+F4:right_square_bracket
+S1+A2+F1:left_curly_bracket
+S1+A2+F2:right_curly_bracket
+S1+A2+F3:exclamation
+S1+A2+F4:at
+S1+A3+F1:sharp
+S1+A3+F2:dollar
+S1+A3+F3:percent
+S1+A3+F4:question_mark
+S1+A4+F1:pipe
+S1+A4+F2:asterisk
+S1+A4+F3:underscore
+S1+A4+F4:double_quote
+S1+F1+F2:ampersand
+S1+F3+F4:equal
+S1+A2+F1+F2:less
+S1+A2+F3+F4:greater
+S3+F1:page_up
+S3+F2:end
+S3+F3:page_down
+S3+F4:home
+
+remap S3 {
+  *A1:arrow_up
+  *A2:arrow_right
+  *A3:arrow_down
+  *A4:arrow_left
+}
+
+A4+A1+F1:one
+A4+A1+F2:two
+A4+A1+F3:three
+A4+A1+F4:four
+A3+A2+F1:five
+A3+A2+F2:six
+A3+A2+F3:seven
+A3+A2+F4:eight
+A4+A3+F1:nine
+A4+A3+F2:zero
+A4+A1+F1+F2:acute
+A4+A1+F3+F4:grave
+A2+A3+F1+F2:tilde
+A2+A3+F3+F4:circumflex
+S3+A3+F3:tab
+A4+A3+F4:tab
+S4+A1:super+t
+
+remap S4 {
+  *A2:super+arrow_right
+  *A4:super+arrow_left
+  *F2:super+ctrl+arrow_right
+  *F4:super+ctrl+arrow_left
+}
+
+S4+A3:super+shift+q
+S4+F1:super+d
+S4+A1+F1:ctrl+shift+t
+S1+S3:switch_to_mode 'ctrl'
+S1+S2+F1:ctrl+a
+S1+S2+F2:ctrl+e
+S1+S2+F3:ctrl+i
+S1+S2+F4:ctrl+o
+S1+S2+A1:ctrl+u
+S1+S2+A2:ctrl+b
+S1+S2+A3:ctrl+c
+S1+S2+A4:ctrl+d
+S1+S2+A1+F1:ctrl+f
+S1+S2+A1+F2:ctrl+g
+S1+S2+A1+F3:ctrl+h
+S1+S2+A1+F4:ctrl+j
+S1+S2+A2+F1:ctrl+k
+S1+S2+A2+F2:ctrl+l
+S1+S2+A2+F3:ctrl+m
+S1+S2+A2+F4:ctrl+n
+S1+S2+A3+F1:ctrl+p
+S1+S2+A3+F2:resctrl+q
+S1+S2+A3+F3:ctrl+r
+S1+S2+A3+F4:ctrl+s
+S1+S2+A4+F1:ctrl+t
+S1+S2+A4+F2:ctrl+v
+S1+S2+A4+F3:ctrl+w
+S1+S2+A4+F4:ctrl+x
+S1+S2+F1+F2:ctrl+y
+S1+S2+F3+F4:ctrl+z
+S1+S2+A4+A1+F1:ctrl+one
+S1+S2+A4+A1+F2:ctrl+two
+S1+S2+A4+A1+F3:ctrl+three
+S1+S2+A4+A1+F4:ctrl+four
+S1+S2+A3+A2+F1:ctrl+five
+S1+S2+A3+A2+F2:ctrl+six
+S1+S2+A3+A2+F3:ctrl+seven
+S1+S2+A3+A2+F4:ctrl+eight
+S1+S2+A4+A3+F1:ctrl+nine
+S1+S2+A4+A3+F2:ctrl+zero
+
+mode 'navegation'
+
+select:switch_to_mode 'text'
+
+S3:enter
+
+remap S3 {
+  .F1:set_mouse_step_5
+  .F2:set_mouse_step_15
+  .F3:set_mouse_step_25
+  .F4:set_mouse_step_45
+  .A1:scroll_up
+  .A3:scroll_down
+  .A2:scroll_right
+  .A4:scroll_left
+}
+
+.A1:mouse_up
+.A3:mouse_down
+.A2:mouse_right
+.A4:mouse_left
+>F1:click_left
+<F1:unclick_left
+.F2:set_mouse_step_15
+.F3:set_mouse_step_40
+.F4:set_mouse_step_60
+
+S1+S3:click_right
+S1+S3:unclick_right
+S1+F4:escape
+>S2:click_scroll
+<S2:unclick_scroll
+
+remap S4 {
+  *A2:ctrl+tab
+  *A4:ctrl+shift+tab
+  *A1:ctrl+t
+  *A3:ctrl+w
+  *F1:super+j
+  *F2:super+k
+  *F3:super+l
+}
+
+mode 'ctrl'
+
+F1:ctrl+a
+F2:ctrl+e
+F3:ctrl+i
+F4:ctrl+o
+A1:ctrl+u
+A2:ctrl+b
+A3:ctrl+c
+A4:ctrl+d
+A1+F1:ctrl+f
+A1+F2:ctrl+g
+A1+F3:ctrl+h
+A1+F4:ctrl+j
+A2+F1:ctrl+k
+A2+F2:ctrl+l
+A2+F3:ctrl+m
+A2+F4:ctrl+n
+A3+F1:ctrl+p
+A3+F2:ctrl+q
+A3+F3:ctrl+r
+A3+F4:ctrl+s
+A4+F1:ctrl+t
+A4+F2:ctrl+v
+A4+F3:ctrl+w
+A4+F4:ctrl+x
+F1+F2:ctrl+y
+F3+F4:ctrl+z
+A4+A1+F1:ctrl+one
+A4+A1+F2:ctrl+two
+A4+A1+F3:ctrl+three
+A4+A1+F4:ctrl+four
+A3+A2+F1:ctrl+five
+A3+A2+F2:ctrl+six
+A3+A2+F3:ctrl+seven
+A3+A2+F4:ctrl+eight
+A4+A3+F1:ctrl+nine
+A4+A3+F2:ctrl+zero
+
+select:switch_to_mode 'text'
+start:switch_to_mode 'navegation'
