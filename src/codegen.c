@@ -73,12 +73,12 @@ void action_definition(char type_operand, char *action, char *cmd) {
   if (remap){
     char *remap_str;
     remap_str = malloc(40);
-    snprintf(remap_str, 40, "%s:=,%i,%i\n", remap_button, current_mode, 0);
+    snprintf(remap_str, 40, "%s:=,%i%i\n", remap_button, current_mode, 0);
     take_action(remap_str);
   }
   char *cmd_str;
   cmd_str = malloc(40);
-  snprintf(cmd_str, 40, "%s:%s,%i,%i\n", action, cmd, current_mode, type_val);
+  snprintf(cmd_str, 40, "%s:%s,%i%i\n", action, cmd, current_mode, type_val);
   take_action(cmd_str);
 }
 
