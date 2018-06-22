@@ -38,8 +38,13 @@ void print_modes(){
 }
 
 void gen_mode(char *parsed_text) {
-  current_mode = next_num();
-  add_mode(parsed_text, current_mode);
+  int mode_index = get_mode_num(parsed_text);
+  if (mode_index == -1){
+    current_mode = next_num();
+    add_mode(parsed_text, current_mode);
+  } else {
+    current_mode = mode_index;
+  }
 }
 
 void take_action(char *line){
