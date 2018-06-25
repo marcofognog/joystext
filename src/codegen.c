@@ -65,6 +65,9 @@ void action_definition(char type_operand, char *action, char *cmd) {
       case '>' :
         type_val = 3;
         break;
+      case '*' :
+        type_val = 2;
+        break;
       case '.' :
         type_val = 1;
         break;
