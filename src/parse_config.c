@@ -345,6 +345,7 @@ void parse_line(char * line){
   memset(keymaps[line_num].t_modified,0, sizeof(TArray));
 
   if(strcmp(command, "=") == 0){
+    // TODO: number_of_lines here could be replaced by line_num?
     for(int k=0;k<number_of_lines;k++){
       if((memcmp(keymaps[k].binary_buttons, merged, sizeof(merged)) == 0)
          && (keymaps[k].mode == keymaps[line_num].mode)
