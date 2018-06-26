@@ -390,7 +390,7 @@ void parse_line(char * line){
 }
 
 int parse_high_level_config(char * config_filename){
-  number_of_lines = 32;
+  number_of_lines = 1000; // TODO: maybe using a dinamically sized array removes the need for this
   keymaps = calloc(number_of_lines, sizeof(Keymap));
   if (keymaps == NULL){
     perror("Failed allocating map of keys.");
