@@ -120,8 +120,8 @@ int next_num(){
 
 char * build_combo_command(char * s1, char * s2){
   char *buff;
-  buff = malloc(20);
-  snprintf(buff, 20, "%s+%s", s1, s2);
+  buff = malloc(40);
+  snprintf(buff, 40, "%s+%s", s1, s2);
   return buff;
 }
 
