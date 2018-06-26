@@ -186,14 +186,14 @@ remap S3 {
 .A3:mouse_down
 .A2:mouse_right
 .A4:mouse_left
->F1:click_left
-<F1:unclick_left
+>F1:click_right
+<F1:unclick_right
 .F2:set_mouse_step_15
 .F3:set_mouse_step_40
 .F4:set_mouse_step_60
 
-S1+S3:click_right
-S1+S3:unclick_right
+S1+S3:click_left
+S1+S3:unclick_left
 S1+F4:escape
 >S2:click_scroll
 <S2:unclick_scroll
