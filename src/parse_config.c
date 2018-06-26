@@ -287,6 +287,8 @@ int next_line_is_a_modified_key = 0;
 // TODO: make this function not depend on line_num var
 void parse_line(char * line){
   static int line_num = 0;
+  number_of_lines = line_num + 1;
+  keymaps = realloc(keymaps, number_of_lines * sizeof(Keymap));
 
   char delimiter[2] = ":";
   char *signifier = strtok(line, delimiter);
@@ -391,13 +393,6 @@ void parse_line(char * line){
 }
 
 int parse_high_level_config(char * config_filename){
-  number_of_lines = 1000; // TODO: maybe using a dinamically sized array removes the need for this
-  keymaps = calloc(number_of_lines, sizeof(Keymap));
-  if (keymaps == NULL){
-    perror("Failed allocating map of keys.");
-    return NULL;
-  }
-
   yyin = fopen(config_filename,"r");
   if (yyin == NULL) {
     fprintf(stderr, "Can't open file: %s\n", config_filename);
@@ -415,15 +410,8 @@ int parse_lower_level_config(int argc, char *config_filename){
     exit(1);
   }
 
-  number_of_lines= count_lines(fp);
-  keymaps = calloc(number_of_lines, sizeof(Keymap));
-  if (keymaps == NULL){
-    perror("Failed allocating map of keys.");
-    return (NULL);
-  }
-
   int l;
-  for (int i=0; i<number_of_lines; i++){
+  for (int i=0; i<count_lines(fp); i++){
     l = fgets(line, 255, (FILE*)fp);
     if(l != NULL){
       parse_line(line);
