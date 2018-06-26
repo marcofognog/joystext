@@ -41,6 +41,7 @@ void print_binary(int *binary_buttons){
   }
 }
 
+// TODO: this func may not be needed after the implemantation of dynamic array
 int count_lines(FILE *fp){
   fseek(fp, 0, SEEK_SET);
   int counter = 0;
