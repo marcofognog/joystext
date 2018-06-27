@@ -4,26 +4,6 @@
 #include <X11/extensions/XTest.h>
 #include <X11/keysym.h>
 
-struct t_array;
-
-typedef struct keymap {
-  int binary_buttons[16];
-  int is_func;
-  int mode;
-  int onpress;
-  int keycode1;
-  int keycode2;
-  int keycode3;
-  struct t_array * t_modified;
-} Keymap;
-
-typedef struct t_array{
-  Keymap * repository;
-  int size;
-} TArray;
-
-Keymap *keymaps;
-
 int pressed_key(int *binary_buttons){
   int print_flag = 0;
   for (int i=0; i < 16; i++) {

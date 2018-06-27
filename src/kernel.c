@@ -482,7 +482,9 @@ void iterate(int *buttons){
     mine = 0;
 
   memcpy(bck_buttons, buttons, sizeof(bck_buttons));
-  TArray ref_array = { keymaps, number_of_lines };
+  ref_array.repository = keymaps;
+  ref_array.size = number_of_lines;
+
   TArray mod_array = * get_ref_array(buttons, &ref_array);
 
   check_for_press_events(buttons, &mod_array);
