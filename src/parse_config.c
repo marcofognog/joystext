@@ -260,13 +260,15 @@ void populate_keycodes(Keymap * keymap, char command[], Command command_list[]){
   }
 }
 
-int number_of_lines;
 int el_index = 0;
 int next_line_is_a_modified_key = 0;
 
 // TODO: make this function not depend on line_num var
 void parse_line(char * line){
   static int line_num = 0;
+
+  ref_array.size++;
+  ref_array.repository = realloc(ref_array.repository, ref_array.size * sizeof(Keymap));
 
   char delimiter[2] = ":";
   char *signifier = strtok(line, delimiter);
@@ -275,9 +277,9 @@ void parse_line(char * line){
   char *command = strtok(signified, ",");
   char *command_mode = strtok(NULL, ",");
   char *sanitized = strtok(command_mode, "\n");
-  keymaps[line_num].onpress = atoi(&sanitized[1]);
+  ref_array.repository[line_num].onpress = atoi(&sanitized[1]);
   sanitized[1] = '\n';
-  keymaps[line_num].mode = atoi(&sanitized[0]);
+  ref_array.repository[line_num].mode = atoi(&sanitized[0]);
 
   char *key1 = strtok(signifier, "+");
   char *key2 = strtok(NULL, "+");
@@ -321,13 +323,13 @@ void parse_line(char * line){
     }
   }
 
-  keymaps[line_num].t_modified = malloc(sizeof(TArray));
-  memset(keymaps[line_num].t_modified,0, sizeof(TArray));
+  ref_array.repository[line_num].t_modified = malloc(sizeof(TArray));
+  memset(ref_array.repository[line_num].t_modified,0, sizeof(TArray));
 
   if(strcmp(command, "=") == 0){
     for(int k=0;k<line_num;k++){
-      if((memcmp(keymaps[k].binary_buttons, merged, sizeof(merged)) == 0)
-         && (keymaps[k].mode == keymaps[line_num].mode)
+      if((memcmp(ref_array.repository[k].binary_buttons, merged, sizeof(merged)) == 0)
+         && (ref_array.repository[k].mode == ref_array.repository[line_num].mode)
          ){
         el_index = k;
         break;
@@ -337,33 +339,33 @@ void parse_line(char * line){
     }
 
     for(int j=0;j<16;j++){
-      keymaps[el_index].binary_buttons[j] = merged[j];
+      ref_array.repository[el_index].binary_buttons[j] = merged[j];
     }
     next_line_is_a_modified_key = 1;
   }else{
     if(next_line_is_a_modified_key == 1){
-      (*keymaps[el_index].t_modified).size++;
-      int pos = (*keymaps[el_index].t_modified).size - 1;
+      (*ref_array.repository[el_index].t_modified).size++;
+      int pos = (*ref_array.repository[el_index].t_modified).size - 1;
 
-      (*keymaps[el_index].t_modified).repository = realloc(
-                                                           (*keymaps[el_index].t_modified).repository,
-                                                           (*keymaps[el_index].t_modified).size * sizeof(Keymap)
+      (*ref_array.repository[el_index].t_modified).repository = realloc(
+                                                           (*ref_array.repository[el_index].t_modified).repository,
+                                                           (*ref_array.repository[el_index].t_modified).size * sizeof(Keymap)
                                                            );
 
       for(int k=0;k<16;k++){
-        (*keymaps[el_index].t_modified).repository[pos].binary_buttons[k] = merged[k];
+        (*ref_array.repository[el_index].t_modified).repository[pos].binary_buttons[k] = merged[k];
       }
-      (*keymaps[el_index].t_modified).repository[pos].is_func = keymaps[line_num].is_func;
-      (*keymaps[el_index].t_modified).repository[pos].onpress = keymaps[line_num].onpress;
-      (*keymaps[el_index].t_modified).repository[pos].mode = keymaps[line_num].mode;
+      (*ref_array.repository[el_index].t_modified).repository[pos].is_func = ref_array.repository[line_num].is_func;
+      (*ref_array.repository[el_index].t_modified).repository[pos].onpress = ref_array.repository[line_num].onpress;
+      (*ref_array.repository[el_index].t_modified).repository[pos].mode = ref_array.repository[line_num].mode;
 
-      populate_keycodes(&(*keymaps[el_index].t_modified).repository[pos], command, commands);
+      populate_keycodes(&(*ref_array.repository[el_index].t_modified).repository[pos], command, commands);
       next_line_is_a_modified_key = 0;
     }else{
-      populate_keycodes(&keymaps[line_num], command, commands);
+      populate_keycodes(&ref_array.repository[line_num], command, commands);
 
       for(int j=0;j<16;j++){
-        keymaps[line_num].binary_buttons[j] = merged[j];
+        ref_array.repository[line_num].binary_buttons[j] = merged[j];
       }
     }
   }
@@ -371,13 +373,6 @@ void parse_line(char * line){
 }
 
 int parse_high_level_config(char * config_filename){
-  number_of_lines = 1000; // TODO: maybe using a dinamically sized array removes the need for this
-  keymaps = calloc(number_of_lines, sizeof(Keymap));
-  if (keymaps == NULL){
-    perror("Failed allocating map of keys.");
-    return NULL;
-  }
-
   yyin = fopen(config_filename,"r");
   if (yyin == NULL) {
     fprintf(stderr, "Can't open file: %s\n", config_filename);
@@ -385,9 +380,6 @@ int parse_high_level_config(char * config_filename){
   }
 
   yyparse();
-
-  ref_array.repository = keymaps;
-  ref_array.size = number_of_lines;
 }
 
 int parse_lower_level_config(int argc, char *config_filename){
@@ -398,22 +390,13 @@ int parse_lower_level_config(int argc, char *config_filename){
     exit(1);
   }
 
-  number_of_lines= count_lines(fp);
-  keymaps = calloc(number_of_lines, sizeof(Keymap));
-  if (keymaps == NULL){
-    perror("Failed allocating map of keys.");
-    return (NULL);
-  }
-
   int l;
-  for (int i=0; i<number_of_lines; i++){
+  for (int i=0; i<count_lines(fp); i++){
     l = fgets(line, 255, (FILE*)fp);
     if(l != NULL){
       parse_line(line);
     }
   }
-  ref_array.repository = keymaps;
-  ref_array.size = number_of_lines;
 
   return 0;
 }
