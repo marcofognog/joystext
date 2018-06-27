@@ -385,6 +385,9 @@ int parse_high_level_config(char * config_filename){
   }
 
   yyparse();
+
+  ref_array.repository = keymaps;
+  ref_array.size = number_of_lines;
 }
 
 int parse_lower_level_config(int argc, char *config_filename){
@@ -409,6 +412,8 @@ int parse_lower_level_config(int argc, char *config_filename){
       parse_line(line);
     }
   }
+  ref_array.repository = keymaps;
+  ref_array.size = number_of_lines;
 
   return 0;
 }

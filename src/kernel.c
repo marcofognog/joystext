@@ -482,8 +482,6 @@ void iterate(int *buttons){
     mine = 0;
 
   memcpy(bck_buttons, buttons, sizeof(bck_buttons));
-  ref_array.repository = keymaps;
-  ref_array.size = number_of_lines;
 
   TArray mod_array = * get_ref_array(buttons, &ref_array);
 
