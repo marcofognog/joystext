@@ -88,6 +88,7 @@ void test_parse_line_one_line(){
   int expected_size = 1;
 
   assert_keymap_equal(keytable1.repository[0], expected);
+  assert_int_equal(keytable1.size, expected_size);
   print_result(keytable1.repository, keytable1.size);
 }
 
@@ -95,11 +96,19 @@ void test_parse_line_two_lines(){
   char line_one[255] = "F1:a,00\n";
   char line_two[255] = "F2:b,00\n";
 
+  Keymap expected1 = create_keymap(0,0,0,97,0,0, 1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+  Keymap expected2 = create_keymap(0,0,0,98,0,0, 0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+
+  int expected_size = 1;
+
   parse_line(line_one, &keytable2);
   parse_line(line_two, &keytable2);
 
   int expected = 2;
   assert_int_equal(keytable2.size, expected);
+
+  assert_keymap_equal(keytable2.repository[0], expected1);
+  assert_keymap_equal(keytable2.repository[1], expected2);
   print_result(keytable2.repository, keytable2.size);
 }
 
@@ -110,11 +119,20 @@ void test_parse_line_remap_lines(){
   char line1[255] = "S4:=,00\n";
   parse_line(line1, &keytable3);
 
-  char line2[255] = "S4:super+k,00\n";
+  char line2[255] = "F2:super+k,00\n";
   parse_line(line2, &keytable3);
 
-  int expected = 3;
-  assert_int_equal(keytable3.size, expected);
+  Keymap expected1 = create_keymap(0,0,0,97,0,0, 1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+  Keymap expected2 = create_keymap(0,0,0,0,0,0, 0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0);
+  Keymap expected3 = create_keymap(0,0,0,65515,107,0, 0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+
+  int expected_size = 3;
+  assert_int_equal(keytable3.size, expected_size);
+
+  assert_keymap_equal(keytable3.repository[0], expected1);
+  assert_keymap_equal(keytable3.repository[1], expected2);
+  assert_keymap_equal((*keytable3.repository[1].t_modified).repository[0], expected3);
+
   print_result(keytable3.repository, keytable3.size);
 }
 
