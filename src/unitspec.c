@@ -36,7 +36,47 @@ void assert_int_equal(int value, int expected){
   if(value == expected){
     printf("Nice\n");
   } else {
-    printf("Fail, size should be %i, but is %i\n", expected, value);
+    printf("Fail, the int should be %i, but is %i\n", expected, value);
+  }
+}
+
+Keymap create_keymap(int is_func,
+                     int mode,
+                     int onpress,
+                     int keycode1,int keycode2, int keycode3,
+                     int b0,int b1,int b2,int b3,int b4,
+                     int b5,int b6,int b7,int b8,int b9,
+                     int b10, int b11, int b12, int b13, int b14, int b15){
+  int buttons[16] = { b0,b1,b2,b3,b4,b5,b6,b7,b8,b9,b10,b11,b12,b13,b14,b15 };
+  Keymap obj;
+
+  memcpy(&obj.binary_buttons, &buttons, sizeof(buttons));
+  obj.is_func = is_func;
+  obj.mode = mode;
+  obj.onpress = onpress;
+  obj.keycode1 = keycode1;
+  obj.keycode2 = keycode2;
+  obj.keycode3 = keycode3;
+
+  return obj;
+}
+
+void assert_keymap_equal(Keymap value, Keymap expected){
+  assert_int_equal(value.keycode1, expected.keycode1);
+  assert_int_equal(value.keycode2, expected.keycode2);
+  assert_int_equal(value.keycode3, expected.keycode3);
+  assert_int_equal(value.onpress, expected.onpress);
+  assert_int_equal(value.mode, expected.mode);
+  assert_int_equal(value.is_func, expected.is_func);
+
+  if(memcmp(value.binary_buttons, expected.binary_buttons, sizeof(expected.binary_buttons)) == 0){
+    printf("Equal buttons\n");
+  } else{
+    printf("-> buttons comparison failed. expected: ");
+    print_binary(expected.binary_buttons);
+    printf(" received: ");
+    print_binary(value.binary_buttons);
+    printf("\n");
   }
 }
 
@@ -44,8 +84,10 @@ void test_parse_line_one_line(){
   char line[255] = "F1:a,00\n";
   parse_line(line, &keytable1);
 
-  int expected = 1;
-  assert_int_equal(keytable1.size, expected);
+  Keymap expected = create_keymap(0,0,0,97,0,0, 1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+  int expected_size = 1;
+
+  assert_keymap_equal(keytable1.repository[0], expected);
   print_result(keytable1.repository, keytable1.size);
 }
 
