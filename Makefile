@@ -17,3 +17,6 @@ clean:
 
 inspect:
 	gcc -std=c99 -Wall -g -I/usr/include/SDL2/ src/inspect.c -L/usr/local/lib/ -lSDL -lXtst -lX11 -o bin/inspect
+
+unitspec:
+	gcc -std=c99 -Wall -g -I/usr/include/SDL2/ src/unitspec.c -L/usr/local/lib/ -lSDL -lXtst -lX11 -lfl -o bin/unitspec

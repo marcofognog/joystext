@@ -264,11 +264,16 @@ int el_index = 0;
 int next_line_is_a_modified_key = 0;
 
 // TODO: make this function not depend on line_num var
-void parse_line(char * line){
-  static int line_num = 0;
+void parse_line(char * line, TArray *ref){
+  TArray ref_array = *ref;
 
   ref_array.size++;
-  ref_array.repository = realloc(ref_array.repository, ref_array.size * sizeof(Keymap));
+  if(ref_array.size == 1){
+    ref_array.repository = calloc(ref_array.size, sizeof(Keymap));
+  } else{
+    ref_array.repository = realloc(ref_array.repository, ref_array.size * sizeof(Keymap));
+  }
+  int line_num = ref_array.size - 1;
 
   char delimiter[2] = ":";
   char *signifier = strtok(line, delimiter);
@@ -370,6 +375,7 @@ void parse_line(char * line){
     }
   }
   line_num++;
+  *ref = ref_array;
 }
 
 int parse_high_level_config(char * config_filename){
@@ -394,7 +400,7 @@ int parse_lower_level_config(int argc, char *config_filename){
   for (int i=0; i<count_lines(fp); i++){
     l = fgets(line, 255, (FILE*)fp);
     if(l != NULL){
-      parse_line(line);
+      parse_line(line, &keystable);
     }
   }
 

@@ -21,4 +21,4 @@ typedef struct t_array{
 
 Keymap *keymaps;
 
-TArray ref_array;
+TArray keystable;
