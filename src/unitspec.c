@@ -31,17 +31,20 @@ void print_result(struct keymap keymaps[], int lines){
 TArray keytable1;
 TArray keytable2;
 
+void assert_int_equal(int value, int expected){
+  if(value == expected){
+    printf("Nice\n");
+  } else {
+    printf("Fail, size should be %i, but is %i\n", expected, value);
+  }
+}
+
 void test_parse_line_one_line(){
   char line[255] = "F1:a,00\n";
   parse_line(line, &keytable1);
 
   int expected = 1;
-  if(keytable1.size == expected){
-    printf("Nice\n");
-  } else {
-    printf("Fail, size should be %i, but is %i\n", expected, keytable1.size);
-  }
-
+  assert_int_equal(keytable1.size, expected);
   print_result(keytable1.repository, keytable1.size);
 }
 
@@ -53,11 +56,7 @@ void test_parse_line_two_lines(){
   parse_line(line_two, &keytable2);
 
   int expected = 2;
-  if(keytable2.size == expected){
-    printf("Nice\n");
-  } else {
-    printf("Fail, size should be %i, but is %i\n", expected, keytable2.size);
-  }
+  assert_int_equal(keytable2.size, expected);
   print_result(keytable2.repository, keytable2.size);
 }
 
