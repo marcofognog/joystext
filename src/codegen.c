@@ -51,7 +51,7 @@ void take_action(char *line){
   if(print_parsed_lower_level_config == 1){
     printf(line);
   } else {
-    parse_line(line);
+    parse_line(line, &keystable);
   }
 }
 

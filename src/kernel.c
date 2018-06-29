@@ -483,6 +483,7 @@ void iterate(int *buttons){
 
   memcpy(bck_buttons, buttons, sizeof(bck_buttons));
 
+  TArray ref_array = keystable;
   TArray mod_array = * get_ref_array(buttons, &ref_array);
 
   check_for_press_events(buttons, &mod_array);
