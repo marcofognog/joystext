@@ -30,6 +30,7 @@ void print_result(struct keymap keymaps[], int lines){
 
 TArray keytable1;
 TArray keytable2;
+TArray keytable3;
 
 void assert_int_equal(int value, int expected){
   if(value == expected){
@@ -60,7 +61,23 @@ void test_parse_line_two_lines(){
   print_result(keytable2.repository, keytable2.size);
 }
 
+void test_parse_line_remap_lines(){
+  char line[255] = "F1:a,00\n";
+  parse_line(line, &keytable3);
+
+  char line1[255] = "S4:=,00\n";
+  parse_line(line1, &keytable3);
+
+  char line2[255] = "S4:super+k,00\n";
+  parse_line(line2, &keytable3);
+
+  int expected = 3;
+  assert_int_equal(keytable3.size, expected);
+  print_result(keytable3.repository, keytable3.size);
+}
+
 int main(int argc, char *argv[]){
   test_parse_line_one_line();
   test_parse_line_two_lines();
+  test_parse_line_remap_lines();
 }
