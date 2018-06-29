@@ -16,7 +16,7 @@ int pressed_key(int *binary_buttons){
 }
 
 void print_binary(int *binary_buttons){
-  for (int i=0; i < 16; i++) {
+  for (int i=0; i < 15; i++) {
     printf("%i", binary_buttons[i]);
   }
 }
