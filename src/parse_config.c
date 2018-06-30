@@ -298,6 +298,25 @@ void merge_found_buttons(char *key1, char *key2, char *key3, char *key4, char *k
   }
 }
 
+int find_or_create_by_buttons(int merged[16], TArray *ref_array){
+  int el_index;
+  TArray ar = *ref_array;
+  int k;
+  for(k=0; k<ar.size; k++){
+    if((memcmp(ar.repository[k].binary_buttons, merged, sizeof(merged)) == 0)
+       && (ar.repository[k].mode == ar.repository[ar.size].mode)
+       ){
+      el_index = k;
+      break;
+    }else{
+      el_index = ar.size;
+    }
+  }
+
+  *ref_array = ar;
+  return el_index;
+}
+
 int el_index = 0;
 int next_line_is_a_modified_key = 0;
 
@@ -337,16 +356,7 @@ void parse_line(char * line, TArray *ref){
   memset(ref_array.repository[line_num].t_modified,0, sizeof(TArray));
 
   if(strcmp(command, "=") == 0){
-    for(int k=0;k<line_num;k++){
-      if((memcmp(ref_array.repository[k].binary_buttons, merged, sizeof(merged)) == 0)
-         && (ref_array.repository[k].mode == ref_array.repository[line_num].mode)
-         ){
-        el_index = k;
-        break;
-      }else{
-        el_index = line_num;
-      }
-    }
+    el_index = find_or_create_by_buttons(merged, &ref_array);
 
     for(int j=0;j<16;j++){
       ref_array.repository[el_index].binary_buttons[j] = merged[j];
