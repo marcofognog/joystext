@@ -159,10 +159,10 @@ void test_parse_line_remap_2_remaps(){
   Keymap remap_s3 = create_keymap(0,0,0,0,0,0, 0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0);
   Keymap remap_s3_f2 = create_keymap(0,0,0,65515,107,0, 0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
   Keymap remap_s3_f1 = create_keymap(0,0,0,65505,65289,103, 1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
-  Keymap remap_s4 = create_keymap(0,0,0,0,0,0, 0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0);
+  Keymap remap_s4 = create_keymap(0,0,0,0,0,0, 0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0);
   Keymap remap_s4_f2 = create_keymap(0,0,0,65515,107,0, 1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
 
-  int expected_size = 7;
+  int expected_size = 3;
   assert_int_equal(keytable4.size, expected_size);
 
   assert_keymap_equal(keytable4.repository[0], f1);
@@ -170,7 +170,6 @@ void test_parse_line_remap_2_remaps(){
   assert_keymap_equal((*keytable4.repository[1].t_modified).repository[0], remap_s3_f2);
   assert_keymap_equal((*keytable4.repository[1].t_modified).repository[1], remap_s3_f1);
   assert_keymap_equal(keytable4.repository[2], remap_s4);
-  Keymap * opa = (*keytable4.repository[2].t_modified).repository;
 
   print_result(keytable4.repository, keytable4.size);
 }
