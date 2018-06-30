@@ -325,7 +325,7 @@ int find_or_create_by_buttons(int merged[16], TArray *ref_array){
       el_index = k;
       break;
     }else{
-      el_index = ar.size;
+      el_index = tarray_create(&ar);
     }
   }
 
@@ -363,7 +363,7 @@ void parse_line(char * line, TArray *ref){
     el_index = find_or_create_by_buttons(merged, &ref_array);
 
     for(int j=0;j<16;j++){
-      ref_array.repository[ref_array.size-1].binary_buttons[j] = merged[j];
+      ref_array.repository[el_index].binary_buttons[j] = merged[j];
     }
     next_line_is_a_modified_key = 1;
   }else{
