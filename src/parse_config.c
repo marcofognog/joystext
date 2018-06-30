@@ -260,38 +260,7 @@ void populate_keycodes(Keymap * keymap, char command[], Command command_list[]){
   }
 }
 
-int el_index = 0;
-int next_line_is_a_modified_key = 0;
-
-// TODO: make this function not depend on line_num var
-void parse_line(char * line, TArray *ref){
-  TArray ref_array = *ref;
-
-  ref_array.size++;
-  if(ref_array.size == 1){
-    ref_array.repository = calloc(ref_array.size, sizeof(Keymap));
-  } else{
-    ref_array.repository = realloc(ref_array.repository, ref_array.size * sizeof(Keymap));
-  }
-  int line_num = ref_array.size - 1;
-
-  char delimiter[2] = ":";
-  char *signifier = strtok(line, delimiter);
-  char *signified = strtok(NULL, delimiter); // This feels wierd
-
-  char *command = strtok(signified, ",");
-  char *command_mode = strtok(NULL, ",");
-  char *sanitized = strtok(command_mode, "\n");
-  ref_array.repository[line_num].onpress = atoi(&sanitized[1]);
-  sanitized[1] = '\n';
-  ref_array.repository[line_num].mode = atoi(&sanitized[0]);
-
-  char *key1 = strtok(signifier, "+");
-  char *key2 = strtok(NULL, "+");
-  char *key3 = strtok(NULL, "+");
-  char *key4 = strtok(NULL, "+");
-  char *key5 = strtok(NULL, "+");
-  int merged[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+void merge_found_buttons(char *key1, char *key2, char *key3, char *key4, char *key5, int * merged){
   for(int k=0; k<16; k++){
     if(strcmp(key1, buttons[k].name) == 0){
       for(int j=0; j<16;j++){
@@ -327,7 +296,43 @@ void parse_line(char * line, TArray *ref){
       }
     }
   }
+}
 
+int el_index = 0;
+int next_line_is_a_modified_key = 0;
+
+// TODO: make this function not depend on line_num var
+void parse_line(char * line, TArray *ref){
+  TArray ref_array = *ref;
+
+  char delimiter[2] = ":";
+  char *signifier = strtok(line, delimiter);
+  char *signified = strtok(NULL, delimiter); // This feels wierd
+
+  char *command = strtok(signified, ",");
+  char *command_mode = strtok(NULL, ",");
+  char *sanitized = strtok(command_mode, "\n");
+  int onpress = atoi(&sanitized[1]);
+  sanitized[1] = '\n';
+  int keymap_mode = atoi(&sanitized[0]);
+
+  char *key1 = strtok(signifier, "+");
+  char *key2 = strtok(NULL, "+");
+  char *key3 = strtok(NULL, "+");
+  char *key4 = strtok(NULL, "+");
+  char *key5 = strtok(NULL, "+");
+  int merged[16] = {0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0};
+
+  merge_found_buttons(key1, key2, key3, key4, key5, merged);
+
+  ref_array.size++;
+  if(ref_array.size == 1){
+    ref_array.repository = calloc(ref_array.size, sizeof(Keymap));
+  } else{
+    ref_array.repository = realloc(ref_array.repository, ref_array.size * sizeof(Keymap));
+  }
+
+  int line_num = ref_array.size - 1;
   ref_array.repository[line_num].t_modified = malloc(sizeof(TArray));
   memset(ref_array.repository[line_num].t_modified,0, sizeof(TArray));
 
@@ -374,7 +379,9 @@ void parse_line(char * line, TArray *ref){
       }
     }
   }
-  line_num++;
+  ref_array.repository[line_num].mode = keymap_mode;
+  ref_array.repository[line_num].onpress = onpress;
+
   *ref = ref_array;
 }
 
