@@ -298,6 +298,22 @@ void merge_found_buttons(char *key1, char *key2, char *key3, char *key4, char *k
   }
 }
 
+int tarray_create(TArray *ref_array){
+  TArray ar = *ref_array;
+  ar.size++;
+  if(ar.size == 1){
+    ar.repository = calloc(ar.size, sizeof(Keymap));
+  } else{
+    ar.repository = realloc(ar.repository, ar.size * sizeof(Keymap));
+  }
+  ar.repository[ar.size-1].t_modified = malloc(sizeof(TArray));
+  memset(ar.repository[ar.size-1].t_modified,0, sizeof(TArray));
+
+  *ref_array = ar;
+
+  return ar.size;
+}
+
 int find_or_create_by_buttons(int merged[16], TArray *ref_array){
   int el_index;
   TArray ar = *ref_array;
@@ -320,7 +336,6 @@ int find_or_create_by_buttons(int merged[16], TArray *ref_array){
 int el_index = 0;
 int next_line_is_a_modified_key = 0;
 
-// TODO: make this function not depend on line_num var
 void parse_line(char * line, TArray *ref){
   TArray ref_array = *ref;
 
@@ -344,53 +359,43 @@ void parse_line(char * line, TArray *ref){
 
   merge_found_buttons(key1, key2, key3, key4, key5, merged);
 
-  ref_array.size++;
-  if(ref_array.size == 1){
-    ref_array.repository = calloc(ref_array.size, sizeof(Keymap));
-  } else{
-    ref_array.repository = realloc(ref_array.repository, ref_array.size * sizeof(Keymap));
-  }
-
-  int line_num = ref_array.size - 1;
-  ref_array.repository[line_num].t_modified = malloc(sizeof(TArray));
-  memset(ref_array.repository[line_num].t_modified,0, sizeof(TArray));
-
   if(strcmp(command, "=") == 0){
     el_index = find_or_create_by_buttons(merged, &ref_array);
 
     for(int j=0;j<16;j++){
-      ref_array.repository[el_index].binary_buttons[j] = merged[j];
+      ref_array.repository[ref_array.size-1].binary_buttons[j] = merged[j];
     }
     next_line_is_a_modified_key = 1;
   }else{
     if(next_line_is_a_modified_key == 1){
-      int pos = (*ref_array.repository[el_index].t_modified).size;
-      (*ref_array.repository[el_index].t_modified).size++;
+      int pos = (*ref_array.repository[ref_array.size-1].t_modified).size;
+      (*ref_array.repository[ref_array.size-1].t_modified).size++;
 
-      (*ref_array.repository[el_index].t_modified).repository = realloc(
-                                                           (*ref_array.repository[el_index].t_modified).repository,
-                                                           (*ref_array.repository[el_index].t_modified).size * sizeof(Keymap)
+      (*ref_array.repository[ref_array.size-1].t_modified).repository = realloc(
+                                                           (*ref_array.repository[ref_array.size-1].t_modified).repository,
+                                                           (*ref_array.repository[ref_array.size-1].t_modified).size * sizeof(Keymap)
                                                            );
 
       for(int k=0;k<16;k++){
-        (*ref_array.repository[el_index].t_modified).repository[pos].binary_buttons[k] = merged[k];
+        (*ref_array.repository[ref_array.size-1].t_modified).repository[pos].binary_buttons[k] = merged[k];
       }
-      (*ref_array.repository[el_index].t_modified).repository[pos].is_func = ref_array.repository[line_num].is_func;
-      (*ref_array.repository[el_index].t_modified).repository[pos].onpress = ref_array.repository[line_num].onpress;
-      (*ref_array.repository[el_index].t_modified).repository[pos].mode = ref_array.repository[line_num].mode;
+      (*ref_array.repository[ref_array.size-1].t_modified).repository[pos].is_func = ref_array.repository[ref_array.size-1].is_func;
+      (*ref_array.repository[ref_array.size-1].t_modified).repository[pos].onpress = ref_array.repository[ref_array.size-1].onpress;
+      (*ref_array.repository[ref_array.size-1].t_modified).repository[pos].mode = ref_array.repository[ref_array.size-1].mode;
 
-      populate_keycodes(&(*ref_array.repository[el_index].t_modified).repository[pos], command, commands);
+      populate_keycodes(&(*ref_array.repository[ref_array.size-1].t_modified).repository[pos], command, commands);
       next_line_is_a_modified_key = 0;
     }else{
-      populate_keycodes(&ref_array.repository[line_num], command, commands);
+      tarray_create(&ref_array);
+      populate_keycodes(&ref_array.repository[ref_array.size-1], command, commands);
 
       for(int j=0;j<16;j++){
-        ref_array.repository[line_num].binary_buttons[j] = merged[j];
+        ref_array.repository[ref_array.size-1].binary_buttons[j] = merged[j];
       }
     }
   }
-  ref_array.repository[line_num].mode = keymap_mode;
-  ref_array.repository[line_num].onpress = onpress;
+  ref_array.repository[ref_array.size-1].mode = keymap_mode;
+  ref_array.repository[ref_array.size-1].onpress = onpress;
 
   *ref = ref_array;
 }
