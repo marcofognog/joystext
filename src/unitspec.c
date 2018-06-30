@@ -28,10 +28,6 @@ void print_result(struct keymap keymaps[], int lines){
   }
 }
 
-TArray keytable1;
-TArray keytable2;
-TArray keytable3;
-
 void assert_int_equal(int value, int expected){
   if(value == expected){
     printf("Nice\n");
@@ -80,6 +76,11 @@ void assert_keymap_equal(Keymap value, Keymap expected){
   }
 }
 
+TArray keytable1;
+TArray keytable2;
+TArray keytable3;
+TArray keytable4;
+
 void test_parse_line_one_line(){
   char line[255] = "F1:a,00\n";
   parse_line(line, &keytable1);
@@ -124,18 +125,59 @@ void test_parse_line_remap_lines(){
   Keymap expected2 = create_keymap(0,0,0,0,0,0, 0,0,0,0,0,0,0,1,0,0,0,0,0,0,0,0);
   Keymap expected3 = create_keymap(0,0,0,65515,107,0, 0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
 
-  int expected_size = 3;
+  int expected_size = 2;
   assert_int_equal(keytable3.size, expected_size);
 
+  print_result(keytable3.repository, keytable3.size);
   assert_keymap_equal(keytable3.repository[0], expected1);
   assert_keymap_equal(keytable3.repository[1], expected2);
   assert_keymap_equal((*keytable3.repository[1].t_modified).repository[0], expected3);
 
-  print_result(keytable3.repository, keytable3.size);
+}
+
+void test_parse_line_remap_2_remaps(){
+  char line0[255] = "F1:a,00\n";
+  parse_line(line0, &keytable4);
+
+  char line1[255] = "S3:=,00\n";
+  parse_line(line1, &keytable4);
+  char line2[255] = "F2:super+k,00\n";
+  parse_line(line2, &keytable4);
+
+  char line3[255] = "S3:=,00\n";
+  parse_line(line3, &keytable4);
+  char line4[255] = "F1:shift+tab+g,00\n";
+  parse_line(line4, &keytable4);
+
+  char line5[255] = "S4:=,00\n";
+  parse_line(line5, &keytable4);
+
+  char line6[255] = "F2:b,00\n";
+  parse_line(line6, &keytable4);
+
+  Keymap f1 = create_keymap(0,0,0,97,0,0, 1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+  Keymap remap_s3 = create_keymap(0,0,0,0,0,0, 0,0,0,0,0,1,0,0,0,0,0,0,0,0,0,0);
+  Keymap remap_s3_f2 = create_keymap(0,0,0,65515,107,0, 0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+  Keymap remap_s3_f1 = create_keymap(0,0,0,65505,65289,103, 1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+  Keymap remap_s4 = create_keymap(0,0,0,0,0,0, 0,0,0,0,0,0,0,0,1,0,0,0,0,0,0,0);
+  Keymap remap_s4_f2 = create_keymap(0,0,0,65515,107,0, 1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
+
+  int expected_size = 7;
+  assert_int_equal(keytable4.size, expected_size);
+
+  assert_keymap_equal(keytable4.repository[0], f1);
+  assert_keymap_equal(keytable4.repository[1], remap_s3);
+  assert_keymap_equal((*keytable4.repository[1].t_modified).repository[0], remap_s3_f2);
+  assert_keymap_equal((*keytable4.repository[1].t_modified).repository[1], remap_s3_f1);
+  assert_keymap_equal(keytable4.repository[2], remap_s4);
+  Keymap * opa = (*keytable4.repository[2].t_modified).repository;
+
+  print_result(keytable4.repository, keytable4.size);
 }
 
 int main(int argc, char *argv[]){
   test_parse_line_one_line();
   test_parse_line_two_lines();
   test_parse_line_remap_lines();
+  test_parse_line_remap_2_remaps();
 }
