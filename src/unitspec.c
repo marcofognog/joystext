@@ -99,8 +99,6 @@ void test_parse_line_two_lines(){
   Keymap expected1 = create_keymap(0,0,0,97,0,0, 1,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
   Keymap expected2 = create_keymap(0,0,0,98,0,0, 0,1,0,0,0,0,0,0,0,0,0,0,0,0,0,0);
 
-  int expected_size = 1;
-
   parse_line(line_one, &keytable2);
   parse_line(line_two, &keytable2);
 
