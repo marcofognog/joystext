@@ -354,8 +354,8 @@ void parse_line(char * line, TArray *ref){
     next_line_is_a_modified_key = 1;
   }else{
     if(next_line_is_a_modified_key == 1){
+      int pos = (*ref_array.repository[el_index].t_modified).size;
       (*ref_array.repository[el_index].t_modified).size++;
-      int pos = (*ref_array.repository[el_index].t_modified).size - 1;
 
       (*ref_array.repository[el_index].t_modified).repository = realloc(
                                                            (*ref_array.repository[el_index].t_modified).repository,
