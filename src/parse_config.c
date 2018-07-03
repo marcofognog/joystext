@@ -368,6 +368,8 @@ void parse_line(char * line, TArray *ref){
     for(int j=0;j<16;j++){
       ref_array.repository[el_index].binary_buttons[j] = merged[j];
     }
+    ref_array.repository[el_index].mode = keymap_mode;
+    ref_array.repository[el_index].onpress = onpress;
     next_line_is_a_modified_key = 1;
   }else{
     if(next_line_is_a_modified_key == 1){
@@ -379,12 +381,14 @@ void parse_line(char * line, TArray *ref){
                                                            (*ref_array.repository[el_index].t_modified).size * sizeof(Keymap)
                                                            );
 
+      memset((*ref_array.repository[el_index].t_modified).repository, 0, (*ref_array.repository[el_index].t_modified).size * sizeof(Keymap));
+
       for(int k=0;k<16;k++){
         (*ref_array.repository[el_index].t_modified).repository[pos].binary_buttons[k] = merged[k];
       }
       (*ref_array.repository[el_index].t_modified).repository[pos].is_func = ref_array.repository[ref_array.size-1].is_func;
-      (*ref_array.repository[el_index].t_modified).repository[pos].onpress = ref_array.repository[ref_array.size-1].onpress;
-      (*ref_array.repository[el_index].t_modified).repository[pos].mode = ref_array.repository[ref_array.size-1].mode;
+      (*ref_array.repository[el_index].t_modified).repository[pos].onpress = onpress;
+      (*ref_array.repository[el_index].t_modified).repository[pos].mode = keymap_mode;
 
       populate_keycodes(&(*ref_array.repository[el_index].t_modified).repository[pos], command, commands);
       next_line_is_a_modified_key = 0;
@@ -395,10 +399,10 @@ void parse_line(char * line, TArray *ref){
       for(int j=0;j<16;j++){
         ref_array.repository[ref_array.size-1].binary_buttons[j] = merged[j];
       }
+      ref_array.repository[ref_array.size-1].mode = keymap_mode;
+      ref_array.repository[ref_array.size-1].onpress = onpress;
     }
   }
-  ref_array.repository[ref_array.size-1].mode = keymap_mode;
-  ref_array.repository[ref_array.size-1].onpress = onpress;
 
   *ref = ref_array;
 }

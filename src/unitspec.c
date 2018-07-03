@@ -81,6 +81,7 @@ TArray keytable1;
 TArray keytable2;
 TArray keytable3;
 TArray keytable4;
+TArray keytable5;
 
 void test_parse_line_one_line(){
   char line[255] = "F1:a,00\n";
@@ -175,9 +176,43 @@ void test_parse_line_remap_2_remaps(){
   print_result(keytable4.repository, keytable4.size);
 }
 
+void test_parse_line_many_with_remaps(){
+  char definition_list[77][255];
+  char S3_definitions[16][255];
+  char S4_definitions[8][255];
+
+  int i;
+  for (i = 0; i < 77; i++){ strcpy(definition_list[i], "F1:a,00\n"); }
+
+  int k;
+  for (k = 0; k < 16; k=k+2){
+    strcpy(S3_definitions[k], "S3:=,00\n");
+    strcpy(S3_definitions[k+1], "F1:a,00\n");
+  }
+
+  int j;
+  for (j = 0; j < 8; j=j+2){
+    strcpy(S4_definitions[j], "S4:=,00\n");
+    strcpy(S4_definitions[j+1], "F1:a,00\n");
+  }
+
+  for (i = 0; i < 77; i++){ parse_line(definition_list[i], &keytable5); }
+  for (k = 0; k < 16; k++){ parse_line(S3_definitions[k], &keytable5); }
+  for (j = 0; j < 8; j++){ parse_line(S4_definitions[j], &keytable5); }
+
+  char S4_remap[255] = "S4:=,00\n";
+  parse_line(S4_remap, &keytable5);
+
+  char extra_definition[255] = "F1:a,01\n";
+  parse_line(extra_definition, &keytable5);
+
+  print_result(keytable5.repository, keytable5.size);
+}
+
 int main(int argc, char *argv[]){
-  test_parse_line_one_line();
-  test_parse_line_two_lines();
-  test_parse_line_remap_lines();
-  test_parse_line_remap_2_remaps();
+  /* test_parse_line_one_line(); */
+  /* test_parse_line_two_lines(); */
+  /* test_parse_line_remap_lines(); */
+  /* test_parse_line_remap_2_remaps(); */
+  test_parse_line_many_with_remaps();
 }
